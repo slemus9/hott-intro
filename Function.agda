@@ -102,4 +102,19 @@ swap-comp-is-id : (A B : Type) (C : A -> B -> Type)
 swap-comp-is-id A B C = 
   ∀-extensionality λ (f : ∀ x -> ∀ y -> C x y) -> 
     ∀-extensionality λ x -> 
-      ∀-extensionality λ y -> ?
+      ∀-extensionality λ y -> 
+        begin
+          (swap ∘ swap) f x y
+        ≡⟨⟩
+          (swap (swap f)) x y
+        ≡⟨⟩
+          (λ (x1 : A) -> λ (y1 : B) -> swap f y1 x1) x y
+        ≡⟨⟩
+          (λ y1 -> swap f y1 x) y
+        ≡⟨⟩
+          swap f y x
+        ≡⟨⟩
+          f x y
+        ≡⟨⟩
+          (id f) x y
+        ∎
