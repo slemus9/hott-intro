@@ -5,6 +5,14 @@ module Function where
 
 Type = Set
 
+func-η : {A B : Type} 
+  -> (f : A -> B)
+  -> (λ x -> f x) ≡ f
+func-η _ = refl
+
+{-
+  TODO: Is there a better representation?
+-}
 postulate
   ∀-extensionality : {A : Type} {B : A -> Type} {f g : (x : A) -> B x}
     -> (∀ x -> f x ≡ g x)
@@ -22,6 +30,34 @@ _∘_ : {A B C : Type} -> (B -> C) -> (A -> B) -> A -> C
 -- Identity
 id : {A : Type} -> A -> A
 id x = x
+
+{-
+  Ctx |- f : A -> B
+  ---------------------
+  Ctx |- id ∘ f = f : A -> B
+-}
+id-left-unit : {A B : Type}
+  -> (f : A -> B)
+  -> id ∘ f ≡ f 
+id-left-unit f = extensionality λ x -> 
+  begin
+    (id ∘ f) x
+  ≡⟨⟩
+    id (f x)
+  ≡⟨⟩
+    f x
+  ∎
+
+{-
+  Exercise 2.2
+  Ctx |- f : A -> B
+  ---------------------
+  Ctx |- f ∘ id = f : A -> B
+-}
+id-right-unit : {A B : Type}
+  -> (f : A -> B)
+  -> f ∘ id ≡ f
+id-right-unit f = extensionality λ _ → refl
 
 {-
   Exercise 2.3.a
