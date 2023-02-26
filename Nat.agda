@@ -40,10 +40,48 @@ module Nat where
 
   -- Addition
   _+_ : Nat -> Nat -> Nat
-  zero + m = m
-  suc n + m = suc (n + m)
+  m + zero = m
+  m + suc n = suc (m + n)
 
   {-
     Addition with the induction principle on the second argument
-    m : Nat |- add(m) : Nat -> Nat
+    m : Nat |- add(m) : Nat -> Nat. We have the constant family 
+    P(n) := Nat
+
+    Ctx, x : Nat |- Nat
+             Ctx |- p0 : Nat
+             Ctx |- ps : (n : Nat) -> Nat -> Nat
+    --------------------------------------------------
+    Ctx, x : Nat |- ind(p0, ps, x) : (n : Nat) -> Nat
+
+    Definitions:
+    add-zero m = m
+    add-succ-right m n x = suc x
+    add-right-ind m = ind-nat (add-zero-right m) (add-succ-right m)
+
+    Let:
+    p0 := add-zero m 
+    ps := add-suc m 
+
+    Computation:
+      add-right-ind m zero
+    = ind-nat p0 ps zero
+    = p0
+    = add-zero m
+    = m
+
+      add-right-ind m (suc n)
+    = ind-nat p0 ps (suc n)
+    = ps n (ind-nat p0 ps n)
+    = add-suc m n (ind-nat p0 ps n)
+    = suc (ind-nat p0 ps n)
+    = suc (add-right-ind m n)
   -}
+  add-zero-right : Nat -> Nat
+  add-zero-right m = m
+
+  add-succ-right : Nat -> Nat -> Nat -> Nat 
+  add-succ-right m n = suc
+
+  add-right-ind : Nat -> Nat -> Nat
+  add-right-ind m = ind-nat (add-zero-right m) (add-succ-right m)
