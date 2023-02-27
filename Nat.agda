@@ -162,3 +162,49 @@ module Nat where
 
     _ : exp 2 5 ≡ 32
     _ = refl
+
+  {-
+    Exercise 3.2
+    min and max
+  -}
+  min : Nat -> Nat -> Nat
+  min m zero = zero
+  min zero n = zero
+  min (suc m) (suc n) = suc (min m n)
+
+  max : Nat -> Nat -> Nat
+  max m zero = m
+  max zero n = n
+  max (suc m) (suc n) = suc (max m n)
+
+  _ : max 0 10 ≡ 10
+  _ = refl
+
+  _ : max 23 26 ≡ 26
+  _ = refl 
+
+  _ : max 12 3 ≡ 12
+  _ = refl
+
+  -- In terms of the induction principle
+  module _ where
+    min-ind : Nat -> Nat -> Nat
+    min-ind = ind-nat p0 ps
+      where
+        p0 : Nat -> Nat
+        p0 _ = zero
+
+        ps : Nat -> (Nat -> Nat) -> Nat -> Nat
+        ps m next n = ind-nat zero (λ _ -> λ rem -> suc (next rem)) n
+
+    _ : min-ind 0 10 ≡ 0
+    _ = refl
+
+    _ : min-ind 10 0 ≡ 0
+    _ = refl
+
+    _ : min-ind 10 12 ≡ 10
+    _ = refl
+ 
+    _ : min-ind 26 15 ≡ 15
+    _ = refl
