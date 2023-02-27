@@ -91,6 +91,52 @@ module Nat where
     _ : add-right-ind 2 5 ≡ 7
     _ = refl
 
+    {-
+      This proof can also be expressed in terms of the induction principle ind-nat,
+      where P n = add-right-ind m n ≡ m + n 
+    -}
+    add-eq : ∀ m n -> add-right-ind m n ≡ m + n
+    add-eq m zero = refl
+    add-eq m (suc n) = 
+      begin
+        add-right-ind m (suc n)
+      ≡⟨⟩
+        ind-nat (add-zero-right m) (add-suc-right m) (suc n)
+      ≡⟨⟩
+        add-suc-right m n (ind-nat (add-zero-right m) (add-suc-right m) n)
+      ≡⟨⟩
+        add-suc-right m n (add-right-ind m n)
+      ≡⟨⟩
+        suc (add-right-ind m n)
+      ≡⟨ cong suc (add-eq m n) ⟩
+        suc (m + n)
+      ∎
+
+    add-eq-ind : ∀ m n -> add-right-ind m n ≡ m + n
+    add-eq-ind m = ind-nat p0 ps
+      where
+        P : Nat -> Type
+        P x = add-right-ind m x ≡ m + x
+
+        p0 : P zero
+        p0 = refl
+
+        ps : (n : Nat) -> P n -> P (suc n)
+        ps n IH = 
+          begin
+            add-right-ind m (suc n)
+          ≡⟨⟩
+            ind-nat (add-zero-right m) (add-suc-right m) (suc n)
+          ≡⟨⟩
+            add-suc-right m n (ind-nat (add-zero-right m) (add-suc-right m) n)
+          ≡⟨⟩
+            add-suc-right m n (add-right-ind m n)
+          ≡⟨⟩
+            suc (add-right-ind m n)
+          ≡⟨ cong suc IH ⟩
+            suc (m + n)
+          ∎
+
   {-
     Exercise 3.1.a
     Multiplication
@@ -126,6 +172,23 @@ module Nat where
 
     _ : mul-right-ind 2 5 ≡ 10
     _ = refl
+
+    mul-eq : ∀ m n -> mul-right-ind m n ≡ m * n
+    mul-eq m zero = refl
+    mul-eq m (suc n) = 
+      begin
+        mul-right-ind m (suc n)
+      ≡⟨⟩
+        ind-nat (mul-zero-right m) (mul-suc-right m) (suc n)
+      ≡⟨⟩
+        mul-suc-right m n (ind-nat (mul-zero-right m) (mul-suc-right m) n)
+      ≡⟨⟩
+        mul-suc-right m n (mul-right-ind m n)
+      ≡⟨⟩
+        m + mul-right-ind m n
+      ≡⟨ cong (m +_) (mul-eq m n) ⟩
+        m + (m * n)
+      ∎
 
   {-
     Exercise 3.1.a
@@ -163,6 +226,23 @@ module Nat where
     _ : exp 2 5 ≡ 32
     _ = refl
 
+    exp-eq : ∀ m n -> exp m n ≡ m ^ n
+    exp-eq m zero = refl
+    exp-eq m (suc n) = 
+      begin
+        exp m (suc n)
+      ≡⟨⟩
+        ind-nat (exp-zero m) (exp-suc m) (suc n)
+      ≡⟨⟩
+        exp-suc m n (ind-nat (exp-zero m) (exp-suc m) n)
+      ≡⟨⟩
+        exp-suc m n (exp m n)
+      ≡⟨⟩
+        m * exp m n
+      ≡⟨ cong (m *_) (exp-eq m n) ⟩
+        m * (m ^ n)
+      ∎
+
   {-
     Exercise 3.2
     min and max
@@ -177,25 +257,16 @@ module Nat where
   max zero n = n
   max (suc m) (suc n) = suc (max m n)
 
-  _ : max 0 10 ≡ 10
-  _ = refl
-
-  _ : max 23 26 ≡ 26
-  _ = refl 
-
-  _ : max 12 3 ≡ 12
-  _ = refl
-
   -- In terms of the induction principle
   module _ where
-    min-ind : Nat -> Nat -> Nat
-    min-ind = ind-nat p0 ps
-      where
-        p0 : Nat -> Nat
-        p0 _ = zero
+    min-zero : Nat -> Nat
+    min-zero _ = zero
 
-        ps : Nat -> (Nat -> Nat) -> Nat -> Nat
-        ps m next n = ind-nat zero (λ _ -> λ rem -> suc (next rem)) n
+    min-suc : Nat -> (Nat -> Nat) -> Nat -> Nat
+    min-suc m next n = ind-nat zero (λ n' -> λ _ -> suc (next n')) n
+
+    min-ind : Nat -> Nat -> Nat
+    min-ind = ind-nat min-zero min-suc
 
     _ : min-ind 0 10 ≡ 0
     _ = refl
@@ -206,5 +277,30 @@ module Nat where
     _ : min-ind 10 12 ≡ 10
     _ = refl
  
-    _ : min-ind 26 15 ≡ 15
+    _ : min-ind 25 20 ≡ 20
     _ = refl
+
+    min-eq : ∀ m n -> min-ind m n ≡ min m n
+    min-eq zero zero = refl
+    min-eq (suc m) zero = refl
+    min-eq zero (suc n) = refl
+    min-eq (suc m) (suc n) = 
+      begin
+        min-ind (suc m) (suc n)
+      ≡⟨⟩
+        ind-nat min-zero min-suc (suc m) (suc n)
+      ≡⟨⟩
+        min-suc m (ind-nat min-zero min-suc m) (suc n)
+      ≡⟨⟩
+        min-suc m (min-ind m) (suc n)
+      ≡⟨⟩
+        ind-nat {λ _ -> Nat} zero (λ n' -> λ _ -> suc (min-ind m n')) (suc n)
+      ≡⟨⟩
+        (λ n' -> λ _ -> suc (min-ind m n')) n (min-suc m (min-ind m) n)
+      ≡⟨⟩
+        (λ _ -> suc (min-ind m n)) (min-suc m (min-ind m) n)
+      ≡⟨⟩
+        suc (min-ind m n)
+      ≡⟨ cong suc (min-eq m n) ⟩
+        suc (min m n)
+      ∎
