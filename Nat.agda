@@ -294,7 +294,7 @@ module Nat where
       ≡⟨⟩
         min-suc m (min-ind m) (suc n)
       ≡⟨⟩
-        ind-nat {λ _ -> Nat} zero (λ n' -> λ _ -> suc (min-ind m n')) (suc n)
+        ind-nat zero (λ n' -> λ (_ : Nat) -> suc (min-ind m n')) (suc n)
       ≡⟨⟩
         (λ n' -> λ _ -> suc (min-ind m n')) n (min-suc m (min-ind m) n)
       ≡⟨⟩
