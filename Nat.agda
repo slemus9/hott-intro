@@ -1,3 +1,4 @@
+open import Function using (id)
 open import Equality using (_≡_; refl; cong; cong-app)
 open Equality.≡-Reasoning
 
@@ -259,6 +260,7 @@ module Nat where
 
   -- In terms of the induction principle
   module _ where
+    -- min
     min-zero : Nat -> Nat
     min-zero _ = zero
 
@@ -303,4 +305,85 @@ module Nat where
         suc (min-ind m n)
       ≡⟨ cong suc (min-eq m n) ⟩
         suc (min m n)
+      ∎
+  
+    -- max 
+    max-suc : Nat -> (Nat -> Nat) -> Nat -> Nat
+    max-suc m next = ind-nat (suc m) (λ n -> λ _ -> suc (next n))
+
+    max-ind : Nat -> Nat -> Nat
+    max-ind = ind-nat id max-suc 
+
+    _ : max-ind 10 0 ≡ 10
+    _ = refl
+
+    _ : max-ind 0 10 ≡ 10
+    _ = refl
+
+    _ : max-ind 23 25 ≡ 25
+    _ = refl
+
+    _ : max-ind 11 8 ≡ 11
+    _ = refl
+
+    max-eq : ∀ m n -> max-ind m n  ≡ max m n
+    max-eq zero zero = refl
+    max-eq zero (suc n) = refl
+    max-eq (suc m) zero = refl
+    max-eq (suc m) (suc n) = 
+      begin
+        max-ind (suc m) (suc n)
+      ≡⟨⟩
+        ind-nat id max-suc (suc m) (suc n)
+      ≡⟨⟩
+        max-suc m (max-ind m) (suc n)
+      ≡⟨⟩
+        ind-nat (suc m) (λ n -> λ (_ : Nat) -> suc (max-ind m n)) (suc n)
+      ≡⟨⟩
+        (λ n -> λ _ -> suc (max-ind m n)) n (max-suc m (max-ind m) n)
+      ≡⟨⟩
+        (λ _ -> suc (max-ind m n)) (max-suc m (max-ind m) n)
+      ≡⟨⟩
+        suc (max-ind m n)
+      ≡⟨ cong suc (max-eq m n) ⟩
+        suc (max m n)
+      ∎ 
+
+  {-
+    Exercise 3.3
+    triangular numbers
+  -}
+  triangular : Nat -> Nat
+  triangular zero = zero
+  triangular (suc n) = (suc n) + triangular n
+
+  _ : triangular 10 ≡ 55
+  _ = refl
+
+  -- In terms of the induction principle
+  -- TODO: Make it tail recursive and prove that both definitions are equivalent
+  module _ where
+    triangular-ind : Nat -> Nat
+    triangular-ind = ind-nat zero (λ n -> λ next -> (suc n) + next)
+
+    _ : triangular-ind 10 ≡ 55
+    _ = refl
+
+    triangular-eq : ∀ n -> triangular-ind n ≡ triangular n
+    triangular-eq zero = refl
+    triangular-eq (suc n) = 
+      begin
+        triangular-ind (suc n)
+      ≡⟨⟩
+        ind-nat zero (λ n -> λ next -> (suc n) + next) (suc n)
+      ≡⟨⟩
+        (λ n -> λ next -> (suc n) + next) n (ind-nat zero (λ n -> λ next -> (suc n) + next) n)
+      ≡⟨⟩
+        (λ n -> λ next -> (suc n) + next) n (triangular-ind n)
+      ≡⟨⟩
+        (λ next -> (suc n) + next) (triangular-ind n)
+      ≡⟨⟩
+        (suc n) + triangular-ind n
+      ≡⟨ cong ((suc n) +_) (triangular-eq n) ⟩
+        (suc n) + triangular n
       ∎
