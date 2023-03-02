@@ -350,7 +350,7 @@ module Nat where
       ∎ 
 
   {-
-    Exercise 3.3
+    Exercise 3.3.a
     triangular numbers
   -}
   triangular : Nat -> Nat
@@ -386,4 +386,38 @@ module Nat where
         (suc n) + triangular-ind n
       ≡⟨ cong ((suc n) +_) (triangular-eq n) ⟩
         (suc n) + triangular n
+      ∎
+
+  {-
+    Exercise 3.3.b
+    factorial
+  -}
+  _! : Nat -> Nat
+  zero ! = suc zero
+  (suc n) ! = suc n * (n !)
+
+  _ : 5 ! ≡ 120
+  _ = refl
+
+  -- In terms of the induction principle
+  -- TODO: Make it tail recursive and prove that both definitions are equivalent
+  module _ where
+    fact-ind : Nat -> Nat
+    fact-ind = ind-nat (suc zero) (λ n -> λ next -> (suc n) * next)
+
+    fact-eq : ∀ n -> fact-ind n ≡ n !
+    fact-eq zero = refl
+    fact-eq (suc n) = 
+      begin
+        fact-ind (suc n)
+      ≡⟨⟩
+        ind-nat (suc zero) (λ n -> λ next -> (suc n) * next) (suc n)
+      ≡⟨⟩
+        (λ n -> λ next -> (suc n) * next) n (fact-ind n)
+      ≡⟨⟩
+        (λ next -> (suc n) * next) (fact-ind n)
+      ≡⟨⟩
+        (suc n) * (fact-ind n)
+      ≡⟨ cong ((suc n) *_) (fact-eq n)⟩
+        suc n * (n !)
       ∎
