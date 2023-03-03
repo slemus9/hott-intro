@@ -393,8 +393,11 @@ module Nat where
     factorial
   -}
   _! : Nat -> Nat
-  zero ! = suc zero
+  zero ! = 1
   (suc n) ! = suc n * (n !)
+
+  fact : Nat -> Nat
+  fact = _!
 
   _ : 5 ! ≡ 120
   _ = refl
@@ -403,7 +406,7 @@ module Nat where
   -- TODO: Make it tail recursive and prove that both definitions are equivalent
   module _ where
     fact-ind : Nat -> Nat
-    fact-ind = ind-nat (suc zero) (λ n -> λ next -> (suc n) * next)
+    fact-ind = ind-nat 1 (λ n -> λ next -> (suc n) * next)
 
     fact-eq : ∀ n -> fact-ind n ≡ n !
     fact-eq zero = refl
@@ -411,7 +414,7 @@ module Nat where
       begin
         fact-ind (suc n)
       ≡⟨⟩
-        ind-nat (suc zero) (λ n -> λ next -> (suc n) * next) (suc n)
+        ind-nat 1 (λ n -> λ next -> (suc n) * next) (suc n)
       ≡⟨⟩
         (λ n -> λ next -> (suc n) * next) n (fact-ind n)
       ≡⟨⟩
@@ -420,4 +423,63 @@ module Nat where
         (suc n) * (fact-ind n)
       ≡⟨ cong ((suc n) *_) (fact-eq n)⟩
         suc n * (n !)
+      ∎
+
+  {-
+    Exercise 3.4
+  -}
+  bin-coef : Nat -> Nat -> Nat
+  bin-coef zero zero = 1
+  bin-coef zero (suc k) = zero
+  bin-coef (suc n) zero = 1
+  bin-coef (suc n) (suc k) = (bin-coef n k) + (bin-coef n (suc k))
+
+  _ : bin-coef 5 11 ≡ 0
+  _ = refl
+
+  _ : bin-coef 11 5 ≡ 462
+  _ = refl
+
+  _ : bin-coef 11 11 ≡ 1
+  _ = refl
+
+  -- In terms of the induction principle
+  module _ where
+    bin-coef-zero : Nat -> Nat 
+    bin-coef-zero = ind-nat 1 (λ _ -> λ _ -> zero)
+
+    bin-coef-suc : Nat -> (Nat -> Nat) -> Nat -> Nat
+    bin-coef-suc _ next = ind-nat 1 (λ k -> λ _ -> next k + next (suc k))
+
+    bin-coef-ind : Nat -> Nat -> Nat
+    bin-coef-ind = ind-nat bin-coef-zero bin-coef-suc
+
+    _ : bin-coef-ind 11 5 ≡ 462
+    _ = refl
+
+    bin-coef-eq : ∀ n k -> bin-coef-ind n k  ≡ bin-coef n k
+    bin-coef-eq zero zero = refl
+    bin-coef-eq zero (suc k) = refl
+    bin-coef-eq (suc n) zero = refl
+    bin-coef-eq (suc n) (suc k) = 
+      begin
+        bin-coef-ind (suc n) (suc k)
+      ≡⟨⟩
+        ind-nat bin-coef-zero bin-coef-suc (suc n) (suc k)
+      ≡⟨⟩
+        bin-coef-suc n (ind-nat bin-coef-zero bin-coef-suc n) (suc k)
+      ≡⟨⟩
+        bin-coef-suc n (bin-coef-ind n) (suc k)
+      ≡⟨⟩
+        ind-nat 1 (λ k -> λ (_ : Nat) -> bin-coef-ind n k + bin-coef-ind n (suc k)) (suc k)
+      ≡⟨⟩
+        (λ k -> λ _ -> bin-coef-ind n k + bin-coef-ind n (suc k)) k (bin-coef-suc n (bin-coef-ind n) k)
+      ≡⟨⟩
+        (λ _ -> bin-coef-ind n k + bin-coef-ind n (suc k)) (bin-coef-suc n (bin-coef-ind n) k)
+      ≡⟨⟩
+        bin-coef-ind n k + bin-coef-ind n (suc k)
+      ≡⟨ cong (_+ bin-coef-ind n (suc k)) (bin-coef-eq n k) ⟩
+        bin-coef n k + bin-coef-ind n (suc k)
+      ≡⟨ cong (bin-coef n k +_) (bin-coef-eq n (suc k)) ⟩
+        bin-coef n k + bin-coef n (suc k)
       ∎
