@@ -427,6 +427,7 @@ module Nat where
 
   {-
     Exercise 3.4
+    Binomial coefficient
   -}
   bin-coef : Nat -> Nat -> Nat
   bin-coef zero zero = 1
@@ -483,3 +484,40 @@ module Nat where
       ≡⟨ cong (bin-coef n k +_) (bin-coef-eq n (suc k)) ⟩
         bin-coef n k + bin-coef n (suc k)
       ∎
+
+  {-
+    Exercise 3.5
+    Fibonacci
+
+    a b
+    0 0 -> 0
+    0 1 -> 1
+    1 1 -> 2
+    1 2 -> 3
+    2 3 -> 5
+    3 5 -> 8
+    5 8 -> 13
+  -}
+  fib : Nat -> Nat
+  fib zero = zero
+  fib 1 = 1
+  fib (suc (suc n)) = fib (suc n) + fib n
+
+  fib-tail : Nat -> Nat -> Nat -> Nat
+  fib-tail zero a b = a
+  fib-tail (suc n) a b = fib-tail n b (a + b)
+
+  _ : fib-tail 9 0 1 ≡ 34
+  _ = refl
+
+  fib-zero : Nat -> Nat -> Nat
+  fib-zero a _ = a
+
+  fib-suc : Nat -> (Nat -> Nat -> Nat) -> Nat -> Nat -> Nat
+  fib-suc _ next a b = next b (a + b)
+
+  fib-ind : Nat -> Nat
+  fib-ind n = ind-nat fib-zero fib-suc n 0 1
+
+  _ : fib-ind 9 ≡ 34
+  _ = refl
