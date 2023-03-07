@@ -521,3 +521,32 @@ module Nat where
 
   _ : fib-ind 9 ≡ 34
   _ = refl
+
+  -- fib-tail-corresp : ∀ n m ->
+  --   fib-tail (suc n) (fib m) (fib (suc m)) ≡ fib-tail n (fib (suc m)) (fib (suc (suc m)))
+  -- fib-tail-corresp zero m = refl
+  -- fib-tail-corresp (suc n) m = {!   !}
+
+  -- fib-fib-tail-eq : ∀ n -> fib n ≡ fib-tail n 0 1
+  -- fib-fib-tail-eq = {!   !}
+
+  {-
+    Exercise 3.4
+    Division by two
+  -}
+  _/2 : Nat -> Nat
+  zero /2 = zero
+  (suc (suc n)) /2 = suc (n /2)
+  (suc n) /2 = n /2
+
+  _ : 2 /2 ≡ 1
+  _ = refl
+
+  _ : 10 /2 ≡ 5
+  _ = refl
+
+  _ : 11 /2 ≡ 5
+  _ = refl
+
+  _ : 12 /2 ≡ 6
+  _ = refl
