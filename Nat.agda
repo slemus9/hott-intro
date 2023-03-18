@@ -550,7 +550,7 @@ module Nat where
   div2-tail : Nat -> Nat -> Nat
   div2-tail acc zero = acc
   div2-tail acc (suc zero) = acc
-  div2-tail acc (suc (suc n)) = div2-tail n (suc acc)
+  div2-tail acc (suc (suc n)) = div2-tail (suc acc) n
 
   _ : 2 /2 ≡ 1
   _ = refl
