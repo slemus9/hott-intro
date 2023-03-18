@@ -536,8 +536,21 @@ module Nat where
   -}
   _/2 : Nat -> Nat
   zero /2 = zero
+  (suc zero) /2 = zero
   (suc (suc n)) /2 = suc (n /2)
-  (suc n) /2 = n /2
+
+  div2 : Nat -> Nat
+  div2 zero = zero
+  div2 (suc n) = go n
+    where
+      go : Nat -> Nat
+      go zero = zero
+      go (suc n) = suc (div2 n) 
+
+  div2-tail : Nat -> Nat -> Nat
+  div2-tail acc zero = acc
+  div2-tail acc (suc zero) = acc
+  div2-tail acc (suc (suc n)) = div2-tail n (suc acc)
 
   _ : 2 /2 ≡ 1
   _ = refl
