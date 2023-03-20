@@ -7,16 +7,16 @@ module Unit where
 
   {-
     Induction Principle
-    Ctx, x : Unit |- P x
+    Ctx, x : Unit |- P x type 
               Ctx |- p : P unit
     ----------------------------------------------
     Ctx, x : Unit |- ind(p, x) : (x : Unit) -> P x
 
     Computation rule:
-    Ctx, x : Unit |- P x
+    Ctx, x : Unit |- P x type
               Ctx |- p : P unit
     ------------------------------------------
-    Ctx, x : Unit |- ind(p, unit) = p : P unit
+    Ctx           |- ind(p, unit) = p : P unit
   -}
   ind-unit : {P : Unit -> Type} 
     -> (p : P unit)
