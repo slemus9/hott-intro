@@ -33,8 +33,8 @@ module Empty where
     We also say that a type A is empty if it comes equiped of an
     element of type ¬ A 
   -}
-  isEmpty : Type -> Type
-  isEmpty = ¬_
+  is-empty : Type -> Type
+  is-empty = ¬_
 
   -- Proposition 4.3.4
   contrapos : {P Q : Type}

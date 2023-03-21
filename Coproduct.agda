@@ -1,3 +1,5 @@
+open import Empty using (is-empty; ex-falso)
+
 module Coproduct where
 
   Type = Set
@@ -40,3 +42,23 @@ module Coproduct where
     -> (B -> C)
     -> A ⨄ B -> C
   fold-coprod = ind-coprod
+
+  function-sum : {A B C D : Type}
+    -> (A -> C)
+    -> (B -> D)
+    -> A ⨄ B -> C ⨄ D
+  function-sum f _ (inl a) = inl (f a)
+  function-sum _ g (inr b) = inr (g b)
+
+  -- Proposition 4.4.4
+  left-empty : {A B : Type}
+    -> is-empty A
+    -> A ⨄ B -> B
+  left-empty notA (inl a) = ex-falso (notA a)
+  left-empty _ (inr b) = b
+
+  right-empty : {A B : Type}
+    -> is-empty B
+    -> A ⨄ B -> A
+  right-empty _ (inl a) = a
+  right-empty notB (inr b) = ex-falso (notB b)
