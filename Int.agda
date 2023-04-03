@@ -82,6 +82,9 @@ module Int where
   x + in-pos zero = suc x
   x + in-pos (Nat.suc y) = suc x + (in-pos y)
 
+  _ : zero + (in-neg 10) ≡ (in-neg 10)
+  _ = refl
+
   _ : (in-neg 10) + zero ≡ (in-neg 10)
   _ = refl
 
@@ -101,3 +104,37 @@ module Int where
   - in-neg x = in-pos x
   - zero = zero
   - in-pos x = in-neg x
+
+  _-_ : Int -> Int -> Int
+  x - in-neg y = x + (in-pos y)
+  x - zero = x
+  x - in-pos y = x + (in-neg y)
+
+  {-
+    Exercise 4.1.c
+    multiplication    
+  -}
+  _*_ : Int -> Int -> Int
+  x * in-neg zero = - x
+  x * in-neg (Nat.suc y) = - (x + (x * in-pos y))
+  x * zero = zero
+  x * in-pos zero = x
+  x * in-pos (Nat.suc y) = x + (x * (in-pos y))
+
+  _ : zero * (in-neg 10) ≡ zero
+  _ = refl
+
+  _ :  (in-neg 10) * zero ≡ zero
+  _ = refl
+
+  _ : (in-pos 2) * (in-pos 3) ≡ (in-pos 11)
+  _ = refl 
+
+  _ : (in-neg 2) * (in-pos 3) ≡ (in-neg 11)
+  _ = refl
+
+  _ : (in-pos 2) * (in-neg 3) ≡ (in-neg 11)
+  _ = refl
+
+  _ : (in-neg 2) * (in-neg 3) ≡ (in-pos 11)
+  _ = refl
