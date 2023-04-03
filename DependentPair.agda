@@ -7,10 +7,10 @@ module DependentPair where
 
   -- Induction principle
   -- This is also the uncurrying function
-  indΣ : {A : Type} {B : A -> Type} {P : Σ A B -> Type}
+  ind-Σ : {A : Type} {B : A -> Type} {P : Σ A B -> Type}
     -> (∀ x -> ∀ y -> P (pair x y))
     -> (z : Σ A B) -> P z
-  indΣ f (pair x y) = f x y
+  ind-Σ f (pair x y) = f x y
 
   -- First projection map
   pr1 : {A : Type} {B : A -> Type}
