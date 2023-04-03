@@ -2,6 +2,7 @@ open import Function using (_∘_)
 open import Nat using (Nat; zero)
 open import Unit using (Unit; unit)
 open import Coproduct using (_⨄_; inr; inl)
+open import Equality using (_≡_; refl)
 
 module Int where
 
@@ -53,7 +54,7 @@ module Int where
       pposS n _ = in-pos (Nat.suc (Nat.suc n)) 
 
   {-
-    Exercise 4.1
+    Exercise 4.1.a
     Predecessor
   -}
   pred : Int -> Int
@@ -69,3 +70,34 @@ module Int where
       p1 = zero
       pposS : Nat -> Int -> Int
       pposS n _ = in-pos n
+
+  {-
+    Exercise 4.1.b
+    Group operations: add and neg
+  -}
+  _+_ : Int -> Int -> Int
+  x + in-neg zero = pred x
+  x + in-neg (Nat.suc y) = pred x + (in-neg y)
+  x + zero = x
+  x + in-pos zero = suc x
+  x + in-pos (Nat.suc y) = suc x + (in-pos y)
+
+  _ : (in-neg 10) + zero ≡ (in-neg 10)
+  _ = refl
+
+  _ : (in-pos 12) + (in-neg 5) ≡ (in-pos 6)
+  _ = refl
+
+  _ : (in-neg 1) + (in-neg 2) ≡ (in-neg 4)
+  _ = refl
+
+  _ : (in-neg 3) + (in-pos 5) ≡ (in-pos 1)
+  _ = refl
+
+  _ : (in-pos 3) + (in-neg 5) ≡ (in-neg 1)
+  _ = refl
+
+  -_ : Int -> Int
+  - in-neg x = in-pos x
+  - zero = zero
+  - in-pos x = in-neg x
