@@ -62,7 +62,7 @@ module Int where
       pneg1 : Int
       pneg1 = in-neg 1
       pnegS : Nat -> Int -> Int
-      pnegS n _ = in-neg (Nat.suc n)
+      pnegS n _ = in-neg (Nat.suc (Nat.suc n))
       p0 : Int
       p0 = neg-one
       p1 : Int
