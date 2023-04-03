@@ -5,6 +5,12 @@ module Function where
 
 Type = Set
 
+-- Bi-implication
+record _<==>_ (A B : Type) : Type where
+  field
+    to : A -> B
+    from : B -> A
+
 func-η : {A B : Type} 
   -> (f : A -> B)
   -> (λ x -> f x) ≡ f
