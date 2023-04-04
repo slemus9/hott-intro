@@ -66,3 +66,26 @@ module DoubleNegation where
 
       from : (P ⨄ (¬ P) -> Q -> P) -> ¬ ¬ (Q -> P)
       from f notImpl = notImpl λ q -> f (inr λ p -> notImpl (λ _ -> p)) q
+
+  {-
+    Exercise 4.3.e 
+    Show that ¬ P, P -> ¬ ¬ Q, and
+    ¬ ¬ P × ¬ ¬ Q are double negation stable
+  -}
+  stable1 : {P : Type}
+    -> ¬ ¬ ¬ P -> ¬ P
+  stable1 ¬¬¬p p = ¬¬¬p λ ¬p -> ¬p p
+
+  stable2 : {P Q : Type}
+    -> ¬ ¬ (P -> ¬ ¬ Q) -> P -> ¬ ¬ Q
+  stable2 ¬¬f p ¬q = ¬¬f λ f -> f p ¬q
+
+  stable3 : {P Q : Type}
+    -> ¬ ¬ ((¬ ¬ P) × (¬ ¬ Q)) -> (¬ ¬ P) × (¬ ¬ Q)
+  stable3 {P} {Q} ¬¬pair = pair fst snd
+    where
+      fst : ¬ ¬ P
+      fst ¬p = ¬¬pair λ { (pair ¬¬p _) -> ¬¬p ¬p } 
+
+      snd : ¬ ¬ Q
+      snd ¬q = ¬¬pair λ { (pair _ ¬¬q) -> ¬¬q ¬q } 
