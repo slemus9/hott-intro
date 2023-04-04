@@ -1,4 +1,4 @@
-open import Function using (_∘_)
+open import Function using (_∘_; _<==>_)
 open import Empty using (¬_; ex-falso)
 open import DependentPair using (_×_; pair)
 open import Coproduct using (_⨄_; inl; inr)
@@ -46,3 +46,23 @@ module DoubleNegation where
   classic4 : {P : Type}
     -> ¬ ¬ (P ⨄ (¬ P))
   classic4 notEM = notEM (inr λ p -> notEM (inl p))
+
+  {-
+    Exercise 4.3.d
+    Some classical laws with double negation
+  -}
+  em-implies-doubleneg : {P Q : Type}
+    -> P ⨄ (¬ P) -> ¬ ¬ P -> P
+  em-implies-doubleneg (inl p) _ = p
+  em-implies-doubleneg (inr notP) dnP = ex-falso (dnP notP)
+
+  classic5 : {P Q : Type}
+    -> (¬ ¬ (Q -> P)) <==> (P ⨄ (¬ P) -> Q -> P)
+  classic5 {P} {Q} = record {to = to; from = from}
+    where
+      to : (¬ ¬ (Q -> P)) -> P ⨄ (¬ P) -> Q -> P
+      to _ (inl p) _ = p
+      to dnImpl (inr notP) q = ex-falso (dnImpl λ f -> notP (f q))
+
+      from : (P ⨄ (¬ P) -> Q -> P) -> ¬ ¬ (Q -> P)
+      from f notImpl = notImpl λ q -> f (inr λ p -> notImpl (λ _ -> p)) q
