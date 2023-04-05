@@ -62,7 +62,7 @@ module List where
   map f = foldr nil (λ x -> λ next -> f x :: next)
 
   {-
-    Exercise 4.4.c
+    Exercise 4.4.d
     length
   -}
   length : {A : Type} -> List A -> Nat
@@ -72,8 +72,8 @@ module List where
   _ = refl 
 
   {-
-    Exercise 4.4.d
-    length
+    Exercise 4.4.e
+    sum and product
   -}
   sum : List Nat -> Nat
   sum = foldr 0 _+_
@@ -85,4 +85,16 @@ module List where
   _ = refl
 
   _ : product (4 :: 5 :: 1 :: 2 :: nil) ≡ 40
+  _ = refl
+
+  {-
+    Exercise 4.4.f
+    concatenate two lists
+  -}
+  _++_ : {A : Type} -> List A -> List A -> List A
+  xs ++ ys = foldr ys _::_ xs
+
+  infixr 5 _++_
+
+  _ : (1 :: 10 :: 4 :: 5 :: nil) ++ (3 :: 2 :: 9 :: nil) ≡ (1 :: 10 :: 4 :: 5 :: 3 :: 2 :: 9 :: nil)
   _ = refl
