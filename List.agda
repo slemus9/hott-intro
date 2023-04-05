@@ -98,3 +98,23 @@ module List where
 
   _ : (1 :: 10 :: 4 :: 5 :: nil) ++ (3 :: 2 :: 9 :: nil) ≡ (1 :: 10 :: 4 :: 5 :: 3 :: 2 :: 9 :: nil)
   _ = refl
+
+  {-
+    Exercise 4.4.g
+    concatenate two lists
+  -}
+  flatten : {A : Type} -> List (List A) -> List A
+  flatten = foldr nil _++_
+
+  _ : flatten ((1 :: 2 :: 3 :: nil) :: (4 :: nil) :: (5 :: 6 :: nil) :: nil) ≡ (1 :: 2 :: 3 :: 4 :: 5 :: 6 :: nil)
+  _ = refl 
+
+  {-
+    Exercise 4.4.h
+    concatenate two lists
+  -}
+  reverse : {A : Type} -> List A -> List A
+  reverse xs = foldr id (λ x -> λ next -> λ acc -> next (x :: acc)) xs nil
+
+  _ : reverse (1 :: 2 :: 3 :: 4 :: 5 :: nil) ≡ (5 :: 4 :: 3 :: 2 :: 1 :: nil)
+  _ = refl
