@@ -1,4 +1,4 @@
-open import Nat using (Nat; zero; suc)
+open import Nat using (Nat; zero; suc; _+_; _*_)
 open import Function using (id)
 open import Equality using (_≡_; refl)
 
@@ -70,3 +70,19 @@ module List where
 
   _ : length (4 :: 5 :: 1 :: 2 :: 6 :: 10 :: nil) ≡ 6
   _ = refl 
+
+  {-
+    Exercise 4.4.d
+    length
+  -}
+  sum : List Nat -> Nat
+  sum = foldr 0 _+_
+
+  product : List Nat -> Nat
+  product = foldr 1 _*_
+
+  _ : sum (4 :: 5 :: 1 :: 2 :: 6 :: 10 :: nil) ≡ 28
+  _ = refl
+
+  _ : product (4 :: 5 :: 1 :: 2 :: nil) ≡ 40
+  _ = refl
