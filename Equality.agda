@@ -1,3 +1,4 @@
+-- Taken from Programming Language Foundations in Agda: https://plfa.github.io/
 module Equality where
 
 Type = Set
