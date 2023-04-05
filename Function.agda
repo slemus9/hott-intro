@@ -1,4 +1,4 @@
-open import Equality using (_≡_; refl; cong; cong-app)
+open import Equality using (_≡_; refl; cong)
 open Equality.≡-Reasoning
 
 module Function where
