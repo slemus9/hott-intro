@@ -1,3 +1,7 @@
+open import Nat using (Nat; zero; suc)
+open import Function using (id)
+open import Equality using (_≡_; refl)
+
 module List where
 
   Type = Set 
@@ -5,6 +9,8 @@ module List where
   data List (A : Type) : Type where
     nil : List A
     _::_ : A -> List A -> List A
+
+  infixr 5 _::_
 
   {-
     Exercise 4.4.a
@@ -38,9 +44,29 @@ module List where
 
   {-
     Exercise 4.4.b
+    fold
   -}
   foldr : {A B : Type}
     -> B
     -> (A -> B -> B)
     -> List A -> B
   foldr z op = ind-list z (λ x -> λ _ -> λ next -> op x next)
+
+  {-
+    Exercise 4.4.c
+    map
+  -}
+  map : {A B : Type}
+    -> (A -> B)
+    -> List A -> List B
+  map f = foldr nil (λ x -> λ next -> f x :: next)
+
+  {-
+    Exercise 4.4.c
+    length
+  -}
+  length : {A : Type} -> List A -> Nat
+  length = foldr zero (λ _ -> λ next -> suc next)
+
+  _ : length (4 :: 5 :: 1 :: 2 :: 6 :: 10 :: nil) ≡ 6
+  _ = refl 
