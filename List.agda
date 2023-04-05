@@ -111,7 +111,7 @@ module List where
 
   {-
     Exercise 4.4.h
-    concatenate two lists
+    reverse a list
   -}
   reverse : {A : Type} -> List A -> List A
   reverse xs = foldr id (λ x -> λ next -> λ acc -> next (x :: acc)) xs nil
