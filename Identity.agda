@@ -1,6 +1,7 @@
 {-# OPTIONS --rewriting #-}
 
 open import Function using (id; _∘_)
+open import DependentPair using (Σ; pair)
 
 module Identity where
 
@@ -145,3 +146,31 @@ module Identity where
       -> (q : y ≡ z)
       -> ap f (concat p q) ≡ concat (ap f p) (ap f q)
     ap-concat f refl refl = refl
+
+  {-
+    Transport.
+    We can trasport any element b : B x to the fiber B y
+  -}
+  tr : {A : Type} {B : A -> Type} {x y : A}
+    -> x ≡ y
+    -> B x -> B y
+  tr refl = id
+
+  -- Dependent action on paths
+  adp : {A : Type} {B : A -> Type} {x y : A}
+    -> (f : ∀ a -> B a)
+    -> (p : x ≡ y)
+    -> tr p (f x) ≡ f y
+  adp f refl = refl
+
+  {-
+    We cannot show that p ≡ refl-of a for any p : a ≡ a,
+    but we can show that the pair (a, relf-of a) is unique;
+    that is, there is (up to identification) only one element in 
+    Σ-type of the identity type. These types are called contractible
+  -}
+  uniq-Σ-identification : {A : Type}
+    -> (a : A)
+    -> (y : Σ A (a ≡_))
+    -> (pair a refl) ≡ y
+  uniq-Σ-identification a (pair .a refl) = refl
