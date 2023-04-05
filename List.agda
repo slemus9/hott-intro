@@ -27,7 +27,7 @@ module List where
     Ctx               |- pNil : P nil
     Ctx               |- pCons : (x : A) -> (xs : List A) -> P xs -> P (x :: xs)
     -----------------------------------------------------------------
-    Ctx                     |- ind-list(pNil, pCons, nil) = pNil : P nil
+    Ctx               |- ind-list(pNil, pCons, nil) = pNil : P nil
 
     Ctx, xs : List A  |- P xs type
     Ctx               |- pNil : P nil
