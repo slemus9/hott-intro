@@ -44,3 +44,16 @@ distrib-inv : {A : Type} {x y z : A}
 distrib-inv refl q
   rewrite right-unit (inv q)
   | left-unit q = refl
+
+{-
+  Exercise 5.2
+-}
+inv-con : {A : Type} {x y z : A}
+  -> (p : x ≡ y)
+  -> (q : y ≡ z)
+  -> (r : x ≡ z)
+  -> concat p q ≡ r -> q ≡ concat (inv p) r
+inv-con p q .(concat p q) refl 
+  rewrite inv (assoc (inv p) p q)
+  | left-inv p
+  | left-unit q = refl
