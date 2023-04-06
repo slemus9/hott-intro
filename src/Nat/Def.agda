@@ -46,6 +46,9 @@ _*_ : Nat -> Nat -> Nat
 m * zero = zero
 m * suc n = m + (m * n)
 
+infixl 6  _+_
+infixl 7  _*_
+
 -- Exponentiation
 _^_ : Nat -> Nat -> Nat
 m ^ zero = 1
