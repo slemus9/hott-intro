@@ -33,3 +33,14 @@ right-inv : {A : Type} {x y : A}
   -> (p : x ≡ y)
   -> concat p (inv p) ≡ refl
 right-inv refl = refl
+
+{-
+  Exercise 5.1
+-}
+distrib-inv : {A : Type} {x y z : A}
+  -> (p : x ≡ y)
+  -> (q : y ≡ z)
+  -> inv (concat p q) ≡ concat (inv q) (inv p)
+distrib-inv refl q
+  rewrite right-unit (inv q)
+  | left-unit q = refl

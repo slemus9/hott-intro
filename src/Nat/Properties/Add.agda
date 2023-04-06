@@ -51,4 +51,3 @@ commutative m zero
   rewrite left-unit m = refl
 commutative m (suc n)
   rewrite left-suc n m = ap suc (commutative m n)
-
