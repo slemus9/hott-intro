@@ -57,3 +57,13 @@ inv-con p q .(concat p q) refl
   rewrite inv (assoc (inv p) p q)
   | left-inv p
   | left-unit q = refl
+
+con-inv : {A : Type} {x y z : A}
+  -> (p : x ≡ y)
+  -> (q : y ≡ z)
+  -> (r : x ≡ z)
+  -> concat p q ≡ r -> p ≡ concat r (inv q)
+con-inv p q .(concat p q) refl
+  rewrite assoc p q (inv q)
+  | right-inv q 
+  | right-unit p = refl

@@ -109,3 +109,13 @@ uniq-Σ-identification : {A : Type}
   -> (y : Σ A (a ≡_))
   -> (a , refl) ≡ y
 uniq-Σ-identification a (.a , refl) = refl
+
+{-
+  Exercise 5.3
+-}
+lift : {A : Type} {B : A -> Type} {a x : A}
+  -> (p : a ≡ x)
+  -> (b : B a)
+  -> Σ A B
+lift {_} {_} {_} {x} p b = x , tr p b
+ 
