@@ -51,3 +51,18 @@ left-suc m (suc n)
   rewrite Add.left-suc m (suc m * n)
   | left-suc m n
   | inv (Add.assoc m (m * n) n)  = refl
+
+{-
+    m * (suc n)
+  = m + m * n
+  = m + n * m
+
+  (suc n) * m
+  = (n * m) + m
+-}
+commutative : (m n : Nat) -> m * n ≡ n * m
+commutative m zero 
+  rewrite left-zero m = refl
+commutative m (suc n)
+  rewrite left-suc n m
+  | Add.commutative (n * m) m = ap (m +_) (commutative m n)
