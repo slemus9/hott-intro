@@ -112,6 +112,8 @@ uniq-Σ-identification a (.a , refl) = refl
 
 {-
   Exercise 5.3
+  Analogous to the path lifting property for fibrations in
+  homotopy theory
 -}
 lift : {A : Type} {B : A -> Type} {a x : A}
   -> (p : a ≡ x)
