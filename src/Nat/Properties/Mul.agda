@@ -108,3 +108,18 @@ distrib-+-right m n (suc k)
   | Add.commutative n (m * k)
   | Add.assoc (m * k) n (n * k)
   | inv (Add.assoc m (m * k) (n + n * k)) = refl
+
+{-
+    (m * n) * suc k
+  = (m * n) + ((m * n) * k)
+  = (m * n) + (m * (n * k))
+
+    m * (n * suc k)
+  = m * (n + n * k)
+  = m * n + m * (n * k)
+-}
+assoc : (m n k : Nat) -> (m * n) * k ≡ m * (n * k)
+assoc m n zero = refl
+assoc m n (suc k)
+  rewrite distrib-+-left m n (n * k)
+  | assoc m n k = refl
