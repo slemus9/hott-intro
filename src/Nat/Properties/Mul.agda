@@ -66,3 +66,45 @@ commutative m zero
 commutative m (suc n)
   rewrite left-suc n m
   | Add.commutative (n * m) m = ap (m +_) (commutative m n)
+
+{-
+    suc m * (n + k)
+  = (m * (n + k)) + n + k
+  = (m * n + m * k) + n + k
+
+    suc m * n + suc m * k
+  = ((m * n) + n) + (m * k) + k
+-}
+distrib-+-left : (m n k : Nat) -> m * (n + k) ≡ m * n + m * k
+distrib-+-left zero n k
+  rewrite left-zero n
+  | left-zero k
+  | left-zero (n + k) = refl
+distrib-+-left (suc m) n k
+  rewrite left-suc m (n + k)
+  | left-suc m n
+  | left-suc m k
+  | distrib-+-left m n k
+  | Add.assoc (m * n) (m * k) (n + k)
+  | inv (Add.assoc (m * k) n k) 
+  | Add.commutative (m * k) n 
+  | Add.assoc n (m * k) k
+  | inv (Add.assoc (m * n) n (m * k + k)) = refl
+
+{-
+    (m + n) * suc k
+  = (m + n) + ((m + n) * k)
+  = (m + n) + (m * k + n * k)
+
+    m * (suc k) + n * (suc k)
+  = (m + m * k) + (n + n * k)
+-}
+distrib-+-right : (m n k : Nat) -> (m + n) * k ≡ m * k + n * k
+distrib-+-right m n zero = refl
+distrib-+-right m n (suc k)
+  rewrite distrib-+-right m n k
+  | Add.assoc m n (m * k + n * k)
+  | inv (Add.assoc n (m * k) (n * k))
+  | Add.commutative n (m * k)
+  | Add.assoc (m * k) n (n * k)
+  | inv (Add.assoc m (m * k) (n + n * k)) = refl
