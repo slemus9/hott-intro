@@ -81,6 +81,8 @@ x + zero = x
 x + in-pos zero = suc x
 x + in-pos (Nat.suc y) = suc (x + (in-pos y))
 
+infixl 6  _+_
+
 _ : zero + (in-neg 10) ≡ (in-neg 10)
 _ = refl
 
@@ -108,6 +110,8 @@ _-_ : Int -> Int -> Int
 x - in-neg y = x + (in-pos y)
 x - zero = x
 x - in-pos y = x + (in-neg y)
+
+infixl 6  _-_
 
 {-
   Exercise 4.1.c
@@ -137,3 +141,5 @@ _ = refl
 
 _ : (in-neg 2) * (in-neg 3) ≡ (in-pos 11)
 _ = refl
+
+infixl 7  _*_
