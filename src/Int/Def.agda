@@ -76,10 +76,10 @@ pred = ind-int pneg1 pnegS p0 p1 pposS
 -}
 _+_ : Int -> Int -> Int
 x + in-neg zero = pred x
-x + in-neg (Nat.suc y) = pred x + (in-neg y)
+x + in-neg (Nat.suc y) = pred (x + (in-neg y))
 x + zero = x
 x + in-pos zero = suc x
-x + in-pos (Nat.suc y) = suc x + (in-pos y)
+x + in-pos (Nat.suc y) = suc (x + (in-pos y))
 
 _ : zero + (in-neg 10) ≡ (in-neg 10)
 _ = refl
