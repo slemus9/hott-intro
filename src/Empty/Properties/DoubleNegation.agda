@@ -1,7 +1,7 @@
-open import Empty.Def using (¬_; ex-falso)
-open import Function.Def using (_∘_; _<==>_)
-open import DependentPair.Def using (_×_; _,_)
-open import Coproduct.Def using (_⨄_; inl; inr)
+open import Empty using (¬_; ex-falso)
+open import Function using (_∘_; _<==>_)
+open import DependentPair using (_×_; _,_)
+open import Coproduct using (_⨄_; inl; inr)
 
 module Empty.Properties.DoubleNegation where
 

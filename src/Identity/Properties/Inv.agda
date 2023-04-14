@@ -1,4 +1,4 @@
-open import Identity.Def using (_≡_; refl; refl-of; inv)
+open import Identity using (_≡_; refl; refl-of; inv)
 
 module Identity.Properties.Inv where
 

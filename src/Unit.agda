@@ -1,4 +1,4 @@
-module Unit.Def where
+module Unit where
 
 Type = Set
 

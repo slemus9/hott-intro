@@ -1,4 +1,4 @@
-module Function.Def where
+module Function where
 
 Type = Set
 

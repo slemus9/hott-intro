@@ -1,4 +1,4 @@
-open import Identity.Def using (_≡_)
+open import Identity using (_≡_)
 
 module Function.Extensionality where
 

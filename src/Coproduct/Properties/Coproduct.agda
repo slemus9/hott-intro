@@ -1,5 +1,5 @@
-open import Coproduct.Def using (_⨄_; inl; inr)
-open import Empty.Def using (is-empty; ex-falso)
+open import Coproduct using (_⨄_; inl; inr)
+open import Empty using (is-empty; ex-falso)
 
 module Coproduct.Properties.Coproduct where
 

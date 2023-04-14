@@ -1,4 +1,4 @@
-module Coproduct.Def where
+module Coproduct where
 
 Type = Set
 

@@ -1,9 +1,9 @@
-open import Function.Def using (_∘_)
-open import Nat.Def using (Nat; zero)
-open import Coproduct.Def using (_⨄_; inr; inl)
-open import Identity.Def using (_≡_; refl)
+open import Function using (_∘_)
+open import Nat using (Nat; zero)
+open import Coproduct using (_⨄_; inr; inl)
+open import Identity using (_≡_; refl)
 
-module Int.Def where
+module Int where
 
 Type = Set
 

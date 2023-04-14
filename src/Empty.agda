@@ -1,4 +1,4 @@
-module Empty.Def where
+module Empty where
 
 Type = Set
 

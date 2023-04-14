@@ -1,6 +1,6 @@
-open import Empty.Def using (¬_)
-open import Function.Def using (_∘_; _<==>_)
-open import DependentPair.Def using (_×_; _,_)
+open import Empty using (¬_)
+open import Function using (_∘_; _<==>_)
+open import DependentPair using (_×_; _,_)
 
 module Empty.Properties.Negation where
 

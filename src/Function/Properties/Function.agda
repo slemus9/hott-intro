@@ -1,4 +1,4 @@
-open import Identity.Def using (_≡_; refl)
+open import Identity using (_≡_; refl)
 
 module Function.Properties.Function where
 

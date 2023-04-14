@@ -1,6 +1,6 @@
-open import Function.Def using (const; _∘_)
+open import Function using (const; _∘_)
 open import Function.Extensionality using (∀-extensionality)
-open import Identity.Def using (_≡_)
+open import Identity using (_≡_)
 open import Identity.Reasoning
 
 module Function.Properties.Const where

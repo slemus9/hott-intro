@@ -1,4 +1,4 @@
-module Nat.Def where
+module Nat where
 
 Type = Set
 

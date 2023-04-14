@@ -1,6 +1,6 @@
-open import Int.Def using (Int; in-neg; in-pos; zero; suc; pred)
-import Nat.Def as Nat
-open import Identity.Def using (_≡_; refl)
+import Nat
+open import Int using (Int; in-neg; in-pos; zero; suc; pred)
+open import Identity using (_≡_; refl)
 
 {-
   Exercise 5.6

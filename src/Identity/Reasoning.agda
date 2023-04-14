@@ -1,4 +1,4 @@
-open import Identity.Def using (_≡_; refl; trans)
+open import Identity using (_≡_; refl; trans)
 
 module Identity.Reasoning {A : Set} where
 

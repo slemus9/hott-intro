@@ -1,5 +1,5 @@
-open import Nat.Def using (Nat; zero; suc; ind-nat; _+_)
-open import Identity.Def using (_≡_; refl; ap)
+open import Nat using (Nat; zero; suc; ind-nat; _+_)
+open import Identity using (_≡_; refl; ap)
 
 module Nat.Properties.Add where
 

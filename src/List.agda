@@ -1,8 +1,8 @@
-open import Nat.Def using (Nat; zero; suc; _+_; _*_)
-open import Function.Def using (id)
-open import Identity.Def using (_≡_; refl)
+open import Nat using (Nat; zero; suc; _+_; _*_)
+open import Function using (id)
+open import Identity using (_≡_; refl)
 
-module List.Def where
+module List where
 
 Type = Set 
 

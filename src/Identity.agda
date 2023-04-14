@@ -1,7 +1,7 @@
-open import Function.Def using (id)
-open import DependentPair.Def using (Σ; _,_)
+open import Function using (id)
+open import DependentPair using (Σ; _,_)
 
-module Identity.Def where
+module Identity where
 
 Type = Set
 

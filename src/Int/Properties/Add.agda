@@ -1,7 +1,7 @@
-open import Int.Def
+import Nat
+open import Int
 open import Int.Properties.Suc
-import Nat.Def as Nat
-open import Identity.Def using (_≡_; refl; inv; ap)
+open import Identity using (_≡_; refl; inv; ap)
 open import Identity.Reasoning
 
 module Int.Properties.Add where

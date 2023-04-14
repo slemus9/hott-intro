@@ -1,4 +1,4 @@
-open import Identity.Def using (_≡_; refl; concat)
+open import Identity using (_≡_; refl; concat)
 open import Identity.Properties.Concat using (assoc)
 
 {-

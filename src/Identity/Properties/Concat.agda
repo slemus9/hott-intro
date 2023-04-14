@@ -1,4 +1,4 @@
-open import Identity.Def using (_≡_; refl; concat; inv)
+open import Identity using (_≡_; refl; concat; inv)
 open import Identity.Reasoning
 
 module Identity.Properties.Concat where

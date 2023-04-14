@@ -1,6 +1,6 @@
-open import Nat.Def using (Nat; zero; suc; _+_; _*_)
+open import Nat using (Nat; zero; suc; _+_; _*_)
 import Nat.Properties.Add as Add 
-open import Identity.Def using (_≡_; refl; ap; inv)
+open import Identity using (_≡_; refl; ap; inv)
 
 {-
   Exercise 5.5

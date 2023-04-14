@@ -1,4 +1,4 @@
-module DependentPair.Def where
+module DependentPair where
 
 Type = Set
 

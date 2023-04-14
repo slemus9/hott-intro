@@ -1,4 +1,4 @@
-module Bool.Def where
+module Bool where
   
 Type = Set
 

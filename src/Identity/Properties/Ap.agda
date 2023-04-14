@@ -1,5 +1,5 @@
-open import Identity.Def using (_≡_; refl; refl-of; ap; inv; concat)
-open import Function.Def using (id; _∘_)
+open import Identity using (_≡_; refl; refl-of; ap; inv; concat)
+open import Function using (id; _∘_)
 
 module Identity.Properties.Ap where
 

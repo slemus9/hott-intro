@@ -1,7 +1,7 @@
-open import Empty.Def using (¬_)
-open import Function.Def using (_∘_)
+open import Empty using (¬_)
+open import Function using (_∘_)
 
-module Empty.DoubleNegation.Def where
+module Empty.DoubleNegation where
 
 Type = Set
 

@@ -1,6 +1,6 @@
-open import Nat.Def
-open import Function.Def using (id)
-open import Identity.Def using (_≡_; refl; cong)
+open import Nat
+open import Function using (id)
+open import Identity using (_≡_; refl; cong)
 open import Identity.Reasoning
 
 -- Module that contains some exercises using the induction principle
