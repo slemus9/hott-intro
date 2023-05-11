@@ -157,3 +157,60 @@ module Int.Properties.Add where
     = suc (suc (x + in-pos y))
   -}
   suc-left x (in-pos (Nat.suc y)) rewrite suc-left x (in-pos y) = refl
+
+  {-
+    Exercise 5.7.c
+    Associativity and Commutativity
+  -}
+  assoc : ∀ x y z -> (x + y) + z ≡ x + (y + z)
+  {-
+    (x + y) + in-neg zero = pred (x + y)
+    x + (y + in-neg zero) = x + pred y
+  -}
+  assoc x y (in-neg Nat.zero) rewrite pred-right x y = refl
+  {-
+      (x + y) + in-neg (suc z)
+    = pred((x + y) + in-neg z)
+    = pred(x + (y + in-neg z)) [I.H]
+    = x + (pred (y + in-neg z)) [pred-right]
+
+      x + (y + in-neg (suc z))
+    = x + (pred (y + in-neg z))
+  -}
+  assoc x y (in-neg (Nat.suc z))
+    rewrite assoc x y (in-neg z)
+    | pred-right x (y + in-neg z) = refl
+  assoc x y zero = refl
+  {-
+    (x + y) + in-pos zero = suc (x + y)
+    x + (y + in-pos zero) = x + (suc y)
+  -}
+  assoc x y (in-pos Nat.zero) rewrite suc-right x y = refl
+  {-
+      (x + y) + in-pos (suc z)
+    = suc ((x + y) + in-pos z)
+    = suc (x + (y + in-pos z)) [I.H]
+    = x + suc (y + in-pos z) [suc-right]
+
+      x + (y + in-pos (suc z))
+    = x + suc (y + in-pos z)
+  -}
+  assoc x y (in-pos (Nat.suc z))
+    rewrite assoc x y (in-pos z)
+    | suc-right x (y + in-pos z) = refl
+
+  pred-zero : in-neg Nat.zero ≡ pred zero
+  pred-zero = refl
+
+  commutative : ∀ x y -> x + y ≡ y + x
+  {-
+    x + in-neg zero = pred x
+    in-neg zero + x = pred zero + x = pred (zero + x) = pred x
+  -}
+  commutative x (in-neg Nat.zero)
+    rewrite pred-zero
+    | pred-left zero x
+    | left-unit x = refl
+  commutative x (in-neg (Nat.suc y)) = {!   !}
+  commutative x zero = {!   !}
+  commutative x (in-pos y) = {!   !}
