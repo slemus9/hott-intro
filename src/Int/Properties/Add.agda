@@ -94,3 +94,66 @@ module Int.Properties.Add where
     ≡⟨⟩
       pred (x + in-pos (Nat.suc y))
     ∎
+
+  suc-right : ∀ x y -> x + suc y ≡ suc (x + y)
+  {-
+    x + (suc (in-neg zero)) = x + zero = x
+    suc (x + (in-neg zero)) = suc (pred x) = x  
+  -}
+  suc-right x (in-neg Nat.zero) rewrite suc-pred x = refl
+  {-
+      x + suc (in-neg (suc y))
+    = x + in-neg y
+
+      suc (x + in-neg (suc y))
+    = suc (pred (x + in-neg y))
+    = x + in-neg y
+  -}
+  suc-right x (in-neg (Nat.suc y)) 
+    rewrite suc-pred (x + in-neg y) = refl
+  suc-right x zero = refl
+  -- x + suc (in-pos zero) = x + in-pos (suc zero) = suc (x + in-pos zero)
+  suc-right x (in-pos Nat.zero) = refl
+  {-
+      x + suc (in-pos (suc y))
+    = x + in-pos (suc (suc y))
+    = suc (x + in-pos (suc y))
+    = suc (suc (x + in-pos y))
+
+      suc (x + in-pos (suc y))
+    = suc (suc (x + in-pos y))
+  -}
+  suc-right x (in-pos (Nat.suc y)) = refl
+
+  suc-left : ∀ x y -> suc x + y ≡ suc (x + y)
+  {-
+    suc x + in-neg zero = pred (suc x) = x
+    suc (x + in-neg zero) = suc (pred x) = x
+  -}
+  suc-left x (in-neg Nat.zero) rewrite suc-pred-eq x = refl
+  {-
+      suc x + in-neg (suc y)
+    = pred (suc x + in-neg y)
+    = pred (suc (x + in-neg y)) [I.H]
+
+      suc (x + in-neg (suc y))
+    = suc (pred (x + in-neg y))
+  -}
+  suc-left x (in-neg (Nat.suc y))
+    rewrite suc-left x (in-neg y)
+    | suc-pred-eq (x + in-neg y) = refl
+  suc-left x zero = refl
+  {-
+    suc x + in-pos zero = suc (suc x)
+    suc (x + in-pos zero) = suc (suc x)
+  -}
+  suc-left x (in-pos Nat.zero) = refl
+  {-
+      suc x + in-pos (suc y)
+    = suc (suc x + in-pos y)
+    = suc (suc (x + in-pos y)) [I.H]
+
+      suc (x + in-pos (suc y))
+    = suc (suc (x + in-pos y))
+  -}
+  suc-left x (in-pos (Nat.suc y)) rewrite suc-left x (in-pos y) = refl
