@@ -107,9 +107,7 @@ _ = refl
 - in-pos x = in-neg x
 
 _-_ : Int -> Int -> Int
-x - in-neg y = x + (in-pos y)
-x - zero = x
-x - in-pos y = x + (in-neg y)
+x - y = x + (- y)
 
 infixl 6  _-_
 
