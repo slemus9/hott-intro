@@ -202,6 +202,17 @@ module Int.Properties.Add where
   pred-zero : in-neg Nat.zero ≡ pred zero
   pred-zero = refl
 
+  pred-in-neg-suc : ∀ x -> in-neg (Nat.suc x) ≡ pred (in-neg x)
+  pred-in-neg-suc Nat.zero = refl
+  pred-in-neg-suc (Nat.suc x) = refl
+
+  suc-zero : in-pos Nat.zero ≡ suc zero
+  suc-zero = refl
+
+  suc-in-pos-suc : ∀ x -> in-pos (Nat.suc x) ≡ suc (in-pos x)
+  suc-in-pos-suc Nat.zero = refl
+  suc-in-pos-suc (Nat.suc x) = refl
+
   commutative : ∀ x y -> x + y ≡ y + x
   {-
     x + in-neg zero = pred x
@@ -211,6 +222,38 @@ module Int.Properties.Add where
     rewrite pred-zero
     | pred-left zero x
     | left-unit x = refl
-  commutative x (in-neg (Nat.suc y)) = {!   !}
-  commutative x zero = {!   !}
-  commutative x (in-pos y) = {!   !}
+  {-
+      x + (in-neg (suc y))
+    = pred (x + in-neg y)
+
+      in-neg (suc y) + x
+    = pred (in-neg y) + x [pred-in-neg-suc]
+    = pred (in-neg y + x) [pred-left]
+    = pred (x + in-neg y) [I.H]
+  -}
+  commutative x (in-neg (Nat.suc y))
+    rewrite commutative x (in-neg y)
+    | pred-in-neg-suc y
+    | pred-left (in-neg y) x = refl
+  commutative x zero rewrite left-unit x = refl
+  {-
+    x + (in-pos zero) = suc x
+    (in-pos zero) + x = suc zero + x = suc (zero + x) = suc x
+  -}
+  commutative x (in-pos Nat.zero)
+    rewrite suc-zero
+    | suc-left zero x
+    | left-unit x = refl
+  {-
+      x + (in-pos (suc y))
+    = suc (x + in-pos y)
+
+      in-pos (suc y) + x
+    = suc (in-pos y) + x
+    = suc (in-pos y + x)
+    = suc (x + in-pos y) [I.H]
+  -}
+  commutative x (in-pos (Nat.suc y))
+    rewrite commutative x (in-pos y)
+    | suc-in-pos-suc y
+    | suc-left (in-pos y) x = refl
