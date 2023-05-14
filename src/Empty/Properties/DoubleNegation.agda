@@ -1,31 +1,10 @@
+open import Empty.DoubleNegation
 open import Empty using (¬_; ex-falso)
 open import Function using (_∘_; _<==>_)
 open import DependentPair using (_×_; _,_)
 open import Coproduct using (_⨄_; inl; inr)
 
 module Empty.Properties.DoubleNegation where
-
-Type = Set
-
-{-
-  Exercise 4.3.b
-  Double negation monad
--}
-pure : {P : Type}
-  -> P -> ¬ ¬ P
-pure p notP = notP p
-
-_>>=_ : {P Q : Type}
-  -> ¬ ¬ P -> (P -> ¬ ¬ Q) -> ¬ ¬ Q
-(dnP >>= f) notQ = dnP (λ p -> f p notQ)
-
-map : {P Q : Type}
-  -> (P -> Q) -> ¬ ¬ P -> ¬ ¬ Q
-map f dnP = dnP >>= (pure ∘ f)
-
-_=<<_ : {P Q : Type}
-  -> (P -> ¬ ¬ Q) -> ¬ ¬ P -> ¬ ¬ Q
-f =<< dnP = dnP >>= f
 
 {-
   Exercise 4.3.c
