@@ -4,6 +4,7 @@ open import Int.Properties.Suc
 open import Identity using (_≡_; refl; inv; ap)
 open import Identity.Reasoning
 
+-- TODO: use better module organization
 module Int.Properties.Add where
 
   {-
@@ -257,3 +258,50 @@ module Int.Properties.Add where
     rewrite commutative x (in-pos y)
     | suc-in-pos-suc y
     | suc-left (in-pos y) x = refl
+
+  {-
+    Exercise 5.7.d
+    Left and right inverses
+  -}
+  neg-inv : ∀ n -> in-neg n ≡ (- in-pos n)
+  neg-inv n = refl
+
+  pos-inv : ∀ n -> in-pos n ≡ (- in-neg n) 
+  pos-inv n = refl
+
+  left-inv : ∀ x -> (- x) + x ≡ zero
+  -- (- in-neg zero) + (in-neg zero) = in-pos zero + in-neg zero = pred (in-pos zero) = zero
+  left-inv (in-neg Nat.zero) = refl
+  -- TODO: Check why rewriting generates an error with the termination checker
+  left-inv (in-neg (Nat.suc x)) = 
+    begin
+      pred (in-pos (Nat.suc x) + in-neg x)
+    ≡⟨ ap pred (commutative (in-pos (Nat.suc x)) (in-neg x)) ⟩
+      pred (in-neg x + in-pos (Nat.suc x))
+    ≡⟨⟩
+      pred (suc (in-neg x + in-pos x))
+    ≡⟨ pred-suc (in-neg x + in-pos x) ⟩
+      in-neg x + in-pos x
+    ≡⟨ ap (_+ in-pos x) (neg-inv x) ⟩
+      (- in-pos x) + in-pos x
+    ≡⟨ left-inv (in-pos x) ⟩
+      zero
+    ∎
+  left-inv zero = refl
+  left-inv (in-pos Nat.zero) = refl
+  left-inv (in-pos (Nat.suc x)) = begin
+      suc (in-neg (Nat.suc x) + in-pos x)
+    ≡⟨ ap suc (commutative (in-neg (Nat.suc x)) (in-pos x)) ⟩
+      suc (in-pos x + in-neg (Nat.suc x))
+    ≡⟨⟩
+      suc (pred (in-pos x + in-neg x))
+    ≡⟨ suc-pred (in-pos x + in-neg x) ⟩
+      in-pos x + in-neg x
+    ≡⟨ ap (_+ in-neg x) (pos-inv x) ⟩
+      (- in-neg x) + in-neg x
+    ≡⟨ left-inv (in-neg x) ⟩
+      zero
+    ∎
+
+  right-inv : ∀ x -> x + (- x) ≡ zero
+  right-inv x rewrite commutative x (- x) = left-inv x
