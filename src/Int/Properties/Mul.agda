@@ -47,3 +47,22 @@ left-zero (in-neg (Nat.suc x)) rewrite left-zero (in-pos x) = refl
 left-zero zero = refl
 left-zero (in-pos Nat.zero) = refl
 left-zero (in-pos (Nat.suc x)) rewrite left-zero (in-pos x) = refl
+
+{-
+  Exercise 5.8.b
+
+  predecessor and successor laws
+-}
+right-pred : ∀ x y -> x * pred y ≡ x * y - x
+{-
+    x * pred (in-neg zero) 
+  = x * (in-neg (suc zero))
+  = - (x + x * in-pos zero)
+  = - (x + x)
+  
+  x * in-neg zero - x = (- x) - x = (- x) + (- x)
+-}
+right-pred x (in-neg Nat.zero) = {!   !}
+right-pred x (in-neg (Nat.suc y)) = {!   !}
+right-pred x zero = {!   !}
+right-pred x (in-pos y) = {!   !}

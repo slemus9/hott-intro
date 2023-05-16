@@ -38,16 +38,12 @@ suc-pos : ∀ n -> suc (in-pos n) ≡ in-pos (Nat.suc n)
 suc-pos Nat.zero = refl
 suc-pos (Nat.suc n) = refl
 
+suc-neg : ∀ n -> suc (in-neg (Nat.suc n)) ≡ in-neg n
+suc-neg Nat.zero = refl
+suc-neg (Nat.suc n) = refl
+
 pred-zero : in-neg Nat.zero ≡ pred zero
 pred-zero = refl
 
-pred-in-neg-suc : ∀ x -> in-neg (Nat.suc x) ≡ pred (in-neg x)
-pred-in-neg-suc Nat.zero = refl
-pred-in-neg-suc (Nat.suc x) = refl
-
 suc-zero : in-pos Nat.zero ≡ suc zero
 suc-zero = refl
-
-suc-in-pos-suc : ∀ x -> in-pos (Nat.suc x) ≡ suc (in-pos x)
-suc-in-pos-suc Nat.zero = refl
-suc-in-pos-suc (Nat.suc x) = refl

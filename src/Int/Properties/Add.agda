@@ -215,13 +215,13 @@ commutative x (in-neg Nat.zero)
   = pred (x + in-neg y)
 
     in-neg (suc y) + x
-  = pred (in-neg y) + x [pred-in-neg-suc]
+  = pred (in-neg y) + x [pred-neg]
   = pred (in-neg y + x) [pred-left]
   = pred (x + in-neg y) [I.H]
 -}
 commutative x (in-neg (Nat.suc y))
   rewrite commutative x (in-neg y)
-  | pred-in-neg-suc y
+  | pred-neg y
   | pred-left (in-neg y) x = refl
 commutative x zero rewrite left-unit x = refl
 {-
@@ -243,7 +243,7 @@ commutative x (in-pos Nat.zero)
 -}
 commutative x (in-pos (Nat.suc y))
   rewrite commutative x (in-pos y)
-  | suc-in-pos-suc y
+  | suc-pos y
   | suc-left (in-pos y) x = refl
 
 {-
