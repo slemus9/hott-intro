@@ -70,4 +70,8 @@ distrib-+ x (in-pos (Nat.suc y)) =
   ≡⟨ ap (λ a -> pred ((- x) + a)) (pos-inv y) ⟩
     pred ((- x) + in-neg y)
   ∎
- 
+
+double-inv : ∀ x -> (- (- x)) ≡ x
+double-inv (in-neg x) = refl
+double-inv zero = refl
+double-inv (in-pos x) = refl

@@ -1,8 +1,9 @@
 import Nat
 open import Int
 open import Int.Properties.Suc
-open import Int.Properties.Neg
+import Int.Properties.Neg as Neg
 import Int.Properties.Add as Add
+import Int.Properties.Minus as Minus
 open import Identity using (_≡_; refl; inv; ap)
 open import Identity.Reasoning
 
@@ -30,7 +31,7 @@ left-unit (in-neg (Nat.suc x))
   rewrite left-unit (in-pos x)
   | Add.commutative (in-pos 0) (in-pos x)
   | suc-pos x
-  | pos-inv x = refl
+  | Neg.pos-inv x = refl
 left-unit zero = refl
 left-unit (in-pos Nat.zero) = refl
 left-unit (in-pos (Nat.suc x))
@@ -54,15 +55,34 @@ left-zero (in-pos (Nat.suc x)) rewrite left-zero (in-pos x) = refl
   predecessor and successor laws
 -}
 right-pred : ∀ x y -> x * pred y ≡ x * y - x
+right-pred x (in-neg Nat.zero) = Neg.distrib-+ x x
 {-
-    x * pred (in-neg zero) 
-  = x * (in-neg (suc zero))
-  = - (x + x * in-pos zero)
-  = - (x + x)
-  
-  x * in-neg zero - x = (- x) - x = (- x) + (- x)
+    x * pred (in-neg (suc y))
+  = x * in-neg (suc (suc y))
+  = - (x + x * in-pos (suc y))
+  = - (x + (x + x * in-pos y))
+  = (- x) + (x + x * in-pos y)
+
+    x * (in-neg (suc y)) - x
+  = (- (x + x * in-pos y)) - x
 -}
-right-pred x (in-neg Nat.zero) = {!   !}
-right-pred x (in-neg (Nat.suc y)) = {!   !}
-right-pred x zero = {!   !}
-right-pred x (in-pos y) = {!   !}
+right-pred x (in-neg (Nat.suc y))
+  rewrite Neg.distrib-+ x (x + x * in-pos y)
+  | Minus.left-neg x (- (x + x * in-pos y)) = refl
+right-pred x zero = inv (Add.left-unit (- x))
+{-
+  x * pred (in-pos zero) = x * zero = zero
+  x * (in-pos zero) - x = x - x
+-}
+right-pred x (in-pos Nat.zero) = inv (Minus.itself x)
+{-
+  x * pred (in-pos (Nat.suc y)) = x * in-pos y
+  (x + x * in-pos (suc y)) - x
+-}
+right-pred x (in-pos (Nat.suc y))
+  rewrite pred-pos y
+  | Add.assoc x (x * in-pos y) (- x)
+  | Add.commutative (x * in-pos y) (- x)
+  | inv (Add.assoc x (- x) (x * in-pos y)) 
+  | Minus.itself x
+  | Add.left-unit (x * in-pos y) = refl
