@@ -221,7 +221,7 @@ commutative x (in-neg Nat.zero)
 -}
 commutative x (in-neg (Nat.suc y))
   rewrite commutative x (in-neg y)
-  | pred-neg y
+  | inv (pred-neg y) 
   | pred-left (in-neg y) x = refl
 commutative x zero rewrite left-unit x = refl
 {-
@@ -243,7 +243,7 @@ commutative x (in-pos Nat.zero)
 -}
 commutative x (in-pos (Nat.suc y))
   rewrite commutative x (in-pos y)
-  | suc-pos y
+  | inv (suc-pos y)
   | suc-left (in-pos y) x = refl
 
 {-
@@ -263,7 +263,7 @@ left-inv (in-neg (Nat.suc x)) =
     pred (suc (in-neg x + in-pos x))
   ≡⟨ pred-suc (in-neg x + in-pos x) ⟩
     in-neg x + in-pos x
-  ≡⟨ ap (_+ in-pos x) (neg-inv x) ⟩
+  ≡⟨ ap (_+ in-pos x) (inv (pos-inv x)) ⟩
     (- in-pos x) + in-pos x
   ≡⟨ left-inv (in-pos x) ⟩
     zero
@@ -278,7 +278,7 @@ left-inv (in-pos (Nat.suc x)) = begin
     suc (pred (in-pos x + in-neg x))
   ≡⟨ suc-pred (in-pos x + in-neg x) ⟩
     in-pos x + in-neg x
-  ≡⟨ ap (_+ in-neg x) (pos-inv x) ⟩
+  ≡⟨ ap (_+ in-neg x) (inv (neg-inv x)) ⟩
     (- in-neg x) + in-neg x
   ≡⟨ left-inv (in-neg x) ⟩
     zero

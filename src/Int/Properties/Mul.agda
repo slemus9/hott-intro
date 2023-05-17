@@ -30,7 +30,7 @@ left-unit (in-neg (Nat.suc x))
   rewrite left-unit (in-pos x)
   | Add.commutative (in-pos 0) (in-pos x)
   | suc-pos x
-  | neg-inv x = refl
+  | pos-inv x = refl
 left-unit zero = refl
 left-unit (in-pos Nat.zero) = refl
 left-unit (in-pos (Nat.suc x))
