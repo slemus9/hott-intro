@@ -86,3 +86,35 @@ right-pred x (in-pos (Nat.suc y))
   | inv (Add.assoc x (- x) (x * in-pos y)) 
   | Minus.itself x
   | Add.left-unit (x * in-pos y) = refl
+
+left-pred : ∀ x y -> pred x * y ≡ x * y - y
+left-pred x (in-neg Nat.zero) 
+  rewrite Neg.distrib-+ x (in-neg Nat.zero) = refl
+{-
+    pred x * in-neg (suc y)
+  = - (pred x + (pred x * in-pos y))
+  = - (pred x + (x * in-pos y - in-pos y)) [I.H]
+  = (- pred x) + (- (x * in-pos y - in-pos y))
+  = suc (- x) + (in-pos y - x * in-pos y)
+  = suc (- x + in-pos y - x * in-pos y)
+
+    x * in-neg (suc y) - in-neg (suc y)
+  = x * in-neg (suc y) + in-pos (suc y)
+  = suc (x * in-neg (suc y) + in-pos y)
+  = suc (- (x + x * in-pos y) + in-pos y) 
+-}
+left-pred x (in-neg (Nat.suc y))
+  rewrite left-pred x (in-pos y)
+  | Neg.distrib-+ (pred x) (x * in-pos y - in-pos y) 
+  | Neg.pred-inv x 
+  | Add.suc-left (- x) (- (x * in-pos y - in-pos y))
+  | Neg.distrib-+ (x * in-pos y) (in-neg y)
+  | inv (Add.assoc (- x) (- (x * in-pos y)) (in-pos y))
+  | Neg.distrib-+ x (x * in-pos y)  = refl
+left-pred x zero = refl
+left-pred x (in-pos Nat.zero) = refl
+left-pred x (in-pos (Nat.suc y))
+  rewrite left-pred x (in-pos y)
+  | Add.pred-left x (x * in-pos y + in-neg y)
+  | Add.assoc x (x * in-pos y) (in-neg y) = refl
+ 
