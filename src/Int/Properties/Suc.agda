@@ -35,12 +35,10 @@ pred-pos Nat.zero = refl
 pred-pos (Nat.suc n) = refl
 
 suc-pos : ∀ n -> suc (in-pos n) ≡ in-pos (Nat.suc n)
-suc-pos Nat.zero = refl
-suc-pos (Nat.suc n) = refl
+suc-pos n rewrite pred-pos n | suc-pred (in-pos (Nat.suc n)) = refl
 
 suc-neg : ∀ n -> suc (in-neg (Nat.suc n)) ≡ in-neg n
-suc-neg Nat.zero = refl
-suc-neg (Nat.suc n) = refl
+suc-neg n rewrite pred-neg n = refl
 
 pred-zero : in-neg Nat.zero ≡ pred zero
 pred-zero = refl
