@@ -39,3 +39,8 @@ swap : {A B : Type} {C : A -> B -> Type}
   -> (∀ x -> ∀ y -> C x y)
   -> (∀ y -> ∀ x -> C x y)
 swap f y x = f x y
+
+_$_ : {A : Type} {B : A -> Type} 
+  -> (∀ x -> B x) 
+  -> ∀ x -> B x
+f $ x = f x

@@ -6,6 +6,7 @@ import Int.Properties.Add as Add
 import Int.Properties.Minus as Minus
 open import Identity using (_≡_; refl; inv; ap)
 open import Identity.Reasoning
+open import Function using (_$_)
 
 module Int.Properties.Mul where
 
@@ -135,8 +136,8 @@ right-suc x (in-neg Nat.zero)
 -}
 right-suc x (in-neg (Nat.suc y))
   rewrite suc-neg y 
-  | Neg.distrib-+ x (x * in-pos y)
-  | inv (Add.swap-left (- (x * in-pos y)) (- x) x)
+  | Neg.distrib-+ x (x * in-pos y) 
+  | Add.swap-left (- x) (- (x * in-pos y)) x
   | Add.left-inv x = right-neg x y
 right-suc x zero = inv (Add.left-unit x)
 right-suc x (in-pos Nat.zero) = refl
@@ -148,9 +149,7 @@ right-suc x (in-pos Nat.zero) = refl
   
   x * in-pos (suc y) + x = x + x * in-pos y + x
 -}
-right-suc x (in-pos (Nat.suc y))
-  rewrite suc-pos (Nat.suc y) = Add.swap-right x x (x * in-pos y) 
-
+right-suc x (in-pos (Nat.suc y)) = inv (Add.swap-right x (x * in-pos y) x)
 left-suc : ∀ x y -> suc x * y ≡ x * y + y
 left-suc x (in-neg Nat.zero) = Neg.suc-inv x
 {-
@@ -176,3 +175,53 @@ left-suc x (in-pos (Nat.suc y))
   rewrite left-suc x (in-pos y)
   | Add.suc-left x (x * in-pos y + in-pos y)
   | Add.assoc x (x * in-pos y) (in-pos y)  = refl
+
+{-
+  Exercise 5.8.c
+  Distributes over addition
+-}
+distrib-+-left : ∀ x y z -> x * (y + z) ≡ x * y + x * z
+distrib-+-left x y (in-neg Nat.zero) = right-pred x y
+distrib-+-left x y (in-neg (Nat.suc z))  = 
+  begin
+    x * pred (y + in-neg z)
+  ≡⟨ right-pred x (y + in-neg z) ⟩
+    x * (y + in-neg z) - x
+  ≡⟨ ap (_- x) $ distrib-+-left x y (in-neg z) ⟩
+    x * y + x * in-neg z - x
+  ≡⟨ Add.swap-right (x * y) (x * in-neg z) (- x) ⟩
+    x * y + ((- x) + (x * in-neg z))
+  ≡⟨ ap (λ k -> x * y + ((- x) + k)) $ right-neg x z ⟩
+    x * y + ((- x) + (- (x * in-pos z)))
+  ≡⟨ ap (x * y +_) (inv $ Neg.distrib-+ x (x * in-pos z)) ⟩
+    x * y + (- (x + x * in-pos z))
+  ∎
+distrib-+-left x y zero = refl
+distrib-+-left x y (in-pos Nat.zero) = right-suc x y
+distrib-+-left x y (in-pos (Nat.suc z)) = 
+  begin
+    x * suc (y + in-pos z)
+  ≡⟨ right-suc x (y + in-pos z) ⟩
+    x * (y + in-pos z) + x
+  ≡⟨ ap (_+ x) $ distrib-+-left x y (in-pos z) ⟩ 
+    x * y + x * in-pos z + x
+  ≡⟨ Add.swap-right (x * y) (x * in-pos z) x ⟩
+    x * y + (x + x * in-pos z)
+  ∎
+
+distrib-+-right : ∀ x y z -> (x + y) * z ≡ x * z + y * z
+distrib-+-right x y (in-neg Nat.zero) = Neg.distrib-+ x y
+distrib-+-right x y (in-neg (Nat.suc z))
+  rewrite distrib-+-right x y (in-pos z)
+  | inv $ Neg.distrib-+ (x + x * in-pos z) (y + y * in-pos z)
+  | Add.assoc x y (x * in-pos z + y * in-pos z)
+  | inv $ Add.swap-left (x * in-pos z) y (y * in-pos z)
+  | Add.assoc (x * in-pos z) y (y * in-pos z)
+  | Add.assoc x (x * in-pos z) (y + y * in-pos z) = refl
+distrib-+-right x y zero = refl
+distrib-+-right x y (in-pos Nat.zero) = refl
+distrib-+-right x y (in-pos (Nat.suc z))
+  rewrite distrib-+-right x y (in-pos z)
+  | Add.assoc x y (x * in-pos z + y * in-pos z)
+  | inv $ Add.swap-left (x * in-pos z) y (y * in-pos z)
+  | Add.assoc (x * in-pos z) y (y * in-pos z) = inv $ Add.assoc x (x * in-pos z) (y + y * in-pos z)

@@ -287,8 +287,8 @@ left-inv (in-pos (Nat.suc x)) = begin
 right-inv : ∀ x -> x + (- x) ≡ zero
 right-inv x rewrite commutative x (- x) = left-inv x
 
-swap-left : ∀ x y z -> x + (y + z) ≡ y + x + z
-swap-left x y z rewrite inv (assoc x y z) | commutative x y = refl
+swap-right : ∀ x y z -> x + y + z ≡ x + (z + y)
+swap-right x y z rewrite assoc x y z | commutative y z = refl
 
-swap-right : ∀ x y z -> x + (y + z) ≡ x + z + y
-swap-right x y z rewrite commutative y z | inv (assoc x z y) = refl
+swap-left : ∀ x y z -> x + y + z ≡ y + (x + z)
+swap-left x y z rewrite commutative x y | assoc y x z = refl
