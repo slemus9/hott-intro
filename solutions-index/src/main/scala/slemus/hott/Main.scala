@@ -27,8 +27,8 @@ object Main extends IOApp.Simple:
   def makeMarkdownLines(exercises: Stream[IO, Exercise]): Stream[IO, String] =
     Stream(title) ++ exercises.map(_.toMarkdownLine)
 
-  def extractAllExercises(chunkSize: Int): Pipe[IO, Path, Exercise] = paths => 
-    sortExerciseStream(paths.flatMap(extractFileExercises), chunkSize)
+  def extractAllExercises(chunkSize: Int): Pipe[IO, Path, Exercise] = 
+    _.flatMap(extractFileExercises).through(sortExerciseStream(chunkSize))
 
   def extractFileExercises(path: Path): Stream[IO, Exercise] = 
     Files[IO].readUtf8Lines(path)
@@ -48,7 +48,7 @@ object Main extends IOApp.Simple:
     I don't expect that the number of exercises will exceed the memory capacity.
     If that is the case, we should re-implement this function 
   */
-  def sortExerciseStream(s: Stream[IO, Exercise], chunkSize: Int): Stream[IO, Exercise] =
+  def sortExerciseStream(chunkSize: Int): Pipe[IO, Exercise, Exercise] = s =>
     Stream.eval(s.compile.toList).flatMap { l => 
       Stream.fromIterator(l.sortBy(_.id).iterator, chunkSize)
     }
