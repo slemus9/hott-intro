@@ -240,4 +240,11 @@ distrib-+-right x y (in-pos (Nat.suc z))
   Associativity and Commutativity
 -}
 assoc : ∀ x y z -> x * y * z ≡ x * (y * z)
-assoc x y z = {!   !}
+assoc x y (in-neg Nat.zero) = inv (right-neg x y)
+assoc x y (in-neg (Nat.suc z))
+  rewrite assoc x y (in-pos z)
+  | inv $ distrib-+-left x y (y * in-pos z) = inv $ right-neg x (y + y * in-pos z)
+assoc x y zero = refl
+assoc x y (in-pos Nat.zero) = refl
+assoc x y (in-pos (Nat.suc z))
+  rewrite assoc x y (in-pos z) = inv $ distrib-+-left x y (y * in-pos z)
