@@ -6,7 +6,7 @@ import Int.Properties.Add as Add
 import Int.Properties.Minus as Minus
 open import Identity using (_≡_; refl; inv; ap; trans)
 open import Identity.Reasoning
-open import Function using (_$_)
+open import Function using (_$_; _∘_)
 
 module Int.Properties.Mul where
 
@@ -235,6 +235,54 @@ distrib-+-right x y (in-pos (Nat.suc z))
   | inv $ Add.swap-left (x * in-pos z) y (y * in-pos z)
   | Add.assoc (x * in-pos z) y (y * in-pos z) = inv $ Add.assoc x (x * in-pos z) (y + y * in-pos z)
 
+left-neg : ∀ x y -> (- x) * y ≡ (- (x * y))
+left-neg x (in-neg Nat.zero) = refl
+left-neg x (in-neg (Nat.suc y)) = begin
+    - ((- x) + (- x) * in-pos y)
+  ≡⟨⟩
+    - ((- x) * one + (- x) * in-pos y)
+  ≡⟨ ap -_ (inv $ distrib-+-left (- x) one (in-pos y)) ⟩
+    - (- x * (one + in-pos y))
+  ≡⟨ ap (λ k -> - ((- x) * k)) (Add.commutative one (in-pos y)) ⟩
+    - (- x * suc (in-pos y))
+  ≡⟨ ap -_ (right-suc (- x) (in-pos y)) ⟩ 
+    - (- x * in-pos y - x)
+  ≡⟨ ap (λ k -> - (k - x)) (left-neg x (in-pos y)) ⟩
+    - ((- (x * in-pos y)) - x)
+  ≡⟨ ap -_ (inv $ Neg.distrib-+ (x * in-pos y) x) ⟩
+    - (- (x * in-pos y + x))
+  ≡⟨ ap (-_ ∘ -_) (Add.commutative (x * in-pos y) x)⟩
+    - (- (x + x * in-pos y))
+  ∎
+left-neg x zero = refl
+left-neg x (in-pos Nat.zero) = refl
+left-neg x (in-pos (Nat.suc y)) = begin
+    (- x) + (- x) * in-pos y
+  ≡⟨⟩
+    (- x) * one + (- x) * in-pos y
+  ≡⟨ inv $ distrib-+-left (- x) one (in-pos y) ⟩
+    (- x) * (one + in-pos y)
+  ≡⟨ ap ((- x) *_) (Add.commutative one (in-pos y)) ⟩
+    (- x) * suc (in-pos y)
+  ≡⟨ right-suc (- x) (in-pos y) ⟩
+    (- x) * in-pos y - x
+  ≡⟨ ap (_- x) (left-neg x (in-pos y)) ⟩
+    (- (x * in-pos y)) - x
+  ≡⟨ inv $ Neg.distrib-+ (x * in-pos y) x ⟩
+    - (x * in-pos y + x)
+  ≡⟨ ap -_ (Add.commutative (x * in-pos y) x) ⟩
+    - (x + x * in-pos y)
+  ∎
+
+left-neg-nat : ∀ n x -> in-neg n * x ≡ (- (in-pos n * x))
+left-neg-nat n x = begin
+    in-neg n * x
+  ≡⟨ ap (_* x) (inv $ Neg.pos-inv n) ⟩
+    (- (in-pos n)) * x
+  ≡⟨ left-neg (in-pos n) x ⟩
+    (- (in-pos n * x))
+  ∎
+
 {-
   Exercise 5.8.d
   Associativity and Commutativity
@@ -248,3 +296,33 @@ assoc x y zero = refl
 assoc x y (in-pos Nat.zero) = refl
 assoc x y (in-pos (Nat.suc z))
   rewrite assoc x y (in-pos z) = inv $ distrib-+-left x y (y * in-pos z)
+
+commutative : ∀ x y -> x * y ≡ y * x
+commutative x (in-neg Nat.zero)
+  rewrite left-neg-nat Nat.zero x | left-unit x = refl
+commutative x (in-neg (Nat.suc y)) = inv (begin
+    in-neg (Nat.suc y) * x
+  ≡⟨ left-neg-nat (Nat.suc y) x ⟩
+    - (in-pos (Nat.suc y) * x)
+  ≡⟨ ap (λ k -> - (k * x)) (inv $ suc-pos y) ⟩
+    - (suc (in-pos y) * x)
+  ≡⟨ ap -_ $ left-suc (in-pos y) x ⟩
+    - (in-pos y * x + x)
+  ≡⟨ ap (λ k -> - (k + x)) $ commutative (in-pos y) x ⟩
+    - (x * in-pos y + x)
+  ≡⟨ ap -_ $ Add.commutative (x * in-pos y) x ⟩
+    - (x + x * in-pos y)
+  ∎)
+commutative x zero = inv $ left-zero x
+commutative x (in-pos Nat.zero) = inv $ left-unit x
+commutative x (in-pos (Nat.suc y)) = inv (begin
+    in-pos (Nat.suc y) * x
+  ≡⟨ ap (_* x) (inv $ suc-pos y) ⟩
+    suc (in-pos y) * x
+  ≡⟨ left-suc (in-pos y) x ⟩
+    in-pos y * x + x
+  ≡⟨ ap (_+ x) $ commutative (in-pos y) x ⟩
+    x * in-pos y + x
+  ≡⟨ Add.commutative (x * in-pos y) x ⟩
+    x + x * in-pos y
+  ∎)
