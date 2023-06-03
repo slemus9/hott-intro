@@ -1,5 +1,4 @@
 open import Identity using (_≡_; refl; concat; inv)
-open import Identity.Reasoning
 open import Function using (id; _$_)
 
 module Identity.Properties.Concat where
@@ -21,7 +20,7 @@ assoc : {A : Type} {x y z w : A}
   -> (q : y ≡ z)
   -> (r : z ≡ w)
   -> concat (concat p q) r ≡ concat p (concat q r)
-assoc refl q r rewrite left-unit q = refl
+assoc refl q r = refl
 
 left-inv : {A : Type} {x y : A}
   -> (p : x ≡ y)
@@ -40,7 +39,7 @@ distrib-inv : {A : Type} {x y z : A}
   -> (p : x ≡ y)
   -> (q : y ≡ z)
   -> inv (concat p q) ≡ concat (inv q) (inv p)
-distrib-inv refl q rewrite right-unit (inv q) = refl
+distrib-inv refl q = inv $ right-unit (inv q)
 
 {-
   Exercise 5.2
@@ -57,4 +56,4 @@ con-inv : {A : Type} {x y z : A}
   -> (q : y ≡ z)
   -> (r : x ≡ z)
   -> concat p q ≡ r -> p ≡ concat r (inv q)
-con-inv p refl r rewrite right-unit r = concat $ inv (right-unit p)
+con-inv p refl r rewrite right-unit p | right-unit r = id
