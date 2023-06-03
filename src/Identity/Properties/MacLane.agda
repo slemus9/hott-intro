@@ -7,8 +7,6 @@ open import Identity.Properties.Concat using (assoc)
 -}
 module Identity.Properties.MacLane {A : Set} {a b c d e : A} where
 
-Type = Set
-
 alpha1 : (p : a ≡ b)
   -> (q : b ≡ c)
   -> (r : c ≡ d)

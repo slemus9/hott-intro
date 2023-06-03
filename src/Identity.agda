@@ -56,7 +56,7 @@ concat : {A : Type} {x y z : A}
   -> x ≡ y
   -> y ≡ z
   -> x ≡ z
-concat refl refl = refl
+concat refl = id
 
 trans = concat
 

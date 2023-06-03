@@ -34,4 +34,4 @@ ap-concat : {A B : Type} {x y z : A}
   -> (p : x ≡ y)
   -> (q : y ≡ z)
   -> ap f (concat p q) ≡ concat (ap f p) (ap f q)
-ap-concat f refl refl = refl
+ap-concat f refl q = refl
