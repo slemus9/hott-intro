@@ -4,6 +4,7 @@ Type = Set
 
 -- Bi-implication
 record _<==>_ (A B : Type) : Type where
+  constructor _iff_
   field
     to : A -> B
     from : B -> A
