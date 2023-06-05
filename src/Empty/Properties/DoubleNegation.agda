@@ -1,7 +1,8 @@
+open import Type using (Type)
 open import Empty.DoubleNegation
 open import Empty using (¬_; ex-falso)
-open import Function using (_∘_; _<==>_)
-open import DependentPair using (_×_; _,_)
+open import Function using (_∘_)
+open import DependentPair using (_×_; _<-->_; _,_)
 open import Coproduct using (_⨄_; inl; inr)
 
 module Empty.Properties.DoubleNegation where
@@ -36,8 +37,8 @@ em-implies-doubleneg (inl p) _ = p
 em-implies-doubleneg (inr notP) dnP = ex-falso (dnP notP)
 
 classic5 : {P Q : Type}
-  -> (¬ ¬ (Q -> P)) <==> (P ⨄ (¬ P) -> Q -> P)
-classic5 {P} {Q} = record {to = to; from = from}
+  -> (¬ ¬ (Q -> P)) <--> (P ⨄ (¬ P) -> Q -> P)
+classic5 {P} {Q} = to , from
   where
     to : (¬ ¬ (Q -> P)) -> P ⨄ (¬ P) -> Q -> P
     to _ (inl p) _ = p

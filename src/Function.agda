@@ -2,13 +2,6 @@ open import Type using (Type)
 
 module Function where
 
--- Bi-implication
-record _<==>_ (A B : Type) : Type where
-  constructor _iff_
-  field
-    to : A -> B
-    from : B -> A
-
 -- Function composition
 _∘_ : {A B C : Type} -> (B -> C) -> (A -> B) -> A -> C
 (g ∘ f) x = g (f x) 

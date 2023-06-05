@@ -1,7 +1,7 @@
 open import Type using (Type)
 open import Empty using (¬_)
-open import Function using (_∘_; _<==>_)
-open import DependentPair using (_×_; _,_)
+open import Function using (_∘_)
+open import DependentPair using (_×_; _<-->_; _,_)
 
 module Empty.Properties.Negation where
 
@@ -21,8 +21,8 @@ contradiction1 (p , notP) = notP p
   Exercise 4.3.a.ii
 -}
 contradiction2 : {P : Type}
-  -> ¬ (P <==> (¬ P))
-contradiction2 record {to = f; from = g} = notP p
+  -> ¬ (P <--> (¬ P))
+contradiction2 (f , g) = notP p
   where
     p = g (λ p -> (f p) p)
     notP = f p

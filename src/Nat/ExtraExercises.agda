@@ -1,3 +1,4 @@
+open import Type using (Type)
 open import Nat
 open import Function using (id)
 open import Identity using (_≡_; refl; cong)
