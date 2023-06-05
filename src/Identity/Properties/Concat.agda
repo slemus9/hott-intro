@@ -1,9 +1,8 @@
+open import Type using (Type)
 open import Identity using (_≡_; refl; concat; inv)
 open import Function using (id; _$_)
 
 module Identity.Properties.Concat where
-
-Type = Set
 
 left-unit : {A : Type} {x y : A}
   -> (p : x ≡ y)

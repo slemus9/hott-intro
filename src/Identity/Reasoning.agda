@@ -1,6 +1,7 @@
+open import Type using (Type)
 open import Identity using (_≡_; refl; trans)
 
-module Identity.Reasoning {A : Set} where
+module Identity.Reasoning {A : Type} where
 
 infix  1 begin_
 infixr 2 _≡⟨⟩_ _≡⟨_⟩_

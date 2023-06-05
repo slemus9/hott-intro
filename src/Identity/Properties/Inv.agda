@@ -1,8 +1,7 @@
+open import Type using (Type)
 open import Identity using (_≡_; refl; refl-of; inv)
 
 module Identity.Properties.Inv where
-
-Type = Set
 
 inv-unit : {A : Type} 
   -> (x : A)

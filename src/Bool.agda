@@ -1,6 +1,6 @@
+open import Type using (Type)
+
 module Bool where
-  
-Type = Set
 
 data Bool : Type where
   true false : Bool

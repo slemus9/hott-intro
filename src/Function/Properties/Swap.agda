@@ -1,11 +1,10 @@
+open import Type using (Type)
 open import Function using (swap; id; _∘_)
 open import Function.Extensionality using (∀-extensionality)
 open import Identity using (_≡_)
 open import Identity.Reasoning
 
 module Function.Properties.Swap where
-
-Type = Set
 
 {-
   Exercise 2.4.b

@@ -1,6 +1,6 @@
-module Unit where
+open import Type using (Type)
 
-Type = Set
+module Unit where
 
 data Unit : Type where
   unit : Unit

@@ -1,10 +1,9 @@
+open import Type using (Type)
 open import Empty using (¬_)
 open import Function using (_∘_; _<==>_)
 open import DependentPair using (_×_; _,_)
 
 module Empty.Properties.Negation where
-
-Type = Set
 
 -- Proposition 4.3.4
 contrapos : {P Q : Type}

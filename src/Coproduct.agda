@@ -1,6 +1,6 @@
-module Coproduct where
+open import Type using (Type)
 
-Type = Set
+module Coproduct where
 
 -- Coproduct or Disjoint Sum
 data _⨄_ (A B : Type) : Type where

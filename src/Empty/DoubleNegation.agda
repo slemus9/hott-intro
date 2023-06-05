@@ -1,9 +1,8 @@
+open import Type using (Type)
 open import Empty using (¬_)
 open import Function using (_∘_)
 
 module Empty.DoubleNegation where
-
-Type = Set
 
 {-
   Exercise 4.3.b

@@ -1,3 +1,4 @@
+open import Type using (Type)
 open import Identity using (_≡_; refl; ap; concat)
 open import Identity.Properties.Concat using (assoc)
 
@@ -5,7 +6,7 @@ open import Identity.Properties.Concat using (assoc)
   Exercise 5.4
   Mac Lane Pentagon
 -}
-module Identity.Properties.MacLane {A : Set} {a b c d e : A} where
+module Identity.Properties.MacLane {A : Type} {a b c d e : A} where
 
 alpha1 : (p : a ≡ b)
   -> (q : b ≡ c)

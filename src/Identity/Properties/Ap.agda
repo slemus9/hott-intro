@@ -1,9 +1,8 @@
+open import Type using (Type)
 open import Identity using (_≡_; refl; refl-of; ap; inv; concat)
 open import Function using (id; _∘_)
 
 module Identity.Properties.Ap where
-
-Type = Set
 
 ap-id : {A : Type} {x y : A}
   -> (p : x ≡ y)

@@ -1,11 +1,10 @@
+open import Type using (Type)
 open import Function using (_∘_)
 open import Nat using (Nat; zero)
 open import Coproduct using (_⨄_; inr; inl)
 open import Identity using (_≡_; refl)
 
 module Int where
-
-Type = Set
 
 -- Int : Type
 -- Int = Nat ⨄ (Unit ⨄ Nat)

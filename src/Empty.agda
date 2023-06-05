@@ -1,6 +1,6 @@
-module Empty where
+open import Type using (Type)
 
-Type = Set
+module Empty where
 
 data Empty : Type where
 

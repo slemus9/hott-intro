@@ -1,9 +1,8 @@
+open import Type using (Type)
 open import Coproduct using (_⨄_; inl; inr)
 open import Empty using (is-empty; ex-falso)
 
 module Coproduct.Properties.Coproduct where
-
-Type = Set
 
 -- Proposition 4.4.4
 left-empty : {A B : Type}

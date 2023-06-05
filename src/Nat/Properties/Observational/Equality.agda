@@ -1,3 +1,4 @@
+open import Type using (Type)
 open import Nat using (Nat; zero; suc)
 open import Unit using (Unit; unit)
 open import Empty using (Empty)
@@ -5,8 +6,6 @@ open import Function using (_<==>_; _iff_; _$_)
 open import Identity using (_≡_; refl; ap)
 
 module Nat.Properties.Observational.Equality where
-
-Type = Set
 
 Eq-Nat : Nat -> Nat -> Type
 Eq-Nat zero zero = Unit

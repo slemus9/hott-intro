@@ -1,11 +1,10 @@
+open import Type using (Type)
 open import Function using (id; _∘_)
 open import Function.Extensionality using (extensionality)
 open import Identity using (_≡_; refl)
 open import Identity.Reasoning
 
 module Function.Properties.Compose where
-
-Type = Set
 
 {-
   Ctx |- f : A -> B

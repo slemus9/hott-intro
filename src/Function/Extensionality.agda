@@ -1,8 +1,7 @@
+open import Type using (Type)
 open import Identity using (_≡_)
 
 module Function.Extensionality where
-
-Type = Set
 
 {-
   TODO: Is there a better representation?

@@ -1,6 +1,6 @@
-module Function where
+open import Type using (Type)
 
-Type = Set
+module Function where
 
 -- Bi-implication
 record _<==>_ (A B : Type) : Type where

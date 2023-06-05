@@ -1,6 +1,6 @@
-module Nat where
+open import Type using (Type)
 
-Type = Set
+module Nat where
 
 data Nat : Type where
   zero : Nat

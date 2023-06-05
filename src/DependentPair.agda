@@ -1,6 +1,6 @@
-module DependentPair where
+open import Type using (Type)
 
-Type = Set
+module DependentPair where
 
 data Σ (A : Type) (B : A -> Type) : Type where
   _,_ : (x : A) -> (y : B x) -> Σ A B

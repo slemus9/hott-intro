@@ -1,9 +1,8 @@
+open import Type using (Type)
 open import Function using (id)
 open import DependentPair using (Σ; _,_)
 
 module Identity where
-
-Type = Set
 
 {-
   The identity type:

@@ -1,9 +1,8 @@
+open import Type using (Type)
 open import Nat using (Nat; zero; suc; ind-nat; _+_)
 open import Identity using (_≡_; refl; ap)
 
 module Nat.Properties.Add where
-
-Type = Set
 
 right-unit : (n : Nat) -> n + 0 ≡ n
 right-unit _ = refl

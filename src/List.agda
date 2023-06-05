@@ -1,10 +1,9 @@
+open import Type using (Type)
 open import Nat using (Nat; zero; suc; _+_; _*_)
 open import Function using (id)
 open import Identity using (_≡_; refl)
 
 module List where
-
-Type = Set 
 
 data List (A : Type) : Type where
   nil : List A
