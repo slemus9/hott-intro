@@ -6,6 +6,8 @@ module Function where
 _∘_ : {A B C : Type} -> (B -> C) -> (A -> B) -> A -> C
 (g ∘ f) x = g (f x) 
 
+infixl 0 _∘_
+
 -- Identity
 id : {A : Type} -> A -> A
 id x = x
@@ -38,3 +40,5 @@ _$_ : {A : Type} {B : A -> Type}
   -> (∀ x -> B x) 
   -> ∀ x -> B x
 f $ x = f x
+
+infixr 0 _$_

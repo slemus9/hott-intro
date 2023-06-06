@@ -2,8 +2,8 @@ open import Type using (Type)
 open import Nat using (Nat; zero; suc; ind-nat; _+_)
 open import Nat.Properties.Observational.Equality using (peano7)
 open import Identity using (_≡_; refl; ap)
-open import DependentPair using (_<-->_; _,_; fst; snd)
-open import Function using (id; _$_)
+open import DependentPair using (_<-->_; _,_; snd)
+open import Function using (id)
 
 module Nat.Properties.Add where
 
@@ -61,7 +61,7 @@ add-k : {m n k : Nat} -> (m ≡ n) <--> (m + k ≡ n + k)
 add-k {m} {n} {k} = to m n k , from m n k where
   to : ∀ m n k -> m ≡ n -> m + k ≡ n + k
   to m n zero = id
-  to m n (suc k) m≡n = ap suc (to m n k m≡n)
+  to m n (suc k) m≡n rewrite m≡n = refl
 
   from : ∀ m n k -> m + k ≡ n + k -> m ≡ n
   from m n zero = id

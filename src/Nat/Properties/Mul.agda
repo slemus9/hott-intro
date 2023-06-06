@@ -1,6 +1,10 @@
 open import Nat using (Nat; zero; suc; _+_; _*_)
-import Nat.Properties.Add as Add 
+import Nat.Properties.Add as Add
+open import Nat.Properties.Observational.Equality using (peano7; peano8)
 open import Identity using (_≡_; refl; ap; inv)
+open import DependentPair using (_<-->_; _,_; fst; snd)
+open import Function using (id; _∘_)
+open import Empty using (ex-falso)
 
 {-
   Exercise 5.5
@@ -123,3 +127,32 @@ assoc m n zero = refl
 assoc m n (suc k)
   rewrite distrib-+-left m n (n * k)
   | assoc m n k = refl
+
+{-
+  Exercise 6.2
+
+  TODO: Can we express this more succinctly
+-}
+mul-k+1 : {m n k : Nat} -> (m ≡ n) <--> (m * (k + 1) ≡ n * (k + 1))
+mul-k+1 {m} {n} {k} = to m n k , from m n k where
+  to : ∀ m n k -> m ≡ n -> m * (k + 1) ≡ n * (k + 1)
+  to m n zero = id
+  to m n (suc k) m≡n rewrite m≡n = refl
+
+  from : ∀ m n k -> m * (k + 1) ≡ n * (k + 1) -> m ≡ n
+  from zero zero k _ = refl
+  from zero (suc n) k rewrite left-zero k | Add.left-suc n (suc n * k) = ex-falso ∘ peano8
+  from (suc m) zero k rewrite left-zero k | Add.left-suc m (suc m * k) = ex-falso ∘ peano8 ∘ inv
+  from (suc m) (suc n) k eq
+    rewrite Add.left-suc m (suc m * k)
+    | left-suc m k
+    | inv (Add.assoc m (m * k) k)
+    | Add.left-suc n (suc n * k)
+    | left-suc n k
+    | inv (Add.assoc n (n * k) k) = fst peano7 (from m n k hyp2) where
+      hyp1 : (m + m * k) + k ≡ (n + n * k) + k
+      hyp1 = snd peano7 eq
+
+      hyp2 : m + m * k ≡ n + n * k
+      hyp2 = snd (Add.add-k {m + m * k} {n + n * k} {k}) hyp1
+ 

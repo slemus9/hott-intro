@@ -4,7 +4,7 @@ open import Unit using (Unit; unit)
 open import Empty using (Empty)
 open import Function using (_$_)
 open import DependentPair using (_<-->_; _,_; fst; snd)
-open import Identity using (_≡_; refl; ap)
+open import Identity using (_≡_; _≢_; refl; ap)
 
 module Nat.Properties.Observational.Equality where
 
@@ -36,3 +36,6 @@ peano7 {n} {m} = to , from where
   from eq = snd (equiv-Eq-Nat n m) nEqm where
     nEqm : Eq-Nat n m
     nEqm = fst (equiv-Eq-Nat (suc n) (suc m)) eq
+
+peano8 : ∀ {n} -> zero ≢ suc n
+peano8 {n} zero≡sucn = fst (equiv-Eq-Nat zero (suc n)) zero≡sucn

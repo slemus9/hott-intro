@@ -1,6 +1,7 @@
 open import Type using (Type)
 open import Function using (id)
 open import DependentPair using (Σ; _,_)
+open import Empty using (¬_)
 
 module Identity where
 
@@ -119,4 +120,8 @@ lift : {A : Type} {B : A -> Type} {a x : A}
   -> (b : B a)
   -> Σ A B
 lift {_} {_} {_} {x} p b = x , tr p b
- 
+
+_≢_ : {A : Type} -> A -> A -> Type
+x ≢ y = ¬ (x ≡ y)
+
+infix 4 _≢_
