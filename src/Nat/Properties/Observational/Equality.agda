@@ -27,8 +27,8 @@ equiv-Eq-Nat n m = to , (from n m) where
   from zero zero _ = refl
   from (suc n) (suc m) eqnat = ap suc (from n m eqnat)
 
-peano7 : ∀ n m -> (n ≡ m) <--> (suc n ≡ suc m)
-peano7 n m = to , from where
+peano7 : ∀ {n m} -> (n ≡ m) <--> (suc n ≡ suc m)
+peano7 {n} {m} = to , from where
   to : n ≡ m -> suc n ≡ suc m
   to = ap suc
 

@@ -46,3 +46,4 @@
 - [Exercise 5.8.b](src/Int/Properties/Mul.agda#L54)
 - [Exercise 5.8.c](src/Int/Properties/Mul.agda#L189)
 - [Exercise 5.8.d](src/Int/Properties/Mul.agda#L287)
+- [Exercise 6.1](src/Nat/Properties/Add.agda#L58)
