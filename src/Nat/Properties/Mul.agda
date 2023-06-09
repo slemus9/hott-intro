@@ -3,8 +3,9 @@ import Nat.Properties.Add as Add
 open import Nat.Properties.Observational.Equality using (peano7; peano8)
 open import Identity using (_≡_; refl; ap; inv)
 open import DependentPair using (_<-->_; _,_; fst; snd)
-open import Function using (id; _∘_)
+open import Function using (id; _∘_; _$_)
 open import Empty using (ex-falso)
+open import Coproduct using (_⨄_; inl; inr)
 
 {-
   Exercise 5.5
@@ -155,4 +156,17 @@ mul-k+1 {m} {n} {k} = to m n k , from m n k where
 
       hyp2 : m + m * k ≡ n + n * k
       hyp2 = snd (Add.add-k {m + m * k} {n + n * k} {k}) hyp1
- 
+
+{-
+  Exercise 6.1.b.ii
+-}
+either-zero : {m n : Nat} -> (m * n ≡ 0) <--> ((m ≡ 0) ⨄ (n ≡ 0))
+either-zero {m} {n} = to m n , from where
+  to : ∀ m n -> m * n ≡ 0 -> (m ≡ 0) ⨄ (n ≡ 0)
+  to zero n _ = inl refl
+  to m zero _ = inr refl
+  to (suc m) (suc n) rewrite Add.left-suc m (suc m * n) = ex-falso ∘ peano8 ∘ inv 
+
+  from : (m ≡ 0) ⨄ (n ≡ 0) -> m * n ≡ 0
+  from (inl refl) = left-zero n
+  from (inr refl) = refl
