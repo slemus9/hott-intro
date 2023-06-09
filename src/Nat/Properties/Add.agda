@@ -1,9 +1,9 @@
 open import Type using (Type)
 open import Nat using (Nat; zero; suc; ind-nat; _+_)
 open import Nat.Properties.Observational.Equality using (peano7)
-open import Identity using (_≡_; refl; ap)
-open import DependentPair using (_<-->_; _,_; snd)
-open import Function using (id)
+open import Identity using (_≡_; refl; ap; trans; inv)
+open import DependentPair using (_×_; _<-->_; _,_; snd)
+open import Function using (id; _$_)
 
 module Nat.Properties.Add where
 
@@ -55,7 +55,7 @@ commutative m (suc n)
   rewrite left-suc n m = ap suc (commutative m n)
 
 {-
-  Exercise 6.1
+  Exercise 6.1.a.i
 -}
 add-k : {m n k : Nat} -> (m ≡ n) <--> (m + k ≡ n + k)
 add-k {m} {n} {k} = to m n k , from m n k where
@@ -66,3 +66,15 @@ add-k {m} {n} {k} = to m n k , from m n k where
   from : ∀ m n k -> m + k ≡ n + k -> m ≡ n
   from m n zero = id
   from m n (suc k) eq = from m n k (snd peano7 eq)
+
+{-
+  Exercise 6.1.b.i
+-}
+both-zero : {m n : Nat} -> (m + n ≡ 0) <--> ((m ≡ 0) × (n ≡ 0))
+both-zero {m} {n} = to m n , from where
+  to : ∀ m n ->  m + n ≡ 0 -> (m ≡ 0) × (n ≡ 0)
+  to zero n eq = refl , trans (inv $ left-unit n) eq
+  to m zero eq = eq , refl
+
+  from : (m ≡ 0) × (n ≡ 0) -> m + n ≡ 0
+  from (refl , refl) = refl

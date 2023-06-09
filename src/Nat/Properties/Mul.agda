@@ -129,7 +129,7 @@ assoc m n (suc k)
   | assoc m n k = refl
 
 {-
-  Exercise 6.2
+  Exercise 6.1.a.ii
 
   TODO: Can we express this more succinctly
 -}
