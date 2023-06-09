@@ -3,7 +3,7 @@ open import Nat using (Nat; zero; suc; ind-nat; _+_)
 open import Nat.Properties.Observational.Equality using (peano7; peano8)
 open import Identity using (_≡_; refl; ap; trans; inv)
 open import DependentPair using (_×_; _<-->_; _,_; snd)
-open import Function using (id; _$_)
+open import Function using (id; _$_; _∘_)
 open import Empty using (ex-falso)
 
 module Nat.Properties.Add where
@@ -76,7 +76,7 @@ both-zero {m} {n} = to m n , from where
   to : ∀ m n ->  m + n ≡ 0 -> (m ≡ 0) × (n ≡ 0)
   to zero n eq = refl , trans (inv $ left-unit n) eq
   to m zero eq = eq , refl
-  to (suc m) (suc n) eq = (ex-falso $ peano8 $ inv eq) , (ex-falso $ peano8 $ inv eq) 
+  to (suc m) (suc n) = ex-falso ∘ peano8 ∘ inv
 
   from : (m ≡ 0) × (n ≡ 0) -> m + n ≡ 0
   from (refl , refl) = refl
