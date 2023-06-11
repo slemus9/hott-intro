@@ -40,7 +40,7 @@ peano7 : ∀ {n m} -> (n ≡ m) <--> (suc n ≡ suc m)
 peano7 =  peano7-l , peano7-r
 
 peano8 : ∀ {n} -> zero ≢ suc n
-peano8 {n} = fst $ equiv-Eq-Nat zero (suc n)
+peano8 {n} = equiv-Eq-Nat-l zero (suc n)
 
 diff-from-suc : ∀ {n} -> n ≢ suc n
 diff-from-suc {zero} = peano8

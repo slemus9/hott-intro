@@ -53,3 +53,6 @@
 - [Exercise 6.1.b.iii](src/Nat/Properties/Mul.agda#L176)
 - [Exercise 6.1.c.i](src/Nat/Properties/Add.agda#L87)
 - [Exercise 6.1.c.ii](src/Nat/Properties/Mul.agda#L201)
+- [Exercise 6.2.a](src/Bool/Properties/Observational/Equality.agda#L11)
+- [Exercise 6.2.b](src/Bool/Properties/Observational/Equality.agda#L19)
+- [Exercise 6.2.c](src/Bool/Properties/Observational/Equality.agda#L36)
