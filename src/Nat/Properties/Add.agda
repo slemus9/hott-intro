@@ -29,9 +29,6 @@ left-suc m = ind-nat p0 pSuc
     pSuc : (n : Nat) -> suc m + n ≡ suc (m + n) -> suc m + suc n ≡ suc (m + suc n)
     pSuc n p = ap suc p
 
-swap-suc : (m n : Nat) -> suc m + n ≡ m + suc n
-swap-suc m n rewrite left-suc m n = refl
-
 {-
   (m + n) + suc k = suc ((m + n) + k)
   m + (n + suc k) = m + suc (n + k) = suc (m + (n + k))
@@ -89,6 +86,6 @@ both-zero = both-zero-l , both-zero-r
 {-
   Exercise 6.1.c.i
 -}
-not-add-non-zero : ∀ {m n} -> m ≢ m + (n + 1)
-not-add-non-zero {suc m} {n} 
-  rewrite left-suc m n = not-add-non-zero ∘ peano7-r
+ineq-+-nonzero : ∀ {m n} -> m ≢ m + (n + 1)
+ineq-+-nonzero {suc m} {n}
+  rewrite left-suc m n = ineq-+-nonzero ∘ peano7-r

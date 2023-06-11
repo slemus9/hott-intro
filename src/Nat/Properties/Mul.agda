@@ -1,7 +1,7 @@
 open import Nat using (Nat; zero; suc; _+_; _*_)
 import Nat.Properties.Add as Add
 open import Nat.Properties.Observational.Equality using (peano7-l; peano7-r; peano8)
-open import Identity using (_≡_; refl; ap; inv)
+open import Identity using (_≢_; _≡_; refl; ap; inv)
 open import DependentPair using (_×_; _<-->_; _,_; fst; snd)
 open import Function using (id; _∘_; _$_)
 open import Empty using (ex-falso)
@@ -196,4 +196,16 @@ both-one-r (refl , refl) = refl
 
 both-one : {m n : Nat} -> (m * n ≡ 1) <--> ((m ≡ 1) × (n ≡ 1))
 both-one {m} {n} = both-one-l , both-one-r
+
+{-
+  Exercise 6.1.c.ii
+-}
+ineq-*-n+2 : {m n : Nat} -> m + 1 ≢ (m + 1) * (n + 2)
+ineq-*-n+2 {zero} {n} 
+  rewrite Add.left-unit 1 | left-unit (n + 2) = peano8 ∘ peano7-r
+ineq-*-n+2 {suc m} {n}
+  rewrite Add.left-suc (suc m) (suc (suc m) + suc (suc m) * n)
+  | Add.left-suc m (suc (suc m) + suc (suc m) * n)
+  | Add.left-suc (suc m) (suc (suc m) * n) = Add.ineq-+-nonzero ∘ peano7-r ∘ peano7-r 
+
  
