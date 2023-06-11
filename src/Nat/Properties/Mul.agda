@@ -207,5 +207,3 @@ ineq-*-n+2 {suc m} {n}
   rewrite Add.left-suc (suc m) (suc (suc m) + suc (suc m) * n)
   | Add.left-suc m (suc (suc m) + suc (suc m) * n)
   | Add.left-suc (suc m) (suc (suc m) * n) = Add.ineq-+-nonzero ∘ peano7-r ∘ peano7-r 
-
- 
