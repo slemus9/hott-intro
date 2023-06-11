@@ -48,6 +48,6 @@
 - [Exercise 5.8.d](src/Int/Properties/Mul.agda#L287)
 - [Exercise 6.1.a.i](src/Nat/Properties/Add.agda#L59)
 - [Exercise 6.1.a.ii](src/Nat/Properties/Mul.agda#L133)
-- [Exercise 6.1.b.i](src/Nat/Properties/Add.agda#L72)
+- [Exercise 6.1.b.i](src/Nat/Properties/Add.agda#L73)
 - [Exercise 6.1.b.ii](src/Nat/Properties/Mul.agda#L161)
-- [Exercise 6.1.b.iii](src/Nat/Properties/Mul.agda#L175)
+- [Exercise 6.1.b.iii](src/Nat/Properties/Mul.agda#L176)

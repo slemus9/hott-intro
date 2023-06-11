@@ -1,6 +1,6 @@
 open import Type using (Type)
 open import Nat using (Nat; zero; suc; ind-nat; _+_)
-open import Nat.Properties.Observational.Equality using (peano7; peano8)
+open import Nat.Properties.Observational.Equality using (peano7-r; peano8)
 open import Identity using (_≡_; refl; ap; trans; inv)
 open import DependentPair using (_×_; _<-->_; _,_; snd)
 open import Function using (id; _$_; _∘_)
@@ -58,25 +58,27 @@ commutative m (suc n)
 {-
   Exercise 6.1.a.i
 -}
-add-k : {m n k : Nat} -> (m ≡ n) <--> (m + k ≡ n + k)
-add-k {m} {n} {k} = to m n k , from m n k where
-  to : ∀ m n k -> m ≡ n -> m + k ≡ n + k
-  to m n zero = id
-  to m n (suc k) m≡n rewrite m≡n = refl
+add-k-l : {m n k : Nat} -> m ≡ n -> m + k ≡ n + k
+add-k-l {_} {_} {zero} = id
+add-k-l {_} {_} {suc k} m≡n rewrite m≡n = refl
 
-  from : ∀ m n k -> m + k ≡ n + k -> m ≡ n
-  from m n zero = id
-  from m n (suc k) eq = from m n k (snd peano7 eq)
+add-k-r : {m n k : Nat} -> m + k ≡ n + k -> m ≡ n
+add-k-r {_} {_} {zero} = id
+add-k-r {_} {_} {suc k} = add-k-r ∘ peano7-r
+
+add-k : {m n k : Nat} -> (m ≡ n) <--> (m + k ≡ n + k)
+add-k = add-k-l , add-k-r
 
 {-
   Exercise 6.1.b.i
 -}
-both-zero : {m n : Nat} -> (m + n ≡ 0) <--> ((m ≡ 0) × (n ≡ 0))
-both-zero {m} {n} = to m n , from where
-  to : ∀ m n ->  m + n ≡ 0 -> (m ≡ 0) × (n ≡ 0)
-  to zero n eq = refl , trans (inv $ left-unit n) eq
-  to m zero eq = eq , refl
-  to (suc m) (suc n) = ex-falso ∘ peano8 ∘ inv
+both-zero-l : {m n : Nat} -> m + n ≡ 0 -> (m ≡ 0) × (n ≡ 0)
+both-zero-l {zero} {n} eq = refl , trans (inv $ left-unit n) eq
+both-zero-l {m} {zero} eq = eq , refl
+both-zero-l {suc m} {suc n} = ex-falso ∘ peano8 ∘ inv
 
-  from : (m ≡ 0) × (n ≡ 0) -> m + n ≡ 0
-  from (refl , refl) = refl
+both-zero-r : {m n : Nat} -> (m ≡ 0) × (n ≡ 0) -> m + n ≡ 0
+both-zero-r (refl , refl) = refl
+
+both-zero : {m n : Nat} -> (m + n ≡ 0) <--> ((m ≡ 0) × (n ≡ 0))
+both-zero = both-zero-l , both-zero-r
