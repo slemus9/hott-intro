@@ -2,7 +2,7 @@ open import Type using (Type)
 open import Nat using (Nat; zero; suc)
 open import Unit using (Unit; unit)
 open import Empty using (Empty)
-open import Function using (_$_)
+open import Function using (_$_; _∘_)
 open import DependentPair using (_<-->_; _,_; fst; snd)
 open import Identity using (_≡_; _≢_; refl; ap)
 
@@ -41,3 +41,7 @@ peano7 =  peano7-l , peano7-r
 
 peano8 : ∀ {n} -> zero ≢ suc n
 peano8 {n} = fst $ equiv-Eq-Nat zero (suc n)
+
+diff-from-suc : ∀ {n} -> n ≢ suc n
+diff-from-suc {zero} = peano8
+diff-from-suc {suc n} = diff-from-suc ∘ peano7-r

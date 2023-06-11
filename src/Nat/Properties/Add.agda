@@ -1,7 +1,7 @@
 open import Type using (Type)
 open import Nat using (Nat; zero; suc; ind-nat; _+_)
 open import Nat.Properties.Observational.Equality using (peano7-r; peano8)
-open import Identity using (_≡_; refl; ap; trans; inv)
+open import Identity using (_≡_; _≢_; refl; ap; trans; inv)
 open import DependentPair using (_×_; _<-->_; _,_; snd)
 open import Function using (id; _$_; _∘_)
 open import Empty using (ex-falso)
@@ -28,6 +28,9 @@ left-suc m = ind-nat p0 pSuc
 
     pSuc : (n : Nat) -> suc m + n ≡ suc (m + n) -> suc m + suc n ≡ suc (m + suc n)
     pSuc n p = ap suc p
+
+swap-suc : (m n : Nat) -> suc m + n ≡ m + suc n
+swap-suc m n rewrite left-suc m n = refl
 
 {-
   (m + n) + suc k = suc ((m + n) + k)
@@ -82,3 +85,10 @@ both-zero-r (refl , refl) = refl
 
 both-zero : {m n : Nat} -> (m + n ≡ 0) <--> ((m ≡ 0) × (n ≡ 0))
 both-zero = both-zero-l , both-zero-r
+
+{-
+  Exercise 6.1.c.i
+-}
+not-add-non-zero : ∀ {m n} -> m ≢ m + (n + 1)
+not-add-non-zero {suc m} {n} 
+  rewrite left-suc m n = not-add-non-zero ∘ peano7-r
