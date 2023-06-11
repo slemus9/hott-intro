@@ -50,3 +50,4 @@
 - [Exercise 6.1.a.ii](src/Nat/Properties/Mul.agda#L133)
 - [Exercise 6.1.b.i](src/Nat/Properties/Add.agda#L72)
 - [Exercise 6.1.b.ii](src/Nat/Properties/Mul.agda#L161)
+- [Exercise 6.1.b.iii](src/Nat/Properties/Mul.agda#L175)
