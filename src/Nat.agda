@@ -64,8 +64,8 @@ m ^ suc n = m * (m ^ n)
 
 -- Minimum
 min : Nat -> Nat -> Nat
-min m zero = zero
 min zero n = zero
+min m zero = zero
 min (suc m) (suc n) = suc (min m n)
 
 -- Maximum

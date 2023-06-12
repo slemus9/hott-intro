@@ -1,9 +1,9 @@
 import Nat.Properties.Add as Add
-open import Nat using (Nat; zero; suc; _+_; _*_; _≤_; 0≤n; s≤s)
-open import Empty using (¬_)
+open import Nat
+open import Empty using (¬_; ex-falso)
 open import Coproduct using (_⨄_; inl; inr)
-open import DependentPair using (_<-->_; _,_)
-open import Function using (id)
+open import DependentPair using (_<-->_; _×_; _,_)
+open import Function using (id; _∘_)
 open import Identity using (_≢_; _≡_; refl; ap)
 
 module Nat.Properties.Ordering where
@@ -70,3 +70,13 @@ mul-nonzero : ∀ m n k -> m ≤ n -> m * (k + 1) ≤ n * (k + 1)
 mul-nonzero m n zero = id
 mul-nonzero m n (suc k) m≤n = 
   add-mono m n (m * (k + 1)) (n * (k + 1)) m≤n (mul-nonzero m n k m≤n)
+
+{-
+  Exercise 6.3.e.i
+-}
+leq-min-fwd : ∀ k m n -> k ≤ min m n -> (k ≤ m) × (k ≤ n)
+leq-min-fwd zero m n _ = 0≤n , 0≤n
+leq-min-fwd (suc k) zero n = ex-falso ∘ not-s≤0
+leq-min-fwd (suc k) (suc m) zero = ex-falso ∘ not-s≤0
+leq-min-fwd (suc k) (suc m) (suc n) (s≤s k≤min) with leq-min-fwd k m n k≤min 
+... | (k≤m , k≤n)  = s≤s k≤m , s≤s k≤n
