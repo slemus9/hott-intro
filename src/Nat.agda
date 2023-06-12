@@ -13,6 +13,8 @@ data _≤_ : Nat -> Nat -> Type where
   0≤n : ∀ {n} -> zero ≤ n
   s≤s : ∀ {m n} -> m ≤ n -> suc m ≤ suc n
 
+infix 4 _≤_
+
 -- Operations
 {-
   Induction principle:

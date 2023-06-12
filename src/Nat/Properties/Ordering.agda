@@ -1,6 +1,8 @@
-open import Nat using (Nat; zero; suc; _≤_; 0≤n; s≤s)
+open import Nat using (Nat; zero; suc; _+_; _≤_; 0≤n; s≤s)
 open import Empty using (¬_)
 open import Coproduct using (_⨄_; inl; inr)
+open import DependentPair using (_<-->_; _,_)
+open import Function using (id)
 open import Identity using (_≢_; _≡_; refl; ap)
 
 module Nat.Properties.Ordering where
@@ -38,3 +40,17 @@ total {suc m} {zero} = inr 0≤n
 total {suc m} {suc n} with total {m} {n} 
 ... | inl m≤n = inl (s≤s m≤n)
 ... | inr n≤m = inr (s≤s n≤m)
+
+{-
+  Exercise 6.3.c
+-}
+add-k-l : ∀ m n k -> m ≤ n -> m + k ≤ n + k
+add-k-l _ _ zero = id
+add-k-l m n (suc k) m≤n = s≤s (add-k-l m n k m≤n)
+
+add-k-r : ∀ m n k -> m + k ≤ n + k -> m ≤ n
+add-k-r m n zero = id
+add-k-r m n (suc k) (s≤s h) = add-k-r m n k h
+
+add-k : ∀ m n k -> (m ≤ n) <--> (m + k ≤ n + k)
+add-k m n k = add-k-l m n k , add-k-r m n k
