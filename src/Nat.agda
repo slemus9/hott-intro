@@ -2,12 +2,18 @@ open import Type using (Type)
 
 module Nat where
 
+-- Data Types
 data Nat : Type where
   zero : Nat
   suc : Nat -> Nat
 
 {-# BUILTIN NATURAL Nat #-}
 
+data _≤_ : Nat -> Nat -> Type where
+  0≤n : ∀ {n} -> zero ≤ n
+  s≤s : ∀ {m n} -> m ≤ n -> suc m ≤ suc n
+
+-- Operations
 {-
   Induction principle:
   Ctx, x : Nat |- P x type
