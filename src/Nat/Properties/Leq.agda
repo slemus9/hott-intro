@@ -11,6 +11,10 @@ module Nat.Properties.Leq where
 not-s≤0 : ∀ {n} -> ¬ (suc n ≤ 0)
 not-s≤0 {zero} ()
 
+left-suc : ∀ {m n} -> m ≤ n -> m ≤ suc n
+left-suc 0≤n = 0≤n
+left-suc (s≤s m≤n) = s≤s (left-suc m≤n)
+
 {-
   Exercise 6.3.a.i
 -}
