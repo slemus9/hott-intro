@@ -15,6 +15,12 @@ data _≤_ : Nat -> Nat -> Type where
 
 infix 4 _≤_
 
+data _<_ : Nat -> Nat -> Type where
+  0<s : ∀ {n} -> zero < suc n
+  s<s : ∀ {m n} -> m < n -> suc m < suc n
+
+infix 4 _<_
+
 -- Operations
 {-
   Induction principle:

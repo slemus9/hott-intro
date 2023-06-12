@@ -64,3 +64,6 @@
 - [Exercise 6.3.d](src/Nat/Properties/Leq.agda#L60)
 - [Exercise 6.3.e.i](src/Nat/Properties/Leq.agda#L75)
 - [Exercise 6.3.e.ii](src/Nat/Properties/Leq.agda#L92)
+- [Exercise 6.4.a.i](src/Nat/Properties/Less.agda#L7)
+- [Exercise 6.4.a.ii](src/Nat/Properties/Less.agda#L13)
+- [Exercise 6.4.a.iii](src/Nat/Properties/Less.agda#L19)
