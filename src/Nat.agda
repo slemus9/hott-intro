@@ -70,8 +70,8 @@ min (suc m) (suc n) = suc (min m n)
 
 -- Maximum
 max : Nat -> Nat -> Nat
-max m zero = m
 max zero n = n
+max m zero = m
 max (suc m) (suc n) = suc (max m n)
 
 -- Triangular numbers

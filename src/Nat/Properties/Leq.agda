@@ -6,7 +6,7 @@ open import DependentPair using (_<-->_; _×_; _,_)
 open import Function using (id; _∘_)
 open import Identity using (_≢_; _≡_; refl; ap)
 
-module Nat.Properties.Ordering where
+module Nat.Properties.Leq where
 
 not-s≤0 : ∀ {n} -> ¬ (suc n ≤ 0)
 not-s≤0 {zero} ()
@@ -79,4 +79,29 @@ leq-min-fwd zero m n _ = 0≤n , 0≤n
 leq-min-fwd (suc k) zero n = ex-falso ∘ not-s≤0
 leq-min-fwd (suc k) (suc m) zero = ex-falso ∘ not-s≤0
 leq-min-fwd (suc k) (suc m) (suc n) (s≤s k≤min) with leq-min-fwd k m n k≤min 
-... | (k≤m , k≤n)  = s≤s k≤m , s≤s k≤n
+... | (k≤m , k≤n) = s≤s k≤m , s≤s k≤n
+
+leq-min-bck : ∀ k m n -> (k ≤ m) × (k ≤ n) -> k ≤ min m n
+leq-min-bck _ m n (0≤n , _) = 0≤n
+leq-min-bck (suc k) (suc m) (suc n) (s≤s k≤m , s≤s k≤n) = s≤s (leq-min-bck k m n (k≤m , k≤n))
+
+leq-min : ∀ k m n -> (k ≤ min m n) <--> ((k ≤ m) × (k ≤ n))
+leq-min k m n = leq-min-fwd k m n , leq-min-bck k m n
+
+{-
+  Exercise 6.3.e.ii
+-}
+leq-max-fwd : ∀ m n k -> max m n ≤ k -> (m ≤ k) × (n ≤ k)
+leq-max-fwd zero zero k _ = 0≤n , 0≤n
+leq-max-fwd zero (suc n) k s≤k = 0≤n , s≤k
+leq-max-fwd (suc m) zero k s≤k = s≤k , 0≤n
+leq-max-fwd (suc m) (suc n) (suc k) (s≤s max≤k) with leq-max-fwd m n k max≤k
+... | (m≤k , n≤k)  = s≤s m≤k , s≤s n≤k
+
+leq-max-bck : ∀ m n k -> (m ≤ k) × (n ≤ k) -> max m n ≤ k
+leq-max-bck zero n k (0≤n , n≤k) = n≤k
+leq-max-bck (suc m) zero (suc k) (s≤s m≤k , 0≤n) = s≤s m≤k
+leq-max-bck (suc m) (suc n) (suc k) (s≤s m≤k , s≤s n≤k) = s≤s (leq-max-bck m n k (m≤k , n≤k))
+
+leq-max : ∀ m n k -> (max m n ≤ k) <--> ((m ≤ k) × (n ≤ k))
+leq-max m n k = leq-max-fwd m n k , leq-max-bck m n k
