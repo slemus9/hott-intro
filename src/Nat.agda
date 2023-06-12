@@ -117,3 +117,9 @@ zero /2 = zero
 (suc (suc n)) /2 = suc (n /2)
 
 div2 = _/2
+
+-- Distance (symmetric difference)
+dist : Nat -> Nat -> Nat
+dist zero n = n
+dist (suc m) zero = suc m
+dist (suc m) (suc n) = dist m n
