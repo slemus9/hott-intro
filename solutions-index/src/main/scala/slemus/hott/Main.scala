@@ -13,7 +13,7 @@ object Main extends IOApp.Simple:
   val groupNameId = "ex"
   val exerciseRegex = """Exercise\s*(?<ex>\d+(?:\.(?:\d+|\w+))*)""".r
 
-  def run: IO[Unit] = 
+  def run: IO[Unit] =
     val outPath = Path("..") / outFileName
     Files[IO].deleteIfExists(outPath) >>
       Files[IO].walk(Path("../src"))
@@ -27,10 +27,10 @@ object Main extends IOApp.Simple:
   def makeMarkdownLines(exercises: Stream[IO, Exercise]): Stream[IO, String] =
     Stream(title) ++ exercises.map(_.toMarkdownLine)
 
-  def extractAllExercises(chunkSize: Int): Pipe[IO, Path, Exercise] = 
+  def extractAllExercises(chunkSize: Int): Pipe[IO, Path, Exercise] =
     _.flatMap(extractFileExercises).through(sortExerciseStream(chunkSize))
 
-  def extractFileExercises(path: Path): Stream[IO, Exercise] = 
+  def extractFileExercises(path: Path): Stream[IO, Exercise] =
     Files[IO].readUtf8Lines(path)
       .zip(intsFrom(1))
       .flatMap(
@@ -38,21 +38,21 @@ object Main extends IOApp.Simple:
       )
 
   // We assume that there is only one "Exercise" annotation per line
-  def extractLineExercise(path: Path): ((String, Int)) => Option[Exercise] = 
-    (line, lineNumber) => exerciseRegex.findFirstMatchIn(line).map { m => 
+  def extractLineExercise(path: Path): ((String, Int)) => Option[Exercise] =
+    (line, lineNumber) => exerciseRegex.findFirstMatchIn(line).map { m =>
       val normalizedPath = Path(".") / Path("..").relativize(path)
-      Exercise(m.group(groupNameId), normalizedPath, lineNumber)  
+      Exercise(m.group(groupNameId), normalizedPath, lineNumber)
     }
 
-  /* 
+  /*
     I don't expect that the number of exercises will exceed the memory capacity.
-    If that is the case, we should re-implement this function 
+    If that is the case, we should re-implement this function
   */
   def sortExerciseStream(chunkSize: Int): Pipe[IO, Exercise, Exercise] = s =>
-    Stream.eval(s.compile.toList).flatMap { l => 
-      Stream.fromIterator(l.sortBy(_.id).iterator, chunkSize)
+    Stream.eval(s.compile.toList).flatMap { l =>
+      Stream.iterable(l.sortBy(_.id))
     }
 
-  def intsFrom(i: Int): Stream[Pure, Int] = Stream(i) ++ intsFrom(i + 1) 
+  def intsFrom(i: Int): Stream[Pure, Int] = Stream(i) ++ intsFrom(i + 1)
 
 end Main

@@ -1,7 +1,8 @@
 import Nat.Properties.Add as Add
 import Nat.Properties.Leq as Leq
 open import Nat
-open import DependentPair using (_<-->_; _,_)
+open import DependentPair using (_×_; _<-->_; _,_)
+open import Coproduct using (_⨄_; inl; inr)
 open import Function using (id; _∘_; _$_)
 open import Identity using (_≡_; refl; inv; ap)
 
@@ -58,3 +59,15 @@ triangle zero (suc n) (suc k) rewrite Add.left-suc k (dist k n)
   | commutative k n = s≤s (leq-dist-k n k)
 triangle (suc m) zero (suc k) = s≤s (leq-dist-k m k)
 triangle (suc m) (suc n) (suc k) = triangle m n k
+
+triangle-eq-fwd : ∀ m n k 
+  -> dist m n ≡ dist m k + dist k n 
+  -> ((m ≤ k) × (k ≤ n)) ⨄ ((n ≤ k) × (k ≤ m))
+triangle-eq-fwd zero zero zero = {!   !}
+triangle-eq-fwd zero zero (suc k) = {!   !}
+triangle-eq-fwd zero (suc n) zero = {!   !}
+triangle-eq-fwd zero (suc n) (suc k) = {!   !}
+triangle-eq-fwd (suc m) zero zero = {!   !}
+triangle-eq-fwd (suc m) zero (suc k) = {!   !}
+triangle-eq-fwd (suc m) (suc n) zero = {!   !}
+triangle-eq-fwd (suc m) (suc n) (suc k) = {!   !}
