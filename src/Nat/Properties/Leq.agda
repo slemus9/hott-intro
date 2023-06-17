@@ -1,4 +1,5 @@
 import Nat.Properties.Add as Add
+open import Nat.Properties.Observational.Equality using (peano7-r)
 open import Nat
 open import Empty using (¬_; ex-falso)
 open import Coproduct using (_⨄_; inl; inr)
@@ -11,9 +12,16 @@ module Nat.Properties.Leq where
 not-s≤0 : ∀ {n} -> ¬ (suc n ≤ 0)
 not-s≤0 {zero} ()
 
-left-suc : ∀ {m n} -> m ≤ n -> m ≤ suc n
-left-suc 0≤n = 0≤n
-left-suc (s≤s m≤n) = s≤s (left-suc m≤n)
+right-suc : ∀ {m n} -> m ≤ n -> m ≤ suc n
+right-suc 0≤n = 0≤n
+right-suc (s≤s m≤n) = s≤s (right-suc m≤n)
+
+n≤0 : ∀ {n} -> n ≤ 0 -> n ≡ 0
+n≤0 0≤n = refl
+
+ineq-+-nonzero : ∀ {m n k} -> m ≤ n -> m ≢ n + (k + 1)
+ineq-+-nonzero {suc m} {suc n} {k} (s≤s m≤n)
+  rewrite Add.left-suc n k = ineq-+-nonzero m≤n ∘ peano7-r
 
 {-
   Exercise 6.3.a.i
@@ -42,7 +50,7 @@ trans (s≤s m≤n) (s≤s n≤k) = s≤s (trans m≤n n≤k)
 total : ∀ {m n} -> (m ≤ n) ⨄ (n ≤ m)
 total {zero} {_} = inl 0≤n
 total {suc m} {zero} = inr 0≤n
-total {suc m} {suc n} with total {m} {n} 
+total {suc m} {suc n} with total {m} {n}
 ... | inl m≤n = inl (s≤s m≤n)
 ... | inr n≤m = inr (s≤s n≤m)
 
@@ -64,7 +72,7 @@ add-k m n k = add-k-r-fwd m n k , add-k-bck m n k
   Exercise 6.3.d
 -}
 add-k-l-fwd : ∀ k m n -> m ≤ n -> k + m ≤ k + n
-add-k-l-fwd k m n 
+add-k-l-fwd k m n
   rewrite Add.commutative k m | Add.commutative k n = add-k-r-fwd m n k
 
 add-mono : ∀ m n p q -> m ≤ n -> p ≤ q -> m + p ≤ n + q
@@ -72,7 +80,7 @@ add-mono m n p q m≤n p≤q = trans (add-k-r-fwd m n p m≤n) (add-k-l-fwd n p 
 
 mul-nonzero : ∀ m n k -> m ≤ n -> m * (k + 1) ≤ n * (k + 1)
 mul-nonzero m n zero = id
-mul-nonzero m n (suc k) m≤n = 
+mul-nonzero m n (suc k) m≤n =
   add-mono m n (m * (k + 1)) (n * (k + 1)) m≤n (mul-nonzero m n k m≤n)
 
 {-
@@ -82,7 +90,7 @@ leq-min-fwd : ∀ k m n -> k ≤ min m n -> (k ≤ m) × (k ≤ n)
 leq-min-fwd zero m n _ = 0≤n , 0≤n
 leq-min-fwd (suc k) zero n = ex-falso ∘ not-s≤0
 leq-min-fwd (suc k) (suc m) zero = ex-falso ∘ not-s≤0
-leq-min-fwd (suc k) (suc m) (suc n) (s≤s k≤min) with leq-min-fwd k m n k≤min 
+leq-min-fwd (suc k) (suc m) (suc n) (s≤s k≤min) with leq-min-fwd k m n k≤min
 ... | (k≤m , k≤n) = s≤s k≤m , s≤s k≤n
 
 leq-min-bck : ∀ k m n -> (k ≤ m) × (k ≤ n) -> k ≤ min m n

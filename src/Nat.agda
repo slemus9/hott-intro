@@ -30,8 +30,8 @@ infix 4 _<_
   --------------------------------------------------
   Ctx, x : Nat |- ind(p0, ps, x) : (n : Nat) -> P x
 
-  Computation rules: 
-  Ctx, x : Nat |- P x type 
+  Computation rules:
+  Ctx, x : Nat |- P x type
             Ctx |- p0 : P zero
             Ctx |- ps : (n : Nat) -> P n -> P (suc n)
   --------------------------------------------------
@@ -121,5 +121,5 @@ div2 = _/2
 -- Distance (symmetric difference)
 dist : Nat -> Nat -> Nat
 dist zero n = n
-dist (suc m) zero = suc m
+dist m zero = m
 dist (suc m) (suc n) = dist m n
