@@ -107,3 +107,10 @@ linear (suc k) zero n = refl
 linear (suc k) (suc m) zero = right-unit (suc k + suc k * m)
 linear (suc k) (suc m) (suc n)
   rewrite invariant (suc k) (suc k * m) (suc k * n) = linear (suc k) m n
+
+{-
+  Exercise 6.5.d
+-}
+dist-when-n≤m : ∀ {m n} -> n ≤ m -> dist m n + n ≡ m
+dist-when-n≤m {m} {_} 0≤n = right-unit m
+dist-when-n≤m (s≤s n≤m) = ap suc (dist-when-n≤m n≤m)
