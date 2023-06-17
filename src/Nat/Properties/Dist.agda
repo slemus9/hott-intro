@@ -1,4 +1,5 @@
 import Nat.Properties.Add as Add
+import Nat.Properties.Mul as Mul
 import Nat.Properties.Leq as Leq
 open import Nat.Properties.Observational.Equality using (peano7-r; peano8)
 open import Nat
@@ -89,3 +90,20 @@ triangle-eq-fwd (suc m) (suc n) zero
 triangle-eq-fwd (suc m) (suc n) (suc k) eq with triangle-eq-fwd m n k eq
 ... | inl (m≤k , k≤n) = inl (s≤s m≤k , s≤s k≤n)
 ... | inr (n≤k , k≤m) = inr (s≤s n≤k , s≤s k≤m)
+
+{-
+  Exercise 6.5.c.i
+-}
+invariant : ∀ k m n -> dist (k + m) (k + n) ≡ dist m n
+invariant zero m n rewrite Add.left-unit m | Add.left-unit n = refl
+invariant (suc k) m n rewrite Add.left-suc k m | Add.left-suc k n = invariant k m n
+
+{-
+  Exercise 6.5.c.ii
+-}
+linear : ∀ k m n -> dist (k * m) (k * n) ≡ k * dist m n
+linear zero m n rewrite Mul.left-zero m | Mul.left-zero n = inv $ Mul.left-zero (dist m n)
+linear (suc k) zero n = refl
+linear (suc k) (suc m) zero = right-unit (suc k + suc k * m)
+linear (suc k) (suc m) (suc n)
+  rewrite invariant (suc k) (suc k * m) (suc k * n) = linear (suc k) m n
