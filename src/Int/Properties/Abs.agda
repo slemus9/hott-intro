@@ -3,9 +3,7 @@ open import Nat using (_≤_; 0≤n; s≤s)
 open import Int.Properties.Suc
 open import Nat.Properties.Observational.Equality using (peano8)
 open import Nat.Properties.Leq as Leq
-open import Nat.Properties.Add as NatAdd
 open import Int
-open import Int.Properties.Add as IntAdd
 open import DependentPair using (_<-->_; _,_)
 open import Function using (id; _∘_; _$_)
 open import Empty using (ex-falso)

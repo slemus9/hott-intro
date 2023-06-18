@@ -77,5 +77,5 @@
 - [Exercise 6.5.c.i](src/Nat/Properties/Dist.agda#L95)
 - [Exercise 6.5.c.ii](src/Nat/Properties/Dist.agda#L102)
 - [Exercise 6.5.d](src/Nat/Properties/Dist.agda#L112)
-- [Exercise 6.6.i](src/Int/Properties/Abs.agda#L17)
-- [Exercise 6.6.ii](src/Int/Properties/Abs.agda#L31)
+- [Exercise 6.6.i](src/Int/Properties/Abs.agda#L15)
+- [Exercise 6.6.ii](src/Int/Properties/Abs.agda#L29)
