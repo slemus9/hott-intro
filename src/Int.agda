@@ -13,7 +13,7 @@ data Int : Type where
   zero : Int
   in-pos : Nat -> Int
 
-neg-one : Int 
+neg-one : Int
 neg-one = in-neg 0
 
 one : Int
@@ -34,7 +34,7 @@ ind-int {P} pneg1 pnegS p0 p1 pposS = go
     go (in-neg (Nat.suc n)) = pnegS n (go (in-neg n))
     go zero = p0
     go (in-pos zero) = p1
-    go (in-pos (Nat.suc n)) = pposS n (go (in-pos n)) 
+    go (in-pos (Nat.suc n)) = pposS n (go (in-pos n))
 
 -- successor function
 suc : Int -> Int
@@ -49,7 +49,7 @@ suc = ind-int pneg1 pnegS p0 p1 pposS
     p1 : Int
     p1 = in-pos 1
     pposS : Nat -> Int -> Int
-    pposS n _ = in-pos (Nat.suc (Nat.suc n)) 
+    pposS n _ = in-pos (Nat.suc (Nat.suc n))
 
 {-
   Exercise 4.1.a
@@ -112,7 +112,7 @@ infixl 6  _-_
 
 {-
   Exercise 4.1.c
-  multiplication    
+  multiplication
 -}
 _*_ : Int -> Int -> Int
 x * in-neg zero = - x
@@ -128,7 +128,7 @@ _ :  (in-neg 10) * zero ≡ zero
 _ = refl
 
 _ : (in-pos 2) * (in-pos 3) ≡ (in-pos 11)
-_ = refl 
+_ = refl
 
 _ : (in-neg 2) * (in-pos 3) ≡ (in-neg 11)
 _ = refl
@@ -140,3 +140,9 @@ _ : (in-neg 2) * (in-neg 3) ≡ (in-pos 11)
 _ = refl
 
 infixl 7  _*_
+
+-- Absolute value
+abs : Int -> Nat
+abs (in-neg n) = Nat.suc n
+abs zero = zero
+abs (in-pos n) = Nat.suc n

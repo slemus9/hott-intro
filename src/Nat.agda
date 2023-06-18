@@ -55,6 +55,8 @@ _+_ : Nat -> Nat -> Nat
 m + zero = m
 m + suc n = suc (m + n)
 
+add = _+_
+
 -- Multiplication
 _*_ : Nat -> Nat -> Nat
 m * zero = zero

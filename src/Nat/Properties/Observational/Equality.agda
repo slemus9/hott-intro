@@ -21,7 +21,7 @@ refl-Eq-Nat (suc n) = refl-Eq-Nat n
 equiv-Eq-Nat-l : ∀ n m -> n ≡ m -> Eq-Nat n m
 equiv-Eq-Nat-l n _ refl = refl-Eq-Nat n
 
-equiv-Eq-Nat-r : ∀ n m ->  Eq-Nat n m -> n ≡ m
+equiv-Eq-Nat-r : ∀ n m -> Eq-Nat n m -> n ≡ m
 equiv-Eq-Nat-r zero zero _ = refl
 equiv-Eq-Nat-r (suc n) (suc m) eqnat = ap suc (equiv-Eq-Nat-r n m eqnat)
 
