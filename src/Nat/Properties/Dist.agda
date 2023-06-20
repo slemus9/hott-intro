@@ -91,6 +91,23 @@ triangle-eq-fwd (suc m) (suc n) (suc k) eq with triangle-eq-fwd m n k eq
 ... | inl (m≤k , k≤n) = inl (s≤s m≤k , s≤s k≤n)
 ... | inr (n≤k , k≤m) = inr (s≤s n≤k , s≤s k≤m)
 
+triangle-eq-bck : ∀ {m n k}
+  -> ((m ≤ k) × (k ≤ n)) ⨄ ((n ≤ k) × (k ≤ m))
+  -> dist m n ≡ dist m k + dist k n
+triangle-eq-bck {_} {n} {_} (inl (0≤n , 0≤n)) = inv $ Add.left-unit n
+triangle-eq-bck {_} {suc n} {suc k} (inl (0≤n , s≤s k≤n))
+  rewrite Add.left-suc k (dist k n) = ap suc $ triangle-eq-bck $ inl (0≤n , k≤n)
+triangle-eq-bck (inl (s≤s m≤k , s≤s k≤n)) = triangle-eq-bck $ inl (m≤k , k≤n)
+triangle-eq-bck {m} {_} {_} (inr (0≤n , 0≤n)) rewrite right-unit m = refl
+triangle-eq-bck {suc m} {_} {suc k} (inr (0≤n , s≤s k≤m)) = ap suc $ hyp $ triangle-eq-bck $ inr (0≤n , k≤m) where
+  hyp : dist m 0 ≡ dist m k + dist k 0 -> m ≡ dist m k + k
+  hyp rewrite right-unit m | right-unit k = id
+triangle-eq-bck (inr (s≤s n≤k , s≤s k≤m)) = triangle-eq-bck $ inr (n≤k , k≤m)
+
+triangle-eq : ∀ m n k
+  -> (dist m n ≡ dist m k + dist k n) <--> (((m ≤ k) × (k ≤ n)) ⨄ ((n ≤ k) × (k ≤ m)))
+triangle-eq m n k = triangle-eq-fwd m n k , triangle-eq-bck
+
 {-
   Exercise 6.5.c.i
 -}
