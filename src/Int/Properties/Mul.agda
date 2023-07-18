@@ -80,11 +80,11 @@ right-pred x (in-pos Nat.zero) = inv (Minus.itself x)
   x * pred (in-pos (Nat.suc y)) = x * in-pos y
   (x + x * in-pos (suc y)) - x
 -}
-right-pred x (in-pos (Nat.suc y)) 
+right-pred x (in-pos (Nat.suc y))
   rewrite pred-pos y | Minus.add-zero-ends x (x * in-pos y) = refl
 
 left-pred : ∀ x y -> pred x * y ≡ x * y - y
-left-pred x (in-neg Nat.zero) 
+left-pred x (in-neg Nat.zero)
   rewrite Neg.distrib-+ x (in-neg Nat.zero) = refl
 {-
     pred x * in-neg (suc y)
@@ -97,12 +97,12 @@ left-pred x (in-neg Nat.zero)
     x * in-neg (suc y) - in-neg (suc y)
   = x * in-neg (suc y) + in-pos (suc y)
   = suc (x * in-neg (suc y) + in-pos y)
-  = suc (- (x + x * in-pos y) + in-pos y) 
+  = suc (- (x + x * in-pos y) + in-pos y)
 -}
 left-pred x (in-neg (Nat.suc y))
-  rewrite left-pred x (in-pos y) 
-  | Neg.distrib-+ (pred x) (x * in-pos y - in-pos y) 
-  | Neg.pred-inv x 
+  rewrite left-pred x (in-pos y)
+  | Neg.distrib-+ (pred x) (x * in-pos y - in-pos y)
+  | Neg.pred-inv x
   | Add.suc-left (- x) (- (x * in-pos y - in-pos y))
   | Neg.distrib-+ (x * in-pos y) (in-neg y)
   | inv (Add.assoc (- x) (- (x * in-pos y)) (in-pos y))
@@ -135,7 +135,7 @@ right-suc : ∀ x y -> x * suc y ≡ x * y + x
   x * suc (in-neg zero) = x * 0 = 0
   x * in-neg zero + x = - x + x = 0
 -}
-right-suc x (in-neg Nat.zero) 
+right-suc x (in-neg Nat.zero)
   rewrite Minus.left-neg x x
   | Minus.itself x = refl
 {-
@@ -143,18 +143,18 @@ right-suc x (in-neg Nat.zero)
   x * (in-neg (suc y)) + x = - (x + x * in-pos y) + x = (- x) + (- (x * in-pos)) + x
 -}
 right-suc x (in-neg (Nat.suc y))
-  rewrite suc-neg y 
-  | Neg.distrib-+ x (x * in-pos y) 
+  rewrite suc-neg y
+  | Neg.distrib-+ x (x * in-pos y)
   | Add.swap-left (- x) (- (x * in-pos y)) x
   | Add.left-inv x = right-neg-nat x y
 right-suc x zero = inv (Add.left-unit x)
 right-suc x (in-pos Nat.zero) = refl
 {-
-    x * suc (in-pos (suc y)) 
-  = x * in-pos (suc (suc y)) 
+    x * suc (in-pos (suc y))
+  = x * in-pos (suc (suc y))
   = x + x * in-pos (suc y)
   = x + (x + x * in-pos y)
-  
+
   x * in-pos (suc y) + x = x + x * in-pos y + x
 -}
 right-suc x (in-pos (Nat.suc y)) = inv (Add.swap-right x (x * in-pos y) x)
@@ -207,12 +207,12 @@ distrib-+-left x y (in-neg (Nat.suc z)) =
   ∎
 distrib-+-left x y zero = refl
 distrib-+-left x y (in-pos Nat.zero) = right-suc x y
-distrib-+-left x y (in-pos (Nat.suc z)) = 
+distrib-+-left x y (in-pos (Nat.suc z)) =
   begin
     x * suc (y + in-pos z)
   ≡⟨ right-suc x (y + in-pos z) ⟩
     x * (y + in-pos z) + x
-  ≡⟨ ap (_+ x) $ distrib-+-left x y (in-pos z) ⟩ 
+  ≡⟨ ap (_+ x) $ distrib-+-left x y (in-pos z) ⟩
     x * y + x * in-pos z + x
   ≡⟨ Add.swap-right (x * y) (x * in-pos z) x ⟩
     x * y + (x + x * in-pos z)
@@ -245,7 +245,7 @@ left-neg x (in-neg (Nat.suc y)) = begin
     - (- x * (one + in-pos y))
   ≡⟨ ap (λ k -> - ((- x) * k)) (Add.commutative one (in-pos y)) ⟩
     - (- x * suc (in-pos y))
-  ≡⟨ ap -_ (right-suc (- x) (in-pos y)) ⟩ 
+  ≡⟨ ap -_ (right-suc (- x) (in-pos y)) ⟩
     - (- x * in-pos y - x)
   ≡⟨ ap (λ k -> - (k - x)) (left-neg x (in-pos y)) ⟩
     - ((- (x * in-pos y)) - x)
@@ -306,11 +306,11 @@ commutative x (in-neg (Nat.suc y)) = inv (begin
     - (in-pos (Nat.suc y) * x)
   ≡⟨ ap (λ k -> - (k * x)) (inv $ suc-pos y) ⟩
     - (suc (in-pos y) * x)
-  ≡⟨ ap -_ $ left-suc (in-pos y) x ⟩
+  ≡⟨ ap -_ (left-suc (in-pos y) x) ⟩
     - (in-pos y * x + x)
-  ≡⟨ ap (λ k -> - (k + x)) $ commutative (in-pos y) x ⟩
+  ≡⟨ ap (λ k -> - (k + x)) (commutative (in-pos y) x) ⟩
     - (x * in-pos y + x)
-  ≡⟨ ap -_ $ Add.commutative (x * in-pos y) x ⟩
+  ≡⟨ ap -_ (Add.commutative (x * in-pos y) x) ⟩
     - (x + x * in-pos y)
   ∎)
 commutative x zero = inv $ left-zero x

@@ -62,6 +62,8 @@ _*_ : Nat -> Nat -> Nat
 m * zero = zero
 m * suc n = m + (m * n)
 
+mul = _*_
+
 infixl 6  _+_
 infixl 7  _*_
 
