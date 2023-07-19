@@ -1,4 +1,5 @@
 import Nat
+import Nat.Properties.Add as NatAdd
 open import Int
 open import Int.Properties.Suc
 import Int.Properties.Neg as Neg
@@ -326,3 +327,29 @@ commutative x (in-pos (Nat.suc y)) = inv (begin
   ≡⟨ Add.commutative (x * in-pos y) x ⟩
     x + x * in-pos y
   ∎)
+
+mul-pos : ∀ m n -> in-pos m * in-pos n ≡ pred (in-pos (Nat.suc m Nat.* Nat.suc n))
+mul-pos m Nat.zero = inv (pred-pos m)
+mul-pos m (Nat.suc n)
+  rewrite mul-pos m n
+  | NatAdd.left-suc m (Nat.suc m Nat.* n)
+  | Add.add-pos m (m Nat.+ Nat.suc m Nat.* n) = refl
+
+inv-by-inv : ∀ x y -> (- x) * (- y) ≡ x * y
+inv-by-inv x (in-neg y) rewrite left-neg x (in-pos y) = inv (right-neg-nat x y)
+inv-by-inv x zero = refl
+inv-by-inv x (in-pos y)
+  rewrite right-neg-nat (- x) y
+  | inv (left-neg (- x) (in-pos y))
+  | Neg.double-inv x = refl
+
+neg-by-neg : ∀ m n -> in-neg m * in-neg n ≡ in-pos m * in-pos n
+neg-by-neg m n = begin
+    in-neg m * in-neg n
+  ≡⟨ ap (_* in-neg n) (inv $ Neg.pos-inv m) ⟩
+    (- (in-pos m)) * in-neg n
+  ≡⟨ ap (in-neg m *_) (inv $ Neg.pos-inv n) ⟩
+    (- (in-pos m)) * (- (in-pos n))
+  ≡⟨ inv-by-inv (in-pos m) (in-pos n) ⟩
+    in-pos m * in-pos n
+  ∎

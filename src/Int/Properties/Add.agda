@@ -1,4 +1,5 @@
 import Nat
+import Nat.Properties.Add as NatAdd
 open import Int
 open import Int.Properties.Suc
 open import Int.Properties.Neg
@@ -16,17 +17,17 @@ right-unit x = refl
 
 left-unit : ∀ x -> zero + x ≡ x
 left-unit (in-neg Nat.zero) = refl
-left-unit (in-neg (Nat.suc n)) = 
+left-unit (in-neg (Nat.suc n)) =
   begin
     pred (zero + in-neg n)
-  ≡⟨ ap pred (left-unit (in-neg n)) ⟩ 
+  ≡⟨ ap pred (left-unit (in-neg n)) ⟩
     pred (in-neg n)
   ≡⟨ pred-neg n ⟩
     in-neg (Nat.suc n)
   ∎
 left-unit zero = refl
 left-unit (in-pos Nat.zero) = refl
-left-unit (in-pos (Nat.suc n)) = 
+left-unit (in-pos (Nat.suc n)) =
   begin
     suc (zero + in-pos n)
   ≡⟨ ap suc (left-unit (in-pos n)) ⟩
@@ -60,7 +61,7 @@ pred-right x zero = refl
   pred (x + in-pos zero) = pred (suc x) = x
 -}
 pred-right x (in-pos Nat.zero) rewrite pred-suc x = refl
-pred-right x (in-pos (Nat.suc y)) = 
+pred-right x (in-pos (Nat.suc y)) =
   begin
     x + pred (in-pos (Nat.suc y))
   ≡⟨ ap (x +_) (pred-pos y) ⟩
@@ -70,9 +71,9 @@ pred-right x (in-pos (Nat.suc y)) =
   ∎
 
 pred-left : ∀ x y -> pred x + y ≡ pred (x + y)
--- pred x + in-neg zero = pred (pred x) 
+-- pred x + in-neg zero = pred (pred x)
 pred-left x (in-neg Nat.zero) = refl
-pred-left x (in-neg (Nat.suc y)) = 
+pred-left x (in-neg (Nat.suc y)) =
   begin
     pred x + in-neg (Nat.suc y)
   ≡⟨⟩
@@ -84,7 +85,7 @@ pred-left x (in-neg (Nat.suc y)) =
   ∎
 pred-left x zero = refl
 pred-left x (in-pos Nat.zero) rewrite suc-pred-eq x = refl
-pred-left x (in-pos (Nat.suc y)) = 
+pred-left x (in-pos (Nat.suc y)) =
   begin
     pred x + in-pos (Nat.suc y)
   ≡⟨⟩
@@ -100,7 +101,7 @@ pred-left x (in-pos (Nat.suc y)) =
 suc-right : ∀ x y -> x + suc y ≡ suc (x + y)
 {-
   x + (suc (in-neg zero)) = x + zero = x
-  suc (x + (in-neg zero)) = suc (pred x) = x  
+  suc (x + (in-neg zero)) = suc (pred x) = x
 -}
 suc-right x (in-neg Nat.zero) rewrite suc-pred x = refl
 {-
@@ -111,7 +112,7 @@ suc-right x (in-neg Nat.zero) rewrite suc-pred x = refl
   = suc (pred (x + in-neg y))
   = x + in-neg y
 -}
-suc-right x (in-neg (Nat.suc y)) 
+suc-right x (in-neg (Nat.suc y))
   rewrite suc-pred (x + in-neg y) = refl
 suc-right x zero = refl
 -- x + suc (in-pos zero) = x + in-pos (suc zero) = suc (x + in-pos zero)
@@ -221,7 +222,7 @@ commutative x (in-neg Nat.zero)
 -}
 commutative x (in-neg (Nat.suc y))
   rewrite commutative x (in-neg y)
-  | inv (pred-neg y) 
+  | inv (pred-neg y)
   | pred-left (in-neg y) x = refl
 commutative x zero rewrite left-unit x = refl
 {-
@@ -254,7 +255,7 @@ left-inv : ∀ x -> (- x) + x ≡ zero
 -- (- in-neg zero) + (in-neg zero) = in-pos zero + in-neg zero = pred (in-pos zero) = zero
 left-inv (in-neg Nat.zero) = refl
 -- TODO: Check why rewriting generates an error with the termination checker
-left-inv (in-neg (Nat.suc x)) = 
+left-inv (in-neg (Nat.suc x)) =
   begin
     pred (in-pos (Nat.suc x) + in-neg x)
   ≡⟨ ap pred (commutative (in-pos (Nat.suc x)) (in-neg x)) ⟩
@@ -292,3 +293,15 @@ swap-right x y z rewrite assoc x y z | commutative y z = refl
 
 swap-left : ∀ x y z -> x + y + z ≡ y + (x + z)
 swap-left x y z rewrite commutative x y | assoc y x z = refl
+
+add-pos : ∀ m n -> in-pos m + in-pos n ≡ pred (in-pos (Nat._+_ (Nat.suc m) (Nat.suc n)))
+add-pos m Nat.zero rewrite pred-pos (Nat.suc m) = suc-pos m
+add-pos m (Nat.suc n)
+  rewrite add-pos m n
+  | suc-pred (in-pos (Nat.add (Nat.suc m) (Nat.suc n))) = refl
+
+add-neg : ∀ m n -> in-neg m + in-neg n ≡ suc (in-neg (Nat._+_ (Nat.suc m) (Nat.suc n)))
+add-neg m Nat.zero rewrite suc-neg (Nat.suc m) = pred-neg m
+add-neg m (Nat.suc n)
+  rewrite add-neg m n
+  | pred-suc (in-neg (Nat._+_ (Nat.suc m) (Nat.suc n))) = refl
