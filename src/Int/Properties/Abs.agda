@@ -64,7 +64,6 @@ distrib-*-pos : ∀ m n -> abs (in-pos m * in-pos n) ≡ Nat.suc m Nat.* Nat.suc
 distrib-*-pos m n
   rewrite IntMul.mul-pos m n
   | NatAdd.left-suc m (Nat.suc m Nat.* n) = refl
-
 distrib-* : ∀ x y -> abs (x * y) ≡ Nat._*_ (abs x) (abs y)
 distrib-* (in-neg x) (in-neg y)
   rewrite IntMul.neg-by-neg x y = distrib-*-pos x y
