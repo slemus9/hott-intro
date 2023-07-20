@@ -1,4 +1,6 @@
 open import Type using (Type)
+open import DependentPair using (Σ)
+open import Identity using (_≡_)
 
 module Nat where
 
@@ -127,3 +129,7 @@ dist : Nat -> Nat -> Nat
 dist zero n = n
 dist m zero = m
 dist (suc m) (suc n) = dist m n
+
+-- Divides relation
+_divides_ : Nat -> Nat -> Type
+d divides n = Σ Nat (λ k -> d * k ≡ n)
