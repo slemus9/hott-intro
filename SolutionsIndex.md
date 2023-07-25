@@ -1,10 +1,12 @@
 # Solutions Index
+## Chapter 2:
 - [Exercise 2.2](src/Function/Properties/Compose.agda#L27)
 - [Exercise 2.3.a](src/Function.agda#L16)
 - [Exercise 2.3.b](src/Function/Properties/Const.agda#L10)
 - [Exercise 2.3.c](src/Function/Properties/Const.agda#L30)
 - [Exercise 2.4.a](src/Function.agda#L26)
 - [Exercise 2.4.b](src/Function/Properties/Swap.agda#L10)
+## Chapter 3:
 - [Exercise 3.1.a](src/Nat/ExtraExercises.agda#L103)
 - [Exercise 3.1.a](src/Nat/ExtraExercises.agda#L150)
 - [Exercise 3.2](src/Nat/ExtraExercises.agda#L197)
@@ -12,6 +14,7 @@
 - [Exercise 3.3.b](src/Nat/ExtraExercises.agda#L320)
 - [Exercise 3.4](src/Nat/ExtraExercises.agda#L345)
 - [Exercise 3.5](src/Nat/ExtraExercises.agda#L388)
+## Chapter 4:
 - [Exercise 4.1.a](src/Int.agda#L55)
 - [Exercise 4.1.b](src/Int.agda#L73)
 - [Exercise 4.1.c](src/Int.agda#L114)
@@ -32,6 +35,7 @@
 - [Exercise 4.4.f](src/List.agda#L90)
 - [Exercise 4.4.g](src/List.agda#L102)
 - [Exercise 4.4.h](src/List.agda#L112)
+## Chapter 5:
 - [Exercise 5.1](src/Identity/Properties/Concat.agda#L35)
 - [Exercise 5.2](src/Identity/Properties/Concat.agda#L44)
 - [Exercise 5.3](src/Identity.agda#L114)
@@ -46,6 +50,7 @@
 - [Exercise 5.8.b](src/Int/Properties/Mul.agda#L55)
 - [Exercise 5.8.c](src/Int/Properties/Mul.agda#L190)
 - [Exercise 5.8.d](src/Int/Properties/Mul.agda#L288)
+## Chapter 6:
 - [Exercise 6.1.a.i](src/Nat/Properties/Add.agda#L59)
 - [Exercise 6.1.a.ii](src/Nat/Properties/Mul.agda#L133)
 - [Exercise 6.1.b.i](src/Nat/Properties/Add.agda#L73)

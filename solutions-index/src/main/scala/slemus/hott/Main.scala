@@ -2,57 +2,50 @@ package slemus.hott
 
 import cats.effect.{IOApp, IO}
 import cats.syntax.traverse.*
-import fs2.{Stream, Pipe, Pure}
+import fs2.{Chunk, Stream, Pipe, Pure}
 import fs2.io.file.{Files, Path}
 
 object Main extends IOApp.Simple:
 
-  // TODO: the title, input directory and output file paths should be arguments to the program
+  // TODO: all these variables should be given as an input to the program
   val title = "# Solutions Index"
   val outFileName = "SolutionsIndex.md"
-  val groupNameId = "ex"
-  val exerciseRegex = """Exercise\s*(?<ex>\d+(?:\.(?:\d+|\w+))*)""".r
+  val chunkSize = 20
 
   def run: IO[Unit] =
     val outPath = Path("..") / outFileName
     Files[IO].deleteIfExists(outPath) >>
       Files[IO].walk(Path("../src"))
         .filter(_.extName == ".agda")
-        .through(extractAllExercises(20)) // TODO: Make the chunk size an argument to the program
+        .through(extractAllExercises(chunkSize))
         .through(makeMarkdownLines)
         .through(Files[IO].writeUtf8Lines(outPath))
         .compile
         .drain
 
-  def makeMarkdownLines(exercises: Stream[IO, Exercise]): Stream[IO, String] =
-    Stream(title) ++ exercises.map(_.toMarkdownLine)
+  def makeMarkdownLines(exercises: Stream[IO, ChapterExercise]): Stream[IO, String] =
+    Stream(title) ++ exercises.groupAdjacentBy(_.chapter).flatMap(makeChapterMarkdown)
 
-  def extractAllExercises(chunkSize: Int): Pipe[IO, Path, Exercise] =
+  def makeChapterMarkdown(chapter: Int, exercises: Chunk[ChapterExercise]): Stream[Pure, String] =
+    Stream(s"## Chapter $chapter:") ++ Stream.chunk(exercises).map(_.toMarkdownLine)
+
+  def extractAllExercises(chunkSize: Int): Pipe[IO, Path, ChapterExercise] =
     _.flatMap(extractFileExercises).through(sortExerciseStream(chunkSize))
 
-  def extractFileExercises(path: Path): Stream[IO, Exercise] =
+  def extractFileExercises(path: Path): Stream[IO, ChapterExercise] =
+    val normalizedPath = Path(".") / Path("..").relativize(path)
     Files[IO].readUtf8Lines(path)
-      .zip(intsFrom(1))
-      .flatMap(
-        extractLineExercise(path).andThen(Stream.fromOption(_))
-      )
-
-  // We assume that there is only one "Exercise" annotation per line
-  def extractLineExercise(path: Path): ((String, Int)) => Option[Exercise] =
-    (line, lineNumber) => exerciseRegex.findFirstMatchIn(line).map { m =>
-      val normalizedPath = Path(".") / Path("..").relativize(path)
-      Exercise(m.group(groupNameId), normalizedPath, lineNumber)
-    }
+      .zipWithIndex
+      .flatMap { case (line, lineNumber) =>
+        Stream.fromOption(ChapterExercise.make(normalizedPath, line, lineNumber + 1))
+      }
 
   /*
     I don't expect that the number of exercises will exceed the memory capacity.
     If that is the case, we should re-implement this function
   */
-  def sortExerciseStream(chunkSize: Int): Pipe[IO, Exercise, Exercise] = s =>
+  def sortExerciseStream(chunkSize: Int): Pipe[IO, ChapterExercise, ChapterExercise] = s =>
     Stream.eval(s.compile.toList).flatMap { l =>
-      Stream.iterable(l.sortBy(_.id))
+      Stream.iterable(l.sortBy(_.exerciseId))
     }
-
-  def intsFrom(i: Int): Stream[Pure, Int] = Stream(i) ++ intsFrom(i + 1)
-
 end Main
