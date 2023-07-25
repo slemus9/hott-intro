@@ -4,6 +4,7 @@ import cats.effect.{IOApp, IO}
 import cats.syntax.traverse.*
 import fs2.{Chunk, Stream, Pipe, Pure}
 import fs2.io.file.{Files, Path}
+import fs2.io.file.Flags
 
 object Main extends IOApp.Simple:
 
@@ -14,14 +15,13 @@ object Main extends IOApp.Simple:
 
   def run: IO[Unit] =
     val outPath = Path("..") / outFileName
-    Files[IO].deleteIfExists(outPath) >>
-      Files[IO].walk(Path("../src"))
-        .filter(_.extName == ".agda")
-        .through(extractAllExercises(chunkSize))
-        .through(makeMarkdownLines)
-        .through(Files[IO].writeUtf8Lines(outPath))
-        .compile
-        .drain
+    Files[IO].walk(Path("../src"))
+      .filter(_.extName == ".agda")
+      .through(extractAllExercises(chunkSize))
+      .through(makeMarkdownLines)
+      .through(Files[IO].writeUtf8Lines(outPath, Flags.Write))
+      .compile
+      .drain
 
   def makeMarkdownLines(exercises: Stream[IO, ChapterExercise]): Stream[IO, String] =
     Stream(title) ++ exercises.groupAdjacentBy(_.chapter).flatMap(makeChapterMarkdown)
