@@ -1,15 +1,15 @@
 open import Type using (Type)
-open import Nat
-open import Function using (id)
-open import Identity using (_≡_; refl; cong)
+open import Nat.Base
+open import Function.Base using (id)
+open import Identity.Base using (_≡_; refl; cong)
 open import Identity.Reasoning
 
 -- Module that contains some exercises using the induction principle
-module Nat.ExtraExercises where 
+module Nat.ExtraExercises where
 
 {-
   Addition with the induction principle on the second argument
-  m : Nat |- add(m) : Nat -> Nat. We have the constant family 
+  m : Nat |- add(m) : Nat -> Nat. We have the constant family
   P(n) := Nat
 
   Ctx, x : Nat |- Nat
@@ -24,8 +24,8 @@ module Nat.ExtraExercises where
   add-right-ind m = ind-nat (add-zero-right m) (add-succ-right m)
 
   Let:
-  p0 := add-zero m 
-  ps := add-suc m 
+  p0 := add-zero m
+  ps := add-suc m
 
   Computation:
     add-right-ind m zero
@@ -44,7 +44,7 @@ module Nat.ExtraExercises where
 add-zero-right : Nat -> Nat
 add-zero-right m = m
 
-add-suc-right : Nat -> Nat -> Nat -> Nat 
+add-suc-right : Nat -> Nat -> Nat -> Nat
 add-suc-right m n = suc
 
 add-right-ind : Nat -> Nat -> Nat
@@ -55,11 +55,11 @@ _ = refl
 
 {-
   This proof can also be expressed in terms of the induction principle ind-nat,
-  where P n = add-right-ind m n ≡ m + n 
+  where P n = add-right-ind m n ≡ m + n
 -}
 add-eq : ∀ m n -> add-right-ind m n ≡ m + n
 add-eq m zero = refl
-add-eq m (suc n) = 
+add-eq m (suc n) =
   begin
     add-right-ind m (suc n)
   ≡⟨⟩
@@ -84,7 +84,7 @@ add-eq-ind m = ind-nat p0 ps
     p0 = refl
 
     ps : (n : Nat) -> P n -> P (suc n)
-    ps n IH = 
+    ps n IH =
       begin
         add-right-ind m (suc n)
       ≡⟨⟩
@@ -131,7 +131,7 @@ _ = refl
 
 mul-eq : ∀ m n -> mul-right-ind m n ≡ m * n
 mul-eq m zero = refl
-mul-eq m (suc n) = 
+mul-eq m (suc n) =
   begin
     mul-right-ind m (suc n)
   ≡⟨⟩
@@ -178,7 +178,7 @@ _ = refl
 
 exp-eq : ∀ m n -> exp m n ≡ m ^ n
 exp-eq m zero = refl
-exp-eq m (suc n) = 
+exp-eq m (suc n) =
   begin
     exp m (suc n)
   ≡⟨⟩
@@ -223,7 +223,7 @@ min-eq : ∀ m n -> min-ind m n ≡ min m n
 min-eq zero zero = refl
 min-eq (suc m) zero = refl
 min-eq zero (suc n) = refl
-min-eq (suc m) (suc n) = 
+min-eq (suc m) (suc n) =
   begin
     min-ind (suc m) (suc n)
   ≡⟨⟩
@@ -249,7 +249,7 @@ max-suc : Nat -> (Nat -> Nat) -> Nat -> Nat
 max-suc m next = ind-nat (suc m) (λ n -> λ _ -> suc (next n))
 
 max-ind : Nat -> Nat -> Nat
-max-ind = ind-nat id max-suc 
+max-ind = ind-nat id max-suc
 
 _ : max-ind 10 0 ≡ 10
 _ = refl
@@ -267,7 +267,7 @@ max-eq : ∀ m n -> max-ind m n  ≡ max m n
 max-eq zero zero = refl
 max-eq zero (suc n) = refl
 max-eq (suc m) zero = refl
-max-eq (suc m) (suc n) = 
+max-eq (suc m) (suc n) =
   begin
     max-ind (suc m) (suc n)
   ≡⟨⟩
@@ -284,7 +284,7 @@ max-eq (suc m) (suc n) =
     suc (max-ind m n)
   ≡⟨ cong suc (max-eq m n) ⟩
     suc (max m n)
-  ∎ 
+  ∎
 
 {-
   Exercise 3.3.a
@@ -299,7 +299,7 @@ _ = refl
 
 triangular-eq : ∀ n -> triangular-ind n ≡ triangular n
 triangular-eq zero = refl
-triangular-eq (suc n) = 
+triangular-eq (suc n) =
   begin
     triangular-ind (suc n)
   ≡⟨⟩
@@ -326,7 +326,7 @@ fact-ind = ind-nat 1 (λ n -> λ next -> (suc n) * next)
 
 fact-eq : ∀ n -> fact-ind n ≡ n !
 fact-eq zero = refl
-fact-eq (suc n) = 
+fact-eq (suc n) =
   begin
     fact-ind (suc n)
   ≡⟨⟩
@@ -345,7 +345,7 @@ fact-eq (suc n) =
   Exercise 3.4
   Binomial coefficient
 -}
-bin-coef-zero : Nat -> Nat 
+bin-coef-zero : Nat -> Nat
 bin-coef-zero = ind-nat 1 (λ _ -> λ _ -> zero)
 
 bin-coef-suc : Nat -> (Nat -> Nat) -> Nat -> Nat
@@ -361,7 +361,7 @@ bin-coef-eq : ∀ n k -> bin-coef-ind n k  ≡ bin-coef n k
 bin-coef-eq zero zero = refl
 bin-coef-eq zero (suc k) = refl
 bin-coef-eq (suc n) zero = refl
-bin-coef-eq (suc n) (suc k) = 
+bin-coef-eq (suc n) (suc k) =
   begin
     bin-coef-ind (suc n) (suc k)
   ≡⟨⟩

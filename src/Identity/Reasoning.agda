@@ -1,5 +1,5 @@
 open import Type using (Type)
-open import Identity using (_≡_; refl; trans)
+open import Identity.Base using (_≡_; refl; trans)
 
 module Identity.Reasoning {A : Type} where
 
@@ -10,7 +10,7 @@ infix  3 _∎
 begin_ : ∀ {x y : A}
   → x ≡ y
     -----
-  → x ≡ y 
+  → x ≡ y
 begin x≡y = x≡y
 
 _≡⟨⟩_ : ∀ (x : A) {y : A}

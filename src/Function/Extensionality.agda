@@ -1,5 +1,5 @@
 open import Type using (Type)
-open import Identity using (_≡_)
+open import Identity.Base using (_≡_)
 
 module Function.Extensionality where
 
