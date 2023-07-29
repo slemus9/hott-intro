@@ -139,3 +139,7 @@ dist (suc m) (suc n) = dist m n
 -- Divides relation
 _divides_ : Nat -> Nat -> Type
 d divides n = Σ Nat (λ k -> d * k ≡ n)
+
+-- Congruence relation modulo k
+_≡_mod_ : Nat -> Nat -> Nat -> Type
+x ≡ y mod k = k divides (dist x y)
