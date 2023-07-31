@@ -83,3 +83,5 @@
 - [Exercise 6.6.i](src/Int/Abs.agda#L24)
 - [Exercise 6.6.ii](src/Int/Abs.agda#L38)
 - [Exercise 6.6.iii](src/Int/Abs.agda#L60)
+## Chapter 7:
+- [Exercise 7.1](src/Nat/Divides.agda#L25)

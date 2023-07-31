@@ -131,3 +131,12 @@ linear (suc k) (suc m) (suc n)
 dist-when-n≤m : ∀ {m n} -> n ≤ m -> dist m n + n ≡ m
 dist-when-n≤m {m} {_} 0≤n = right-unit m
 dist-when-n≤m (s≤s n≤m) = ap suc (dist-when-n≤m n≤m)
+
+clear-add-eq-when-n≤m : ∀ m n k -> n ≤ m -> m ≡ n + k -> dist m n ≡ k
+clear-add-eq-when-n≤m m zero k 0≤n
+  rewrite Add.left-unit k | right-unit m = id
+clear-add-eq-when-n≤m (suc m) (suc n) k (s≤s n≤m)
+  rewrite Add.left-suc n k = clear-add-eq-when-n≤m m n k n≤m ∘ peano7-r
+
+clear-add-eq : ∀ m n k -> m ≡ n + k -> dist m n ≡ k
+clear-add-eq m n k eq = clear-add-eq-when-n≤m m n k (Leq.leq-for-add-eq m n k eq) eq

@@ -1,5 +1,5 @@
 import Nat.Add as Add
-open import Nat.Observational.Equality using (peano7-r)
+open import Nat.Observational.Equality using (peano7-r; peano8)
 open import Nat.Base
 open import Empty using (ex-falso)
 open import Empty.Negation using (¬_)
@@ -118,3 +118,9 @@ leq-max-bck (suc m) (suc n) (suc k) (s≤s m≤k , s≤s n≤k) = s≤s (leq-max
 
 leq-max : ∀ m n k -> (max m n ≤ k) <--> ((m ≤ k) × (n ≤ k))
 leq-max m n k = leq-max-fwd m n k , leq-max-bck m n k
+
+leq-for-add-eq : ∀ m n k -> m ≡ n + k -> n ≤ m
+leq-for-add-eq m zero k _ = 0≤n
+leq-for-add-eq zero (suc n) k rewrite Add.left-suc n k = ex-falso ∘ peano8
+leq-for-add-eq (suc m) (suc n) k
+  rewrite Add.left-suc n k = s≤s ∘ leq-for-add-eq m n k ∘ peano7-r
