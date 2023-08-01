@@ -48,10 +48,10 @@ trans (s≤s m≤n) (s≤s n≤k) = s≤s (trans m≤n n≤k)
 {-
   Exercise 6.3.b
 -}
-total : ∀ {m n} -> (m ≤ n) ⨄ (n ≤ m)
-total {zero} {_} = inl 0≤n
-total {suc m} {zero} = inr 0≤n
-total {suc m} {suc n} with total {m} {n}
+total : ∀ m n -> (m ≤ n) ⨄ (n ≤ m)
+total zero _ = inl 0≤n
+total (suc m) zero = inr 0≤n
+total (suc m) (suc n) with total m n
 ... | inl m≤n = inl (s≤s m≤n)
 ... | inr n≤m = inr (s≤s n≤m)
 

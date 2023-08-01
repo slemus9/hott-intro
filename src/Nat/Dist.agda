@@ -140,3 +140,15 @@ clear-add-eq-when-n≤m (suc m) (suc n) k (s≤s n≤m)
 
 clear-add-eq : ∀ m n k -> m ≡ n + k -> dist m n ≡ k
 clear-add-eq m n k eq = clear-add-eq-when-n≤m m n k (Leq.leq-for-add-eq m n k eq) eq
+
+dist-through-fwd : ∀ {m n k}
+  -> m ≤ n
+  -> n ≤ k
+  -> dist m k ≡ dist m n + dist n k
+dist-through-fwd m≤n n≤k = triangle-eq-bck $ inl (m≤n , n≤k)
+
+dist-through-bck : ∀ {m n k}
+  -> m ≤ n
+  -> n ≤ k
+  -> dist k m ≡ dist k n + dist n m
+dist-through-bck m≤n n≤k = triangle-eq-bck $ inr (m≤n , n≤k)
