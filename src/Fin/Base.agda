@@ -30,7 +30,7 @@ data Fin : Nat -> Type where
 ind-fin : {P : (k : Nat) -> Fin k -> Type}
   -> (∀ k -> P (suc k) base)
   -> (∀ k x -> P k x -> P (suc k) (i x))
-  -> ∀ k -> ∀ x -> P k x
+  -> ∀ k x -> P k x
 ind-fin p g (suc k) base = p k
 ind-fin p g (suc k) (i x) = g k x (ind-fin p g k x)
 
