@@ -53,3 +53,10 @@ asym (s<s m<n) (s<s n<m) = asym m<n n<m
 -- asym-bck {zero} {suc n} ¬0<s = ex-falso (¬0<s 0<s)
 -- asym-bck {suc m} {zero} _ = 0<s
 -- asym-bck {suc m} {suc n} ¬s<s = s<s $ asym-bck (¬s<s ∘ s<s)
+
+n<s : ∀ {n} -> n < suc n
+n<s {zero} = 0<s
+n<s {suc n} = s<s n<s
+
+when-equal : ∀ {m n} -> m ≡ n -> ¬ (m < n)
+when-equal eq rewrite eq = antireflex
