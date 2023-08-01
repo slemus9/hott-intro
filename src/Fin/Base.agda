@@ -28,12 +28,11 @@ data Fin : Nat -> Type where
 
 -- Induction principle
 ind-fin : {P : (k : Nat) -> Fin k -> Type}
-  -> (k : Nat)
   -> (∀ k -> P (suc k) base)
   -> (∀ k x -> P k x -> P (suc k) (i x))
-  -> ∀ x -> P k x
-ind-fin (suc k) p g base = p k
-ind-fin (suc k) p g (i x) = g k x (ind-fin k p g x)
+  -> ∀ k -> ∀ x -> P k x
+ind-fin p g (suc k) base = p k
+ind-fin p g (suc k) (i x) = g k x (ind-fin p g k x)
 
 -- Inclusion functions
 incl : ∀ k -> Fin k -> Nat
