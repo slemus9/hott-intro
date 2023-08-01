@@ -4,6 +4,7 @@ import Bool
 import Coproduct
 import DependentPair
 import Empty
+import Fin
 import Function
 import Identity
 import Int
