@@ -7,12 +7,12 @@ open import Empty using (ex-falso)
 
 module Fin.Incl where
 
-bounded : ∀ k -> (x : Fin k) -> incl k x < k
-bounded (suc k) base = Less.n<s
-bounded (suc k) (i x) = Less.right-suc (bounded k x)
+bounded : ∀ {k} -> (x : Fin k) -> incl x < k
+bounded base = Less.n<s
+bounded (i x) = Less.right-suc (bounded x)
 
-injective : ∀ k -> (x y : Fin k) -> incl k x ≡ incl k y -> x ≡ y
-injective (suc k) base base _ = refl
-injective (suc k) base (i y) eq = ex-falso $ Less.when-equal (sym eq) (bounded k y)
-injective (suc k) (i x) base eq = ex-falso $ Less.when-equal eq (bounded k x)
-injective (suc k) (i x) (i y) = ap i ∘ injective k x y
+injective : ∀ {k} -> (x y : Fin k) -> incl x ≡ incl y -> x ≡ y
+injective base base _ = refl
+injective base (i y) eq = ex-falso $ Less.when-equal (sym eq) (bounded y)
+injective (i x) base eq = ex-falso $ Less.when-equal eq (bounded x)
+injective (i x) (i y) = ap i ∘ injective x y
