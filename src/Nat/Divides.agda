@@ -14,6 +14,9 @@ one-divides-any n = n , Mul.left-unit n
 any-divides-zero : ∀ n -> n divides 0
 any-divides-zero n = 0 , refl
 
+reflex : ∀ n -> n divides n
+reflex n = 1 , refl
+
 divides-x-y-then-x+y : ∀ d x y
   -> d divides x
   -> d divides y
