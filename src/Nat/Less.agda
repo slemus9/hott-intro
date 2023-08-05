@@ -1,4 +1,5 @@
 open import Nat.Base
+import Nat.Leq as Leq
 open import Identity using (_≡_; ap)
 open import Function using (_$_; _∘_)
 open import Empty using (ex-falso)
@@ -8,6 +9,9 @@ module Nat.Less where
 
 not-n<0 : ∀ {n} -> ¬ (n < 0)
 not-n<0 ()
+
+asym : ∀ {m n} -> m < n -> ¬ (n < m)
+asym (s<s m<n) (s<s n<m) = asym m<n n<m
 
 {-
   Exercise 6.4.a.i
@@ -45,14 +49,14 @@ to-leq (s<s m<n) = s≤s (to-leq m<n)
 {-
   Exercise 6.4.c.ii
 -}
-asym : ∀ {m n} -> m < n -> ¬ (n < m)
-asym (s<s m<n) (s<s n<m) = asym m<n n<m
+not-leq-fwd : ∀ {m n} -> m < n -> ¬ (n ≤ m)
+not-leq-fwd 0<s = Leq.not-s≤0
+not-leq-fwd (s<s m<n) (s≤s n≤m) = not-leq-fwd m<n n≤m
 
--- asym-bck : ∀ {m n} -> ¬ (m < n) -> n < m
--- asym-bck {zero} {zero} = {!   !} -- ?
--- asym-bck {zero} {suc n} ¬0<s = ex-falso (¬0<s 0<s)
--- asym-bck {suc m} {zero} _ = 0<s
--- asym-bck {suc m} {suc n} ¬s<s = s<s $ asym-bck (¬s<s ∘ s<s)
+not-leq-bck : ∀ {m n} -> ¬ (m ≤ n) -> n < m
+not-leq-bck {zero} {n} ¬0≤n = ex-falso (¬0≤n 0≤n)
+not-leq-bck {suc m} {zero} _ = 0<s
+not-leq-bck {suc m} {suc n} ¬sm≤sn = s<s $ not-leq-bck (¬sm≤sn ∘ s≤s)
 
 n<s : ∀ {n} -> n < suc n
 n<s {zero} = 0<s
