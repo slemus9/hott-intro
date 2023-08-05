@@ -56,11 +56,12 @@ incl-quotient-map-mod-k+1 : ∀ {k}
   -> (n : Nat)
   -> incl {suc k} [ n ] ≡ n mod (k + 1)
 incl-quotient-map-mod-k+1 {k} zero rewrite incl-first k = CMK.reflex zero (k + 1)
+-- A version of CMK.trans with implicit arguments x y z k didn't work
 incl-quotient-map-mod-k+1 {k} (suc n) =
   CMK.trans
     (incl (next [ n ]))
     (suc (incl [ n ]))
     (suc n)
     (suc k)
-    (incl-next-mod-k {suc k} [ n ])
+    (incl-next-mod-k [ n ])
     (incl-quotient-map-mod-k+1 n)
