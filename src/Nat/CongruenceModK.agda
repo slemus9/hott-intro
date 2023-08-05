@@ -76,3 +76,12 @@ trans x y z k c1 c2 = cases (Leq.total x y) (Leq.total y z) (Leq.total x z) wher
   cases (inr y≤x) (inl y≤z) (inr z≤x) = case3 (Dist.dist-through-fwd y≤z z≤x) c1
   cases (inr y≤x) (inr z≤y) (inl x≤z) = case2 (Dist.dist-through-fwd y≤x x≤z) c2
   cases (inr y≤x) (inr z≤y) (inr z≤x) = case1 (Dist.dist-through-bck z≤y y≤x)
+
+trans' : ∀ {x y z k}
+  -> x ≡ y mod k
+  -> y ≡ z mod k
+  -> x ≡ z mod k
+trans' {x} {y} {z} {k} = trans x y z k
+
+add1 : ∀ {x y k} -> x ≡ y mod k -> suc x ≡ suc y mod k
+add1 = id
