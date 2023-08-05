@@ -4,6 +4,7 @@ import Nat.Dist as Dist
 import Nat.Less as Less
 import Nat.Divides as Divides
 import Nat.CongruenceModK as CMK
+open CMK.Reasoning
 open import Function using (_∘_; _$_)
 open import Identity using (_≡_; refl; ap; sym)
 open import Empty using (ex-falso)
@@ -56,12 +57,7 @@ incl-quotient-map-mod-k+1 : ∀ {k}
   -> (n : Nat)
   -> incl {suc k} [ n ] ≡ n mod (k + 1)
 incl-quotient-map-mod-k+1 {k} zero rewrite incl-first k = CMK.reflex zero (k + 1)
--- A version of CMK.trans with implicit arguments x y z k didn't work
-incl-quotient-map-mod-k+1 {k} (suc n) =
-  CMK.trans
-    (incl (next [ n ]))
-    (suc (incl [ n ]))
-    (suc n)
-    (suc k)
-    (incl-next-mod-k [ n ])
-    (incl-quotient-map-mod-k+1 n)
+incl-quotient-map-mod-k+1 (suc n) =
+    incl (next [ n ])
+  ≡⟨ incl-next-mod-k [ n ] ⟩
+    incl-quotient-map-mod-k+1 n

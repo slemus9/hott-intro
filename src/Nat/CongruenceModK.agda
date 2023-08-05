@@ -79,3 +79,29 @@ trans x y z k c1 c2 = cases (Leq.total x y) (Leq.total y z) (Leq.total x z) wher
 
 add1 : ∀ {x y k} -> x ≡ y mod k -> suc x ≡ suc y mod k
 add1 = id
+
+module Reasoning where
+  infix  1 begin[_]_
+  infixr 2 _≡⟨⟩_ _≡⟨_⟩_
+  infix  3 _∎
+
+  begin[_]_ : ∀ {x y}
+    -> ∀ k
+    -> x ≡ y mod k
+    -> x ≡ y mod k
+  begin[ k ] x≡y = x≡y
+
+  _≡⟨⟩_ : ∀ x {y k}
+    -> x ≡ y mod k
+    -> x ≡ y mod k
+  x ≡⟨⟩ x≡y = x≡y
+
+  _≡⟨_⟩_ : ∀ x {y z k}
+    -> x ≡ y mod k
+    -> y ≡ z mod k
+    -> x ≡ z mod k
+  _≡⟨_⟩_ x {y} {z} {k} x≡y y≡z = trans x y z k x≡y y≡z
+
+  _∎ : ∀ x {k}
+    -> x ≡ x mod k
+  _∎ x {k} = reflex x k
