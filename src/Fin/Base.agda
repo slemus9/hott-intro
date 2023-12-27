@@ -77,3 +77,6 @@ next (i x) = to-next-fin x
 [_] : ∀ {k} -> Nat -> Fin (suc k)
 [ zero ] = first
 [ suc n ] = next [ n ]
+
+[_]⟨_⟩ : Nat -> ∀ k -> Fin (suc k)
+[ n ]⟨ k ⟩ = [_] {k} n

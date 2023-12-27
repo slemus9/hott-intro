@@ -81,15 +81,8 @@ add1 : ∀ {x y k} -> x ≡ y mod k -> suc x ≡ suc y mod k
 add1 = id
 
 module Reasoning where
-  infix  1 begin[_]_
   infixr 2 _≡⟨⟩_ _≡⟨_⟩_
   infix  3 _∎
-
-  begin[_]_ : ∀ {x y}
-    -> ∀ k
-    -> x ≡ y mod k
-    -> x ≡ y mod k
-  begin[ k ] x≡y = x≡y
 
   _≡⟨⟩_ : ∀ x {y k}
     -> x ≡ y mod k
