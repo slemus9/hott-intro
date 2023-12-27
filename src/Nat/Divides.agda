@@ -1,10 +1,14 @@
+open import Function using (_$_)
 open import Nat.Base
 import Nat.Add as Add
+import Nat.Leq as Leq
+import Nat.Less as Less
 import Nat.Mul as Mul
 import Nat.Dist as Dist
 open import DependentPair using (_,_)
 open import Identity using (_≡_; refl; inv)
 open import Identity.Reasoning
+open import Empty using (ex-falso)
 
 module Nat.Divides where
 
@@ -55,3 +59,40 @@ divides-y-x+y-then-y : ∀ d x y
   -> d divides x
 divides-y-x+y-then-y d x y
   rewrite Add.commutative x y = divides-x-x+y-then-y d y x
+
+{-
+  Case: x = 0
+    Goal: x = 0
+    x = 0
+
+  Case: x = suc x
+    Goal: suc x = 0
+
+    Givens:
+      suc x < d => ¬ (d ≤ suc x)
+      d divides (suc x) => d * k = suc x
+
+    Case: k = 0
+      d * k = suc x => 0 = suc x (contradiction)
+
+    Case: k = suc k
+      Givens:
+        d * suc k = suc x
+        d ≤ d * suc k
+
+      d ≤ suc x (contradiction)
+-}
+divisor-less-than-dividend-fwd : ∀ d x
+  -> x < d
+  -> d divides x
+  -> x ≡ 0
+divisor-less-than-dividend-fwd _ zero _ _ = refl
+divisor-less-than-dividend-fwd d (suc x) x+1<d (suc k , d+d*k≡x+1) = ex-falso $ Less.not-leq-fwd x+1<d d≤x+1 where
+  d≤x+1 : d ≤ suc x
+  d≤x+1 rewrite (inv d+d*k≡x+1) = Leq.n<=n+m
+
+divisor-less-than-dividend-bck : ∀ d x
+  -> x < d
+  -> x ≡ 0
+  -> d divides x
+divisor-less-than-dividend-bck d _ _ refl = any-divides-zero d

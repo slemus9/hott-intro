@@ -20,6 +20,10 @@ right-suc (s≤s m≤n) = s≤s (right-suc m≤n)
 n≤0 : ∀ {n} -> n ≤ 0 -> n ≡ 0
 n≤0 0≤n = refl
 
+n<=n+m : ∀ {n m} -> n ≤ n + m
+n<=n+m {zero} {m} = 0≤n
+n<=n+m {suc n} {m} rewrite Add.left-suc n m = s≤s n<=n+m
+
 ineq-+-nonzero : ∀ {m n k} -> m ≤ n -> m ≢ n + (k + 1)
 ineq-+-nonzero {suc m} {suc n} {k} (s≤s m≤n)
   rewrite Add.left-suc n k = ineq-+-nonzero m≤n ∘ peano7-r

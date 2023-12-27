@@ -36,7 +36,7 @@
 ## Chapter 5:
 - [Exercise 5.1](src/Identity/Concat.agda#L35)
 - [Exercise 5.2](src/Identity/Concat.agda#L44)
-- [Exercise 5.3](src/Identity/Base.agda#L118)
+- [Exercise 5.3](src/Identity/Base.agda#L117)
 - [Exercise 5.4](src/Identity/MacLane.agda#L6)
 - [Exercise 5.5](src/Nat/Mul.agda#L11)
 - [Exercise 5.6](src/Int/Suc.agda#L6)
@@ -84,4 +84,4 @@
 - [Exercise 6.6.ii](src/Int/Abs.agda#L38)
 - [Exercise 6.6.iii](src/Int/Abs.agda#L60)
 ## Chapter 7:
-- [Exercise 7.1](src/Nat/Divides.agda#L25)
+- [Exercise 7.1](src/Nat/Divides.agda#L28)
