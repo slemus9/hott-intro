@@ -39,21 +39,20 @@ refl-of x = refl
   An element of type a ≡ x is also called identification or path.
 
   Ctx |- a : A
-  Ctx, a : A, x : A, p : a ≡ x |- P a x p type
+  Ctx, x : A, p : a ≡ x |- P x p type
   -----------------------------------------------------------------
-  Ctx |- ind-eq a : P a a refl -> (x : A) -> (p : a ≡ x) -> P a x p
+  Ctx |- ind-eq a : P a refl -> (x : A) -> (p : a ≡ x) -> P x p
 
   Computation rule:
   Ctx |- a : A
-  Ctx, a : A, x : A, p : a ≡ x |- P a x p type
+  Ctx, x : A, p : a ≡ x |- P x p type
   -----------------------------------------------------------------
-  Ctx, u : P a a refl |- ind-eq a u a refl : P a a refl
+  Ctx, u : P a refl |- ind-eq u a refl = u : P a refl
 -}
-ind-eq : {A : Type} {P : (a x : A) -> a ≡ x -> Type}
-  -> ∀ a
-  -> P a a refl
-  -> ∀ x -> (p : a ≡ x) -> P a x p
-ind-eq a u .a refl = u
+ind-eq : {A : Type} {a : A} {P : (x : A) -> a ≡ x -> Type}
+  -> P a refl
+  -> ∀ x -> (p : a ≡ x) -> P x p
+ind-eq u a refl = u
 
 -- Groupoidal structure of types
 concat : {A : Type} {x y z : A}
@@ -103,8 +102,8 @@ adp : {A : Type} {B : A -> Type} {x y : A}
 adp f refl = refl
 
 {-
-  We cannot show that p ≡ refl-of a for any p : a ≡ a,
-  but we can show that the pair (a, relf-of a) is unique;
+  We cannot show that p ≡ refl-of a for any p : a ≡ a using the
+  induction principle of identity types, but we can show that the pair (a, relf-of a) is unique;
   that is, there is (up to identification) only one element in
   Σ-type of the identity type. These types are called contractible
 -}
