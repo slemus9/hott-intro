@@ -44,11 +44,11 @@ module Nat.ExtraExercises where
 add-zero-right : Nat -> Nat
 add-zero-right m = m
 
-add-suc-right : Nat -> Nat -> Nat -> Nat
-add-suc-right m n = suc
+add-right-suc : Nat -> Nat -> Nat -> Nat
+add-right-suc m n = suc
 
 add-right-ind : Nat -> Nat -> Nat
-add-right-ind m = ind-nat (add-zero-right m) (add-suc-right m)
+add-right-ind m = ind-nat (add-zero-right m) (add-right-suc m)
 
 _ : add-right-ind 2 5 ≡ 7
 _ = refl
@@ -63,11 +63,11 @@ add-eq m (suc n) =
   begin
     add-right-ind m (suc n)
   ≡⟨⟩
-    ind-nat (add-zero-right m) (add-suc-right m) (suc n)
+    ind-nat (add-zero-right m) (add-right-suc m) (suc n)
   ≡⟨⟩
-    add-suc-right m n (ind-nat (add-zero-right m) (add-suc-right m) n)
+    add-right-suc m n (ind-nat (add-zero-right m) (add-right-suc m) n)
   ≡⟨⟩
-    add-suc-right m n (add-right-ind m n)
+    add-right-suc m n (add-right-ind m n)
   ≡⟨⟩
     suc (add-right-ind m n)
   ≡⟨ cong suc (add-eq m n) ⟩
@@ -88,11 +88,11 @@ add-eq-ind m = ind-nat p0 ps
       begin
         add-right-ind m (suc n)
       ≡⟨⟩
-        ind-nat (add-zero-right m) (add-suc-right m) (suc n)
+        ind-nat (add-zero-right m) (add-right-suc m) (suc n)
       ≡⟨⟩
-        add-suc-right m n (ind-nat (add-zero-right m) (add-suc-right m) n)
+        add-right-suc m n (ind-nat (add-zero-right m) (add-right-suc m) n)
       ≡⟨⟩
-        add-suc-right m n (add-right-ind m n)
+        add-right-suc m n (add-right-ind m n)
       ≡⟨⟩
         suc (add-right-ind m n)
       ≡⟨ cong suc IH ⟩
@@ -106,8 +106,8 @@ add-eq-ind m = ind-nat p0 ps
 mul-zero-right : Nat -> Nat
 mul-zero-right m = zero
 
-mul-suc-right : Nat -> Nat -> Nat -> Nat
-mul-suc-right m n next = m + next
+mul-right-suc : Nat -> Nat -> Nat -> Nat
+mul-right-suc m n next = m + next
 
 {-
     mul-right-ind m zero
@@ -119,12 +119,12 @@ mul-suc-right m n next = m + next
     mul-right-ind m (suc n)
   = ind-nat p0 ps (suc n)
   = ps n (ind-nat p0 ps n)
-  = mul-suc-right m n (ind-nat p0 ps n)
+  = mul-right-suc m n (ind-nat p0 ps n)
   = m + (ind-nat p0 ps n)
   = m + (mul-right-ind m n)
 -}
 mul-right-ind : Nat -> Nat -> Nat
-mul-right-ind m = ind-nat (mul-zero-right m) (mul-suc-right m)
+mul-right-ind m = ind-nat (mul-zero-right m) (mul-right-suc m)
 
 _ : mul-right-ind 2 5 ≡ 10
 _ = refl
@@ -135,11 +135,11 @@ mul-eq m (suc n) =
   begin
     mul-right-ind m (suc n)
   ≡⟨⟩
-    ind-nat (mul-zero-right m) (mul-suc-right m) (suc n)
+    ind-nat (mul-zero-right m) (mul-right-suc m) (suc n)
   ≡⟨⟩
-    mul-suc-right m n (ind-nat (mul-zero-right m) (mul-suc-right m) n)
+    mul-right-suc m n (ind-nat (mul-zero-right m) (mul-right-suc m) n)
   ≡⟨⟩
-    mul-suc-right m n (mul-right-ind m n)
+    mul-right-suc m n (mul-right-ind m n)
   ≡⟨⟩
     m + mul-right-ind m n
   ≡⟨ cong (m +_) (mul-eq m n) ⟩

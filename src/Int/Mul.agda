@@ -104,7 +104,7 @@ left-pred x (in-neg (Nat.suc y))
   rewrite left-pred x (in-pos y)
   | Neg.distrib-+ (pred x) (x * in-pos y - in-pos y)
   | Neg.pred-inv x
-  | Add.suc-left (- x) (- (x * in-pos y - in-pos y))
+  | Add.left-suc (- x) (- (x * in-pos y - in-pos y))
   | Neg.distrib-+ (x * in-pos y) (in-neg y)
   | inv (Add.assoc (- x) (- (x * in-pos y)) (in-pos y))
   | Neg.distrib-+ x (x * in-pos y)  = refl
@@ -175,7 +175,7 @@ left-suc x (in-neg Nat.zero) = Neg.suc-inv x
 -}
 left-suc x (in-neg (Nat.suc y))
   rewrite left-suc x (in-pos y)
-  | Add.suc-left x (x * in-pos y + in-pos y)
+  | Add.left-suc x (x * in-pos y + in-pos y)
   | Neg.suc-inv (x + (x * in-pos y + in-pos y))
   | inv (Add.assoc x (x * in-pos y) (in-pos y))
   | Neg.distrib-+ (x + x * in-pos y) (in-pos y) = refl
@@ -183,7 +183,7 @@ left-suc x zero = refl
 left-suc x (in-pos Nat.zero) = refl
 left-suc x (in-pos (Nat.suc y))
   rewrite left-suc x (in-pos y)
-  | Add.suc-left x (x * in-pos y + in-pos y)
+  | Add.left-suc x (x * in-pos y + in-pos y)
   | Add.assoc x (x * in-pos y) (in-pos y)  = refl
 
 {-

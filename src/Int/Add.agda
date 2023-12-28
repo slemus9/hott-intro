@@ -97,12 +97,12 @@ pred-left x (in-pos (Nat.suc y)) =
     pred (x + in-pos (Nat.suc y))
   ∎
 
-suc-right : ∀ x y -> x + suc y ≡ suc (x + y)
+right-suc : ∀ x y -> x + suc y ≡ suc (x + y)
 {-
   x + (suc (in-neg zero)) = x + zero = x
   suc (x + (in-neg zero)) = suc (pred x) = x
 -}
-suc-right x (in-neg Nat.zero) rewrite suc-pred x = refl
+right-suc x (in-neg Nat.zero) rewrite suc-pred x = refl
 {-
     x + suc (in-neg (suc y))
   = x + in-neg y
@@ -111,11 +111,11 @@ suc-right x (in-neg Nat.zero) rewrite suc-pred x = refl
   = suc (pred (x + in-neg y))
   = x + in-neg y
 -}
-suc-right x (in-neg (Nat.suc y))
+right-suc x (in-neg (Nat.suc y))
   rewrite suc-pred (x + in-neg y) = refl
-suc-right x zero = refl
+right-suc x zero = refl
 -- x + suc (in-pos zero) = x + in-pos (suc zero) = suc (x + in-pos zero)
-suc-right x (in-pos Nat.zero) = refl
+right-suc x (in-pos Nat.zero) = refl
 {-
     x + suc (in-pos (suc y))
   = x + in-pos (suc (suc y))
@@ -125,14 +125,14 @@ suc-right x (in-pos Nat.zero) = refl
     suc (x + in-pos (suc y))
   = suc (suc (x + in-pos y))
 -}
-suc-right x (in-pos (Nat.suc y)) = refl
+right-suc x (in-pos (Nat.suc y)) = refl
 
-suc-left : ∀ x y -> suc x + y ≡ suc (x + y)
+left-suc : ∀ x y -> suc x + y ≡ suc (x + y)
 {-
   suc x + in-neg zero = pred (suc x) = x
   suc (x + in-neg zero) = suc (pred x) = x
 -}
-suc-left x (in-neg Nat.zero) rewrite suc-pred-eq x = refl
+left-suc x (in-neg Nat.zero) rewrite suc-pred-eq x = refl
 {-
     suc x + in-neg (suc y)
   = pred (suc x + in-neg y)
@@ -141,15 +141,15 @@ suc-left x (in-neg Nat.zero) rewrite suc-pred-eq x = refl
     suc (x + in-neg (suc y))
   = suc (pred (x + in-neg y))
 -}
-suc-left x (in-neg (Nat.suc y))
-  rewrite suc-left x (in-neg y)
+left-suc x (in-neg (Nat.suc y))
+  rewrite left-suc x (in-neg y)
   | suc-pred-eq (x + in-neg y) = refl
-suc-left x zero = refl
+left-suc x zero = refl
 {-
   suc x + in-pos zero = suc (suc x)
   suc (x + in-pos zero) = suc (suc x)
 -}
-suc-left x (in-pos Nat.zero) = refl
+left-suc x (in-pos Nat.zero) = refl
 {-
     suc x + in-pos (suc y)
   = suc (suc x + in-pos y)
@@ -158,7 +158,7 @@ suc-left x (in-pos Nat.zero) = refl
     suc (x + in-pos (suc y))
   = suc (suc (x + in-pos y))
 -}
-suc-left x (in-pos (Nat.suc y)) rewrite suc-left x (in-pos y) = refl
+left-suc x (in-pos (Nat.suc y)) rewrite left-suc x (in-pos y) = refl
 
 {-
   Exercise 5.7.c
@@ -187,19 +187,19 @@ assoc x y zero = refl
   (x + y) + in-pos zero = suc (x + y)
   x + (y + in-pos zero) = x + (suc y)
 -}
-assoc x y (in-pos Nat.zero) rewrite suc-right x y = refl
+assoc x y (in-pos Nat.zero) rewrite right-suc x y = refl
 {-
     (x + y) + in-pos (suc z)
   = suc ((x + y) + in-pos z)
   = suc (x + (y + in-pos z)) [I.H]
-  = x + suc (y + in-pos z) [suc-right]
+  = x + suc (y + in-pos z) [right-suc]
 
     x + (y + in-pos (suc z))
   = x + suc (y + in-pos z)
 -}
 assoc x y (in-pos (Nat.suc z))
   rewrite assoc x y (in-pos z)
-  | suc-right x (y + in-pos z) = refl
+  | right-suc x (y + in-pos z) = refl
 
 commutative : ∀ x y -> x + y ≡ y + x
 {-
@@ -230,7 +230,7 @@ commutative x zero rewrite left-unit x = refl
 -}
 commutative x (in-pos Nat.zero)
   rewrite suc-zero
-  | suc-left zero x
+  | left-suc zero x
   | left-unit x = refl
 {-
     x + (in-pos (suc y))
@@ -244,7 +244,7 @@ commutative x (in-pos Nat.zero)
 commutative x (in-pos (Nat.suc y))
   rewrite commutative x (in-pos y)
   | inv (suc-pos y)
-  | suc-left (in-pos y) x = refl
+  | left-suc (in-pos y) x = refl
 
 {-
   Exercise 5.7.d
