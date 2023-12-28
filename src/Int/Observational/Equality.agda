@@ -28,19 +28,19 @@ refl-Eq-Int zero = unit
 refl-Eq-Int (in-pos Nat.zero) = unit
 refl-Eq-Int (in-pos (Nat.suc x)) = refl-Eq-Nat x
 
-equiv-Eq-Int-l : ∀ x y -> x ≡ y -> Eq-Int x y
-equiv-Eq-Int-l x _ refl = refl-Eq-Int x
+equiv-Eq-Int-fwd : ∀ x y -> x ≡ y -> Eq-Int x y
+equiv-Eq-Int-fwd x _ refl = refl-Eq-Int x
 
-equiv-Eq-Int-r : ∀ x y -> Eq-Int x y -> x ≡ y
-equiv-Eq-Int-r (in-neg x) (in-neg y) = ap in-neg ∘ equiv-Eq-Nat-r x y
-equiv-Eq-Int-r zero zero _ = refl
-equiv-Eq-Int-r (in-pos x) (in-pos y) = ap in-pos ∘ equiv-Eq-Nat-r x y
+equiv-Eq-Int-bck : ∀ x y -> Eq-Int x y -> x ≡ y
+equiv-Eq-Int-bck (in-neg x) (in-neg y) = ap in-neg ∘ equiv-Eq-Nat-bck x y
+equiv-Eq-Int-bck zero zero _ = refl
+equiv-Eq-Int-bck (in-pos x) (in-pos y) = ap in-pos ∘ equiv-Eq-Nat-bck x y
 
 equiv-Eq-Nat : ∀ x y -> (x ≡ y) <--> (Eq-Int x y)
-equiv-Eq-Nat x y = equiv-Eq-Int-l x y , equiv-Eq-Int-r x y
+equiv-Eq-Nat x y = equiv-Eq-Int-fwd x y , equiv-Eq-Int-bck x y
 
 not-zero-pos : ∀ {m} -> zero ≢ in-pos m
-not-zero-pos {m} = equiv-Eq-Int-l zero (in-pos m)
+not-zero-pos {m} = equiv-Eq-Int-fwd zero (in-pos m)
 
 not-zero-neg : ∀ {m} -> zero ≢ in-neg m
-not-zero-neg {m} = equiv-Eq-Int-l zero (in-neg m)
+not-zero-neg {m} = equiv-Eq-Int-fwd zero (in-neg m)

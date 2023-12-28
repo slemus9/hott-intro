@@ -1,6 +1,6 @@
 open import Type using (Type)
 open import Nat.Base using (Nat; zero; suc; ind-nat; _+_)
-open import Nat.Observational.Equality using (peano7-r; peano8)
+open import Nat.Observational.Equality using (peano7-bck; peano8)
 open import Identity using (_≡_; _≢_; refl; ap; trans; inv)
 open import DependentPair using (_×_; _<-->_; _,_; snd)
 open import Function using (id; _$_; _∘_)
@@ -58,34 +58,34 @@ commutative m (suc n)
 {-
   Exercise 6.1.a.i
 -}
-add-k-l : {m n k : Nat} -> m ≡ n -> m + k ≡ n + k
-add-k-l {_} {_} {zero} = id
-add-k-l {_} {_} {suc k} m≡n rewrite m≡n = refl
+add-k-fwd : {m n k : Nat} -> m ≡ n -> m + k ≡ n + k
+add-k-fwd {_} {_} {zero} = id
+add-k-fwd {_} {_} {suc k} m≡n rewrite m≡n = refl
 
-add-k-r : {m n k : Nat} -> m + k ≡ n + k -> m ≡ n
-add-k-r {_} {_} {zero} = id
-add-k-r {_} {_} {suc k} = add-k-r ∘ peano7-r
+add-k-bck : {m n k : Nat} -> m + k ≡ n + k -> m ≡ n
+add-k-bck {_} {_} {zero} = id
+add-k-bck {_} {_} {suc k} = add-k-bck ∘ peano7-bck
 
 add-k : {m n k : Nat} -> (m ≡ n) <--> (m + k ≡ n + k)
-add-k = add-k-l , add-k-r
+add-k = add-k-fwd , add-k-bck
 
 {-
   Exercise 6.1.b.i
 -}
-both-zero-l : {m n : Nat} -> m + n ≡ 0 -> (m ≡ 0) × (n ≡ 0)
-both-zero-l {zero} {n} eq = refl , trans (inv $ left-unit n) eq
-both-zero-l {m} {zero} eq = eq , refl
-both-zero-l {suc m} {suc n} = ex-falso ∘ peano8 ∘ inv
+both-zero-fwd : {m n : Nat} -> m + n ≡ 0 -> (m ≡ 0) × (n ≡ 0)
+both-zero-fwd {zero} {n} eq = refl , trans (inv $ left-unit n) eq
+both-zero-fwd {m} {zero} eq = eq , refl
+both-zero-fwd {suc m} {suc n} = ex-falso ∘ peano8 ∘ inv
 
-both-zero-r : {m n : Nat} -> (m ≡ 0) × (n ≡ 0) -> m + n ≡ 0
-both-zero-r (refl , refl) = refl
+both-zero-bck : {m n : Nat} -> (m ≡ 0) × (n ≡ 0) -> m + n ≡ 0
+both-zero-bck (refl , refl) = refl
 
 both-zero : {m n : Nat} -> (m + n ≡ 0) <--> ((m ≡ 0) × (n ≡ 0))
-both-zero = both-zero-l , both-zero-r
+both-zero = both-zero-fwd , both-zero-bck
 
 {-
   Exercise 6.1.c.i
 -}
 ineq-+-nonzero : ∀ {m n} -> m ≢ m + (n + 1)
 ineq-+-nonzero {suc m} {n}
-  rewrite left-suc m n = ineq-+-nonzero ∘ peano7-r
+  rewrite left-suc m n = ineq-+-nonzero ∘ peano7-bck

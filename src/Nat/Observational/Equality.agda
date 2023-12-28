@@ -18,30 +18,30 @@ refl-Eq-Nat : (n : Nat) -> Eq-Nat n n
 refl-Eq-Nat zero = unit
 refl-Eq-Nat (suc n) = refl-Eq-Nat n
 
-equiv-Eq-Nat-l : ∀ n m -> n ≡ m -> Eq-Nat n m
-equiv-Eq-Nat-l n _ refl = refl-Eq-Nat n
+equiv-Eq-Nat-fwd : ∀ n m -> n ≡ m -> Eq-Nat n m
+equiv-Eq-Nat-fwd n _ refl = refl-Eq-Nat n
 
-equiv-Eq-Nat-r : ∀ n m -> Eq-Nat n m -> n ≡ m
-equiv-Eq-Nat-r zero zero _ = refl
-equiv-Eq-Nat-r (suc n) (suc m) eqnat = ap suc (equiv-Eq-Nat-r n m eqnat)
+equiv-Eq-Nat-bck : ∀ n m -> Eq-Nat n m -> n ≡ m
+equiv-Eq-Nat-bck zero zero _ = refl
+equiv-Eq-Nat-bck (suc n) (suc m) eqnat = ap suc (equiv-Eq-Nat-bck n m eqnat)
 
 equiv-Eq-Nat : ∀ n m -> (n ≡ m) <--> Eq-Nat n m
-equiv-Eq-Nat n m = equiv-Eq-Nat-l n m , equiv-Eq-Nat-r n m
+equiv-Eq-Nat n m = equiv-Eq-Nat-fwd n m , equiv-Eq-Nat-bck n m
 
-peano7-l : ∀ {n m} -> n ≡ m -> suc n ≡ suc m
-peano7-l = ap suc
+peano7-fwd : ∀ {n m} -> n ≡ m -> suc n ≡ suc m
+peano7-fwd = ap suc
 
-peano7-r : ∀ {n m} -> suc n ≡ suc m -> n ≡ m
-peano7-r {n} {m} eq = snd (equiv-Eq-Nat n m) nEqm where
+peano7-bck : ∀ {n m} -> suc n ≡ suc m -> n ≡ m
+peano7-bck {n} {m} eq = snd (equiv-Eq-Nat n m) nEqm where
   nEqm : Eq-Nat n m
   nEqm = fst (equiv-Eq-Nat (suc n) (suc m)) eq
 
 peano7 : ∀ {n m} -> (n ≡ m) <--> (suc n ≡ suc m)
-peano7 =  peano7-l , peano7-r
+peano7 =  peano7-fwd , peano7-bck
 
 peano8 : ∀ {n} -> zero ≢ suc n
-peano8 {n} = equiv-Eq-Nat-l zero (suc n)
+peano8 {n} = equiv-Eq-Nat-fwd zero (suc n)
 
 diff-from-suc : ∀ {n} -> n ≢ suc n
 diff-from-suc {zero} = peano8
-diff-from-suc {suc n} = diff-from-suc ∘ peano7-r
+diff-from-suc {suc n} = diff-from-suc ∘ peano7-bck
