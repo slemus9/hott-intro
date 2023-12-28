@@ -53,11 +53,11 @@ incl-next-mod-k {suc k} (i x) rewrite incl-to-next-fin x | Dist.to-itself (incl 
   We get:
     incl (next [ n ]) ≡ suc n mod suc k
 -}
-incl-quotient-map-mod-k+1 : ∀ {k}
+i[x]≡xmodk+1 : ∀ {k}
   -> (n : Nat)
   -> incl [ n ]⟨ k ⟩ ≡ n mod (k + 1)
-incl-quotient-map-mod-k+1 {k} zero rewrite incl-first k = CMK.reflex zero (k + 1)
-incl-quotient-map-mod-k+1 (suc n) =
+i[x]≡xmodk+1 {k} zero rewrite incl-first k = CMK.reflex zero (k + 1)
+i[x]≡xmodk+1 (suc n) =
     incl (next [ n ])
   ≡⟨ incl-next-mod-k [ n ] ⟩
-    incl-quotient-map-mod-k+1 n
+    i[x]≡xmodk+1 n

@@ -1,8 +1,9 @@
 import Nat.Add as Add
 import Nat.Mul as Mul
 import Nat.Leq as Leq
-open import Nat.Observational.Equality using (peano7-r; peano8)
+import Nat.Less as Less
 open import Nat.Base
+open import Nat.Observational.Equality using (peano7-r; peano8)
 open import DependentPair using (_×_; _<-->_; _,_)
 open import Coproduct using (_⨄_; inl; inr)
 open import Function using (id; _∘_; _$_)
@@ -152,3 +153,12 @@ dist-through-bck : ∀ {m n k}
   -> n ≤ k
   -> dist k m ≡ dist k n + dist n m
 dist-through-bck m≤n n≤k = triangle-eq-bck $ inr (m≤n , n≤k)
+
+both-less-than-k : ∀ {m n k}
+  -> m < k
+  -> n < k
+  -> dist m n < k
+both-less-than-k 0<s 0<s = 0<s
+both-less-than-k 0<s (s<s n<k) = s<s n<k
+both-less-than-k (s<s m<k) 0<s = s<s m<k
+both-less-than-k {suc m} {suc n} {suc k} (s<s m<k) (s<s n<k) = Less.right-suc (both-less-than-k m<k n<k)
