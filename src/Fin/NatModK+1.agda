@@ -1,8 +1,9 @@
 open import Fin.Base
-open import Fin.Incl as Incl
+import Fin.Incl as Incl
+open import Function using (_$_)
 open import Nat
-open import Nat.Divides as Divides
-open import Nat.Dist as Dist
+import Nat.Divides as Divides
+import Nat.Dist as Dist
 import Nat.CongruenceModK as CMK
 open CMK.Reasoning
 open import Identity using (_≡_; refl)
@@ -49,7 +50,7 @@ effectiveness-fwd k x y [x]≡[y] =
 effectiveness-bck : ∀ k x y
   -> x ≡ y mod (suc k)
   -> [ x ]⟨ k ⟩ ≡ [ y ]⟨ k ⟩
-effectiveness-bck k x y x≡ymodk+1 = Incl.injective [ x ]⟨ k ⟩ [ y ]⟨ k ⟩ i[x]≡i[y] where
+effectiveness-bck k x y x≡ymodk+1 = Incl.injective $ Dist.itself-bck i[x]-i[y]≡0 where
   i[x]≡i[y]modk+1 : incl [ x ]⟨ k ⟩ ≡ incl [ y ]⟨ k ⟩ mod (suc k)
   i[x]≡i[y]modk+1 =
       incl [ x ]⟨ k ⟩
@@ -65,11 +66,14 @@ effectiveness-bck k x y x≡ymodk+1 = Incl.injective [ x ]⟨ k ⟩ [ y ]⟨ k �
   i[x]-i[y]<k+1 = Dist.both-less-than-k (Incl.bounded [ x ]⟨ k ⟩) (Incl.bounded [ y ]⟨ k ⟩)
 
   i[x]-i[y]≡0 : dist (incl [ x ]⟨ k ⟩) (incl [ y ]⟨ k ⟩) ≡ 0
-  i[x]-i[y]≡0 = Divides.divisor-less-than-dividend-fwd
-    (suc k)
-    (dist (incl [ x ]⟨ k ⟩) (incl [ y ]⟨ k ⟩))
-    i[x]-i[y]<k+1
-    i[x]≡i[y]modk+1
+  i[x]-i[y]≡0 = Divides.divisor-less-than-dividend-fwd i[x]-i[y]<k+1 i[x]≡i[y]modk+1
 
-  i[x]≡i[y] : incl [ x ]⟨ k ⟩ ≡ incl [ y ]⟨ k ⟩
-  i[x]≡i[y] = Dist.itself-bck (incl [ x ]⟨ k ⟩) (incl [ y ]⟨ k ⟩) i[x]-i[y]≡0
+split-surjective : ∀ {k}
+  -> (x : Fin (suc k))
+  -> [ incl x ] ≡ x
+split-surjective {k} x = Incl.injective $ Dist.itself-bck i[ix]-ix≡0 where
+  i[ix]-ix<k+1 : dist (incl [ incl x ]⟨ k ⟩) (incl x) < (suc k)
+  i[ix]-ix<k+1 = Dist.both-less-than-k (Incl.bounded [ incl x ]⟨ k ⟩) (Incl.bounded x)
+
+  i[ix]-ix≡0 : dist (incl [ incl x ]⟨ k ⟩) (incl x) ≡ 0
+  i[ix]-ix≡0 = Divides.divisor-less-than-dividend-fwd i[ix]-ix<k+1 (Incl.i[x]≡xmodk+1 (incl x))

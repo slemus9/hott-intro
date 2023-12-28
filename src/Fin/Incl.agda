@@ -15,11 +15,11 @@ bounded : ∀ {k} -> (x : Fin k) -> incl x < k
 bounded base = Less.n<s
 bounded (i x) = Less.right-suc (bounded x)
 
-injective : ∀ {k} -> (x y : Fin k) -> incl x ≡ incl y -> x ≡ y
-injective base base _ = refl
-injective base (i y) eq = ex-falso $ Less.when-equal (sym eq) (bounded y)
-injective (i x) base eq = ex-falso $ Less.when-equal eq (bounded x)
-injective (i x) (i y) = ap i ∘ injective x y
+injective : ∀ {k} -> {x y : Fin k} -> incl x ≡ incl y -> x ≡ y
+injective {_} {base} {base} _ = refl
+injective {_} {base} {i y} eq = ex-falso $ Less.when-equal (sym eq) (bounded y)
+injective {_} {i x} {base} eq = ex-falso $ Less.when-equal eq (bounded x)
+injective {_} {i x} {i y} = ap i ∘ injective
 
 incl-first : ∀ k -> incl (first {k}) ≡ zero
 incl-first zero = refl

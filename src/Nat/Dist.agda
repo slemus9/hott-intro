@@ -23,16 +23,16 @@ right-unit (suc n) = refl
 {-
   Exercise 6.5.a.i
 -}
-itself-fwd : ∀ m n -> m ≡ n -> dist m n ≡ 0
-itself-fwd m n refl = to-itself m
+itself-fwd : ∀ {m n} -> m ≡ n -> dist m n ≡ 0
+itself-fwd {m} {_} refl = to-itself m
 
-itself-bck : ∀ m n -> dist m n ≡ 0 -> m ≡ n
-itself-bck zero n = inv
-itself-bck (suc m) zero = id
-itself-bck (suc m) (suc n) = ap suc ∘ itself-bck m n
+itself-bck : ∀ {m n} -> dist m n ≡ 0 -> m ≡ n
+itself-bck {zero} {n} = inv
+itself-bck {suc m} {zero} = id
+itself-bck {suc m} {suc n} = ap suc ∘ itself-bck
 
-itself : ∀ m n -> (m ≡ n) <--> (dist m n ≡ 0)
-itself m n = itself-fwd m n , itself-bck m n
+itself : ∀ {m n} -> (m ≡ n) <--> (dist m n ≡ 0)
+itself = itself-fwd , itself-bck
 
 {-
   Exercise 6.5.a.ii

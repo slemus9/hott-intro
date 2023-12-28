@@ -82,17 +82,17 @@ divides-y-x+y-then-y d x y
 
       d ≤ suc x (contradiction)
 -}
-divisor-less-than-dividend-fwd : ∀ d x
+divisor-less-than-dividend-fwd : ∀ {d x}
   -> x < d
   -> d divides x
   -> x ≡ 0
-divisor-less-than-dividend-fwd _ zero _ _ = refl
-divisor-less-than-dividend-fwd d (suc x) x+1<d (suc k , d+d*k≡x+1) = ex-falso $ Less.not-leq-fwd x+1<d d≤x+1 where
+divisor-less-than-dividend-fwd {_} {zero} _ _ = refl
+divisor-less-than-dividend-fwd {d} {suc x} x+1<d (suc k , d+d*k≡x+1) = ex-falso $ Less.not-leq-fwd x+1<d d≤x+1 where
   d≤x+1 : d ≤ suc x
   d≤x+1 rewrite (inv d+d*k≡x+1) = Leq.n<=n+m
 
-divisor-less-than-dividend-bck : ∀ d x
+divisor-less-than-dividend-bck : ∀ {d x}
   -> x < d
   -> x ≡ 0
   -> d divides x
-divisor-less-than-dividend-bck d _ _ refl = any-divides-zero d
+divisor-less-than-dividend-bck {d} {_} _ refl = any-divides-zero d
