@@ -2,6 +2,7 @@ module index where
 
 import Bool
 import Coproduct
+import Decidable
 import DependentPair
 import Empty
 import Fin
