@@ -1,7 +1,10 @@
 import Nat
-open import Int.Base
-open import Int.Suc
+open import Additive
+open import Nat.Instances
+open import Int.Base hiding (_+_)
+open import Int.Instances
 open import Int.Neg
+open import Int.Suc
 open import Identity using (_≡_; refl; inv; ap)
 open import Identity.Reasoning
 
@@ -164,7 +167,7 @@ left-suc x (in-pos (Nat.suc y)) rewrite left-suc x (in-pos y) = refl
   Exercise 5.7.c
   Associativity and Commutativity
 -}
-assoc : ∀ x y z -> (x + y) + z ≡ x + (y + z)
+assoc : (x y z : Int) -> (x + y) + z ≡ x + (y + z)
 {-
   (x + y) + in-neg zero = pred (x + y)
   x + (y + in-neg zero) = x + pred y
@@ -201,7 +204,7 @@ assoc x y (in-pos (Nat.suc z))
   rewrite assoc x y (in-pos z)
   | right-suc x (y + in-pos z) = refl
 
-commutative : ∀ x y -> x + y ≡ y + x
+commutative : (x y : Int) -> x + y ≡ y + x
 {-
   x + in-neg zero = pred x
   in-neg zero + x = pred zero + x = pred (zero + x) = pred x
@@ -287,20 +290,20 @@ left-inv (in-pos (Nat.suc x)) = begin
 right-inv : ∀ x -> x + (- x) ≡ zero
 right-inv x rewrite commutative x (- x) = left-inv x
 
-swap-right : ∀ x y z -> x + y + z ≡ x + (z + y)
+swap-right : (x y z : Int) -> x + y + z ≡ x + (z + y)
 swap-right x y z rewrite assoc x y z | commutative y z = refl
 
-swap-left : ∀ x y z -> x + y + z ≡ y + (x + z)
+swap-left : (x y z : Int) -> x + y + z ≡ y + (x + z)
 swap-left x y z rewrite commutative x y | assoc y x z = refl
 
-add-pos : ∀ m n -> in-pos m + in-pos n ≡ pred (in-pos (Nat._+_ (Nat.suc m) (Nat.suc n)))
+add-pos : ∀ m n -> in-pos m + in-pos n ≡ pred (in-pos (Nat.suc m + Nat.suc n))
 add-pos m Nat.zero rewrite pred-pos (Nat.suc m) = suc-pos m
 add-pos m (Nat.suc n)
   rewrite add-pos m n
   | suc-pred (in-pos (Nat.add (Nat.suc m) (Nat.suc n))) = refl
 
-add-neg : ∀ m n -> in-neg m + in-neg n ≡ suc (in-neg (Nat._+_ (Nat.suc m) (Nat.suc n)))
+add-neg : ∀ m n -> in-neg m + in-neg n ≡ suc (in-neg (Nat.suc m + Nat.suc n))
 add-neg m Nat.zero rewrite suc-neg (Nat.suc m) = pred-neg m
 add-neg m (Nat.suc n)
   rewrite add-neg m n
-  | pred-suc (in-neg (Nat._+_ (Nat.suc m) (Nat.suc n))) = refl
+  | pred-suc (in-neg (Nat.suc m + Nat.suc n)) = refl

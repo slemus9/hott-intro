@@ -5,6 +5,7 @@ import Nat.Add
 import Nat.CongruenceModK
 import Nat.Dist
 import Nat.Divides
+import Nat.Instances
 import Nat.Leq
 import Nat.Less
 import Nat.Mul

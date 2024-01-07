@@ -1,5 +1,8 @@
 import Nat
-open import Int.Base using (Int; in-neg; in-pos; zero; suc; pred)
+open import Additive
+open import Nat.Instances
+open import Int.Base hiding (_+_)
+open import Int.Instances
 open import Identity using (_≡_; refl)
 
 {-
@@ -40,8 +43,8 @@ suc-pos n rewrite pred-pos n | suc-pred (in-pos (Nat.suc n)) = refl
 suc-neg : ∀ n -> suc (in-neg (Nat.suc n)) ≡ in-neg n
 suc-neg n rewrite pred-neg n = refl
 
-pred-zero : in-neg Nat.zero ≡ pred zero
+pred-zero : in-neg Nat.zero ≡ pred Int.zero
 pred-zero = refl
 
-suc-zero : in-pos Nat.zero ≡ suc zero
+suc-zero : in-pos Nat.zero ≡ suc Int.zero
 suc-zero = refl

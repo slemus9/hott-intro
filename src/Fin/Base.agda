@@ -80,3 +80,6 @@ next (i x) = to-next-fin x
 
 [_]⟨_⟩ : Nat -> ∀ k -> Fin (suc k)
 [ n ]⟨ k ⟩ = [_] {k} n
+
+one : ∀ {k} -> Fin (suc k)
+one = [ 1 ]

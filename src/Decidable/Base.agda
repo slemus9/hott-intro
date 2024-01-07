@@ -68,10 +68,10 @@ from-bijection-bck : {A B : Type}
 from-bijection-bck (_ , g) (inl b) = inl (g b)
 from-bijection-bck (f , _) (inr ¬b) = inr (¬b ∘ f)
 
-if-bijection : {A B : Type}
+from-bijection : {A B : Type}
   -> A <--> B
   -> decidable A <--> decidable B
-if-bijection a<->b = from-bijection-fwd a<->b , from-bijection-bck a<->b
+from-bijection a<->b = from-bijection-fwd a<->b , from-bijection-bck a<->b
 
 eq-nat : ∀ m n -> decidable (Eq-Nat m n)
 eq-nat zero zero = unit
