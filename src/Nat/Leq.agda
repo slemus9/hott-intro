@@ -17,8 +17,15 @@ right-suc : ∀ {m n} -> m ≤ n -> m ≤ suc n
 right-suc 0≤n = 0≤n
 right-suc (s≤s m≤n) = s≤s (right-suc m≤n)
 
-n≤0 : ∀ {n} -> n ≤ 0 -> n ≡ 0
-n≤0 0≤n = refl
+when-n≤0  : ∀ {n} -> n ≤ 0 -> n ≡ 0
+when-n≤0  0≤n = refl
+
+when-m≤sn : ∀ {m n} -> m ≤ suc n -> (m ≡ suc n) ⨄ (m ≤ n)
+when-m≤sn {zero} {n} 0≤n = inr 0≤n
+when-m≤sn {suc m} {zero} (s≤s m≤0) rewrite when-n≤0 m≤0 = inl refl
+when-m≤sn {suc m} {suc n} (s≤s m≤sn) with when-m≤sn m≤sn
+... | inl m≡sn = inl (ap suc m≡sn)
+... | inr m≤n = inr (s≤s m≤n)
 
 n<=n+m : ∀ {n m} -> n ≤ n + m
 n<=n+m {zero} {m} = 0≤n

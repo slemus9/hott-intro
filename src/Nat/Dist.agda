@@ -76,7 +76,7 @@ triangle-eq-fwd zero (suc n) zero _ = inl (0≤n , 0≤n)
 triangle-eq-fwd zero (suc n) (suc k) eq rewrite Add.left-suc k (dist k n)
   with triangle-eq-fwd zero n k (peano7-bck eq)
 ... | inl (_ , k≤n) = inl (0≤n , s≤s k≤n)
-... | inr (n≤k , k≤0) rewrite Leq.n≤0 k≤0 | Leq.n≤0 n≤k = inl (0≤n , s≤s 0≤n)
+... | inr (n≤k , k≤0) rewrite Leq.when-n≤0 k≤0 | Leq.when-n≤0 n≤k = inl (0≤n , s≤s 0≤n)
 triangle-eq-fwd (suc m) zero zero _ = inr (0≤n , 0≤n)
 triangle-eq-fwd (suc m) zero (suc k) eq = result where
   hyp : m ≡ dist m k + k -> dist m 0 ≡ dist m k + dist k 0
@@ -84,7 +84,7 @@ triangle-eq-fwd (suc m) zero (suc k) eq = result where
 
   result : ((suc m ≤ suc k) × (suc k ≤ zero)) ⨄ ((zero ≤ suc k) × (suc k ≤ suc m))
   result with triangle-eq-fwd m zero k (hyp $ peano7-bck eq)
-  ... | inl (m≤k , k≤0) rewrite Leq.n≤0 k≤0 | Leq.n≤0 m≤k = inr (0≤n , s≤s 0≤n)
+  ... | inl (m≤k , k≤0) rewrite Leq.when-n≤0 k≤0 | Leq.when-n≤0 m≤k = inr (0≤n , s≤s 0≤n)
   ... | inr (_ , k≤m) = inr (0≤n , s≤s k≤m)
 triangle-eq-fwd (suc m) (suc n) zero
   rewrite Add.left-suc m n = ex-falso ∘ Leq.ineq-+-nonzero {dist m n} {m + n} {1} (leq-add m n)
