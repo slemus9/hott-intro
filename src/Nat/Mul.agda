@@ -207,3 +207,9 @@ ineq-*-n+2 {suc m} {n}
   rewrite Add.left-suc (suc m) (suc (suc m) + suc (suc m) * n)
   | Add.left-suc m (suc (suc m) + suc (suc m) * n)
   | Add.left-suc (suc m) (suc (suc m) * n) = Add.ineq-+-nonzero ∘ peano7-bck ∘ peano7-bck
+
+eq-mul-one : ∀ {n k} -> suc n * k ≡ suc n -> k ≡ 1
+eq-mul-one {zero} {k} eq rewrite left-unit k = eq
+eq-mul-one {suc n} {k} eq
+  rewrite commutative (suc (suc n)) k
+  | inv $ left-unit $ suc (suc n) = mul-k+1-bck {k} {1} {suc n} eq

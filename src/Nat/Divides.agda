@@ -5,8 +5,8 @@ import Nat.Leq as Leq
 import Nat.Less as Less
 import Nat.Mul as Mul
 import Nat.Dist as Dist
-open import DependentPair using (_,_)
-open import Identity using (_≡_; refl; inv)
+open import DependentPair using (_,_; _×_; snd)
+open import Identity using (_≡_; refl; inv; ap)
 open import Identity.Reasoning
 open import Empty using (ex-falso)
 
@@ -18,8 +18,67 @@ one-divides-any n = n , Mul.left-unit n
 any-divides-zero : ∀ n -> n divides 0
 any-divides-zero n = 0 , refl
 
+zero-divides-zero : ∀ n -> 0 divides n -> n ≡ 0
+zero-divides-zero n (k , 0*k≡n) =
+  begin
+    n
+  ≡⟨ inv 0*k≡n ⟩
+    0 * k
+  ≡⟨ Mul.left-zero k ⟩
+    0
+  ∎
+
+{-
+  Exercise 7.2
+-}
 reflex : ∀ n -> n divides n
 reflex n = 1 , refl
+
+{-
+  Goal: suc m = n
+
+  Givens:
+    suc m * k1 = n
+    n * k2 = suc m
+  ==> (suc m * k1) * k2  = suc m
+  ==> suc m * (k1 * k2) = suc m
+  ==> k1 * k2 = 1
+  ==> k1 = 1, k2 = 1
+
+      suc m * k1 = n
+  ==> suc m * 1 = n
+-}
+antisym : ∀ m n -> m divides n -> n divides m -> m ≡ n
+antisym zero n 0|n _  = inv $ zero-divides-zero n 0|n
+antisym (suc m) n (k1 , sm*k1≡n) (k2 , n*k2≡sm) =
+  begin
+    suc m
+  ≡⟨ inv n*k2≡sm ⟩
+    n * k2
+  ≡⟨ ap (n *_) (snd k1*k2≡1) ⟩
+    n
+  ∎ where
+  sm*k1*k2≡sm : suc m * (k1 * k2) ≡ suc m
+  sm*k1*k2≡sm rewrite inv $ Mul.assoc (suc m) k1 k2 | sm*k1≡n = n*k2≡sm
+
+  k1*k2≡1 : (k1 ≡ 1) × (k2 ≡ 1)
+  k1*k2≡1 = Mul.both-one-fwd $ Mul.eq-mul-one sm*k1*k2≡sm
+
+{-
+  Goal: m * k3 = k
+
+  Givens
+    m * k1 = n
+    n * k2 = k
+  ==> (m * k1) * k2 = k
+  ==> m * (k1 * k2) = k
+  ==> k3 = k1 * k2
+-}
+trans : ∀ m n k -> m divides n -> n divides k -> m divides k
+trans m n k (k1 , m*k1≡n) (k2 , n*k2≡k) = (k1 * k2) , m*k3≡k where
+  m*k3≡k : m * (k1 * k2) ≡ k
+  m*k3≡k rewrite inv $ Mul.assoc m k1 k2 | m*k1≡n  = n*k2≡k
+
 
 divides-x-y-then-x+y : ∀ d x y
   -> d divides x
