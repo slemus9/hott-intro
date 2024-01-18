@@ -18,9 +18,6 @@ one-divides-any n = n , Mul.left-unit n
 any-divides-zero : ∀ n -> n divides 0
 any-divides-zero n = 0 , refl
 
-any-divides-itself : ∀ n -> n divides n
-any-divides-itself n = 1 , refl
-
 zero-divides-zero : ∀ n -> 0 divides n -> n ≡ 0
 zero-divides-zero n (k , 0*k≡n) =
   begin
