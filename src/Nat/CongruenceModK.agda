@@ -1,11 +1,12 @@
 open import Type using (Type)
 open import Nat.Base
+import Nat.Add as Add
 import Nat.Leq as Leq
 import Nat.Divides as Divides
 import Nat.Dist as Dist
 open import Identity using (_≡_; ap)
-open import Function using (id)
-open import DependentPair using (_,_)
+open import Function using (id; _$_)
+open import DependentPair using (_,_; _<-->_; fst; snd)
 open import Coproduct using (_⨄_; inl; inr)
 
 module Nat.CongruenceModK where
@@ -77,9 +78,6 @@ trans x y z k c1 c2 = cases (Leq.total x y) (Leq.total y z) (Leq.total x z) wher
   cases (inr y≤x) (inr z≤y) (inl x≤z) = case2 (Dist.dist-through-fwd y≤x x≤z) c2
   cases (inr y≤x) (inr z≤y) (inr z≤x) = case1 (Dist.dist-through-bck z≤y y≤x)
 
-add1 : ∀ {x y k} -> x ≡ y mod k -> suc x ≡ suc y mod k
-add1 = id
-
 module Reasoning where
   infixr 2 _≡⟨⟩_ _≡⟨_⟩_
   infix  3 _∎
@@ -98,3 +96,81 @@ module Reasoning where
   _∎ : ∀ x {k}
     -> x ≡ x mod k
   _∎ x {k} = reflex x k
+
+open Reasoning
+
+add1 : ∀ {x y k} -> x ≡ y mod k -> suc x ≡ suc y mod k
+add1 = id
+
+add-left : ∀ a b c k
+  -> (a ≡ b mod k) <--> ((c + a) ≡ c + b mod k)
+add-left a b c k rewrite Dist.invariant c a b = id , id
+
+add-left-fwd : ∀ a b c k
+  -> a ≡ b mod k
+  -> (c + a) ≡ c + b mod k
+add-left-fwd a b c k = fst (add-left a b c k)
+
+add-left-bck : ∀ a b c k
+  -> (c + a) ≡ c + b mod k
+  -> a ≡ b mod k
+add-left-bck a b c k = snd (add-left a b c k)
+
+add-right : ∀ a b c k
+  -> (a ≡ b mod k) <--> ((a + c) ≡ b + c mod k)
+add-right a b c k rewrite Add.commutative a c | Add.commutative b c = add-left a b c k
+
+add-right-fwd : ∀ a b c k
+  -> a ≡ b mod k
+  -> (a + c) ≡ b + c mod k
+add-right-fwd a b c k = fst (add-right a b c k)
+
+add-right-bck : ∀ a b c k
+  -> (a + c) ≡ b + c mod k
+  -> a ≡ b mod k
+add-right-bck a b c k = snd (add-right a b c k)
+
+{-
+  x ≡ x' mod k -> x + y ≡ x' + y mod k
+  y ≡ y' mod k -> x' + y ≡ x' + y' mod k
+-}
+add-preserves-cong-1 : ∀ x y x' y' k
+  -> x ≡ x' mod k
+  -> y ≡ y' mod k
+  -> (x + y) ≡ x' + y' mod k
+add-preserves-cong-1 x y x' y' k x≡x' y≡y' =
+    x + y
+  ≡⟨ add-right-fwd x x' y k x≡x' ⟩
+    x' + y
+  ≡⟨ add-left-fwd y y' x' k y≡y' ⟩
+    x' + y'
+  ∎
+
+{-
+  x ≡ x' mod k -> x + y' ≡ x' + y' mod k
+
+     x + y ≡ x' + y' mod k
+  && x + y' ≡ x' + y' mod k
+  -> x + y ≡ x + y' mod k
+  -> y ≡ y' mod k
+-}
+add-preserves-cong-2 : ∀ x y x' y' k
+  -> x ≡ x' mod k
+  -> (x + y) ≡ x' + y' mod k
+  -> y ≡ y' mod k
+add-preserves-cong-2 x y x' y' k x≡x' x+y≡x'+y' = add-left-bck y y' x k x+y≡x+y' where
+  x+y≡x+y' : (x + y) ≡ x + y' mod k
+  x+y≡x+y' =
+      x + y
+    ≡⟨ x+y≡x'+y' ⟩
+      x' + y'
+    ≡⟨ sym (x + y') (x' + y') k $ add-right-fwd x x' y' k x≡x' ⟩
+      x + y'
+    ∎
+
+add-preserves-cong-3 : ∀ x y x' y' k
+  -> y ≡ y' mod k
+  -> (x + y) ≡ x' + y' mod k
+  -> x ≡ x' mod k
+add-preserves-cong-3 x y x' y' k
+  rewrite Add.commutative x y | Add.commutative x' y'  = add-preserves-cong-2 y x y' x' k
