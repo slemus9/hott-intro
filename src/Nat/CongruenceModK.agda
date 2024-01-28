@@ -173,4 +173,4 @@ add-preserves-cong-3 : ∀ x y x' y' k
   -> (x + y) ≡ x' + y' mod k
   -> x ≡ x' mod k
 add-preserves-cong-3 x y x' y' k
-  rewrite Add.commutative x y | Add.commutative x' y'  = add-preserves-cong-2 y x y' x' k
+  rewrite Add.commutative x y | Add.commutative x' y' = add-preserves-cong-2 y x y' x' k
