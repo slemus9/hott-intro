@@ -136,3 +136,13 @@ right-inv {k} x rewrite sym $ NatModK+1.split-surjective {k} zero = ans where
 
 left-inv : ∀ {k} -> (x : ℤ/ (suc k)) -> add (inv x) x ≡ zero
 left-inv x rewrite commutative (inv x) x = right-inv x
+
+{-
+  Exercise 7.4
+-}
+add-one : ∀ {k} -> (x : ℤ/ (suc k)) -> next {suc k} x ≡ add x (one {k})
+add-one {Nat.zero} base = refl
+add-one {suc k} x
+  rewrite Incl.incl-one k
+  | Add.right-suc (incl x) 0
+  | NatModK+1.split-surjective x = refl

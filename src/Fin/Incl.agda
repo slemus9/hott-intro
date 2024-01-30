@@ -31,6 +31,11 @@ incl-to-next-fin : ∀ {k}
 incl-to-next-fin base = refl
 incl-to-next-fin (i x) = incl-to-next-fin x
 
+incl-one : ∀ k -> incl (one {suc k}) ≡ 1
+incl-one zero = refl
+incl-one (suc k)
+  rewrite incl-to-next-fin (first {k + 2}) | incl-first (k + 2) = refl
+
 incl-next-mod-k : ∀ {k}
   -> (x : Fin k)
   -> incl (next x) ≡ incl x + 1 mod k

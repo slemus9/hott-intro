@@ -87,3 +87,4 @@
 - [Exercise 7.1](src/Nat/Divides.agda#L90)
 - [Exercise 7.2](src/Nat/Divides.agda#L32)
 - [Exercise 7.3](src/Nat/Factorial.agda#L43)
+- [Exercise 7.4](src/Fin/CyclicGroups.agda#L141)
