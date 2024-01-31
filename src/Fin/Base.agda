@@ -1,6 +1,8 @@
-open import Type
-open import Nat
 open import DependentPair
+open import Empty
+open import Nat
+open import Type
+open import Unit
 
 module Fin.Base where
 
@@ -83,3 +85,10 @@ next (i x) = to-next-fin x
 
 one : ∀ {k} -> Fin (suc k)
 one = [ 1 ]
+
+-- Observational Equality
+Eq-Fin : ∀ {k} -> Fin k -> Fin k -> Type
+Eq-Fin base base = Unit
+Eq-Fin base (i _) = Empty
+Eq-Fin (i _) base = Empty
+Eq-Fin (i x) (i y) = Eq-Fin x y

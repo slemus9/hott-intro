@@ -88,3 +88,7 @@
 - [Exercise 7.2](src/Nat/Divides.agda#L32)
 - [Exercise 7.3](src/Nat/Factorial.agda#L43)
 - [Exercise 7.4](src/Fin/CyclicGroups.agda#L141)
+- [Exercise 7.5.a](src/Fin/Observational/Equality.agda#L16)
+- [Exercise 7.5.b](src/Fin/Observational/Equality.agda#L29)
+- [Exercise 7.5.c](src/Fin/Observational/Equality.agda#L35)
+- [Exercise 7.5.d](src/Fin/Observational/Equality.agda#L53)
