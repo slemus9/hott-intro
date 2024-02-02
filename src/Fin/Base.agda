@@ -75,6 +75,35 @@ next : ∀ {k} -> Fin k -> Fin k
 next base = first
 next (i x) = to-next-fin x
 
+neg-two : ∀ {k} -> Fin (suc k)
+neg-two {zero} = base
+neg-two {suc k} = i base
+
+skip-neg-two : ∀ {k} -> Fin k -> Fin (suc k)
+skip-neg-two base = base
+skip-neg-two (i x) = i (i x)
+
+{-
+  Predecesor Function
+
+  Examples on Fin 5
+
+    pred $ i (base {3})
+  = skip-neg-two $ pred (base {3})
+  = skip-neg-two $ i (base {2})
+  = i (i base {2})
+
+    pred $ i (i base {2})
+  = skip-neg-two $ pred (i base {2})
+  = skip-neg-two $ skip-neg-two $ pred (base {2})
+  = skip-neg-two $ skip-neg-two $ i (base {1})
+  = skip-neg-two $ i $ i (base {1})
+  = i $ i $ i (base {1})
+-}
+pred : ∀ {k} -> Fin k -> Fin k
+pred base = neg-two
+pred (i x) = skip-neg-two (pred x)
+
 -- Quotient map
 [_] : ∀ {k} -> Nat -> Fin (suc k)
 [ zero ] = first
