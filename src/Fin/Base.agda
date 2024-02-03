@@ -16,8 +16,8 @@ module Fin.Base where
   A set of elements x ∈ A such that P x holds, is interpreted
   as the type of terms x : A equipped with an element p : P x
 -}
-Classical-Fin : (k : Nat) -> Type
-Classical-Fin k = Σ Nat λ x -> x < k
+ClassicalFin : Nat -> Type
+ClassicalFin k = Σ Nat λ x -> x < k
 
 -- Inductive definition
 data Fin : Nat -> Type where

@@ -1,6 +1,6 @@
 open import Nat.Base
 import Nat.Leq as Leq
-open import Identity using (_≡_; ap)
+open import Identity using (_≡_; refl; ap)
 open import Function using (_$_; _∘_)
 open import Empty using (ex-falso)
 open import Empty.Negation using (¬_)
@@ -64,3 +64,7 @@ n<s {suc n} = s<s n<s
 
 when-equal : ∀ {m n} -> m ≡ n -> ¬ (m < n)
 when-equal eq rewrite eq = antireflex
+
+<-uniq : ∀ {x y} -> (p1 p2 : x < y) -> p1 ≡ p2
+<-uniq 0<s 0<s = refl
+<-uniq (s<s p1) (s<s p2) = ap s<s (<-uniq p1 p2)
