@@ -10,10 +10,6 @@ module Fin.Base where
 -- Standard Finite Types --
 ---------------------------
 
--- f : A -> B
--- g : B -> A
--- f (g (x)) = x , g (f (y)) = y
-
 {-
   Standard Finite Sets: {x ∈ N | x < k}
 
