@@ -1,4 +1,5 @@
-open import Empty.Base using (Empty)
+open import DependentPair using (_<-->_; _×_; _,_)
+open import Empty.Base using (Empty; ex-falso)
 open import Type using (Type)
 
 module Empty.Negation.Base where
@@ -24,3 +25,16 @@ module Empty.Negation.Base where
 -}
 is-empty : Type -> Type
 is-empty = ¬_
+
+{-
+  Exercise 4.a.i
+-}
+taut1 : {P : Type} -> ¬ (P × (¬ P))
+taut1 (p , ¬p) = ex-falso (¬p p)
+
+{-
+  Exercise 4.a.ii
+-}
+taut2 : {P : Type} -> ¬ (P <--> (¬ P))
+taut2 (f , g) = ex-falso (f p p) where
+  p = g λ p -> f p p
