@@ -75,7 +75,7 @@ to-fin-i (suc x , s<s x<k) = ap to-next-fin $ to-fin-i (x , x<k)
   Exercise 7.7.b.i
 -}
 to-fin-from-fin : ∀ {k} -> (x : Fin k) -> to-fin (from-fin x) ≡ x
-to-fin-from-fin {suc k} base rewrite to-fin-base k = refl
+to-fin-from-fin {suc k} base = to-fin-base k
 to-fin-from-fin (i x) rewrite to-fin-i (from-fin x) = ap i (to-fin-from-fin x)
 
 from-fin-i : ∀ {k} -> (x : Fin k) -> from-fin (i x) ≡ i-clss (from-fin x)
