@@ -93,4 +93,6 @@
 - [Exercise 7.5.c](src/Fin/Observational/Equality.agda#L35)
 - [Exercise 7.5.d](src/Fin/Observational/Equality.agda#L53)
 - [Exercise 7.6](src/Fin/Next.agda#L49)
-- [Exercise 7.7.a](src/Fin/Classical.agda#L18)
+- [Exercise 7.7.a](src/Fin/Classical.agda#L22)
+- [Exercise 7.7.b.i](src/Fin/Classical.agda#L75)
+- [Exercise 7.7.b.ii](src/Fin/Classical.agda#L119)
