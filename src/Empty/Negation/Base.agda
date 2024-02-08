@@ -27,13 +27,13 @@ is-empty : Type -> Type
 is-empty = ¬_
 
 {-
-  Exercise 4.a.i
+  Exercise 4.3.a.i
 -}
 taut1 : {P : Type} -> ¬ (P × (¬ P))
 taut1 (p , ¬p) = ex-falso (¬p p)
 
 {-
-  Exercise 4.a.ii
+  Exercise 4.3.a.ii
 -}
 taut2 : {P : Type} -> ¬ (P <--> (¬ P))
 taut2 (f , g) = ex-falso (f p p) where

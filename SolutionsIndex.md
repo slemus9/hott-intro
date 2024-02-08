@@ -21,6 +21,8 @@
 - [Exercise 4.2.a](src/Bool/Base.agda#L21)
 - [Exercise 4.2.b](src/Bool/Base.agda#L28)
 - [Exercise 4.2.c](src/Bool/Base.agda#L39)
+- [Exercise 4.3.a.i](src/Empty/Negation/Base.agda#L30)
+- [Exercise 4.3.a.ii](src/Empty/Negation/Base.agda#L36)
 - [Exercise 4.3.b](src/Empty/Negation/DoubleNegation.agda#L11)
 - [Exercise 4.3.c](src/Empty/Negation/DoubleNegation.agda#L31)
 - [Exercise 4.3.d](src/Empty/Negation/DoubleNegation.agda#L51)
