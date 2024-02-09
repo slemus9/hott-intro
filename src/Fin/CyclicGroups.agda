@@ -9,7 +9,7 @@ open import Fin.Base
 open import Function using (_$_)
 open import Identity using (_≡_; refl; sym)
 open import Int using (Int)
-open import Nat hiding (zero; add)
+open import Nat hiding (zero; add; mul)
 open import Type
 
 module Fin.CyclicGroups where
@@ -38,9 +38,12 @@ add x y = [ incl x + incl y ]
 inv : ∀ {k} -> ℤ/ (suc k) -> ℤ/ (suc k)
 inv {k} x = [ dist (incl x) (suc k) ]
 
+mul : ∀ {k} -> ℤ/ (suc k) -> ℤ/ (suc k) -> ℤ/ (suc k)
+mul x y = [ incl x * incl y ]
+
 -- Properties
 incl-add : ∀ {k} -> (x y : ℤ/ (suc k)) -> incl (add x y) ≡ incl x + incl y mod (suc k)
-incl-add x y = Incl.i[x]≡xmodk+1 (incl x + incl y)
+incl-add x y = Incl.incl-map-cong (incl x + incl y)
 
 -- Z / (k + 1) satisfies the laws of abelian groups
 commutative : ∀ {k} -> (x y : ℤ/ (suc k)) -> add x y ≡ add y x
@@ -120,7 +123,7 @@ right-inv {k} x rewrite sym $ NatModK+1.split-surjective {k} zero = ans where
     (dist (incl x) (suc k))
     (suc k)
     (CMK.reflex (incl x) (suc k))
-    (Incl.i[x]≡xmodk+1 $ dist (incl x) (suc k))
+    (Incl.incl-map-cong $ dist (incl x) (suc k))
 
   h1 : (incl x + incl [ dist (incl x) (suc k) ]⟨ k ⟩) ≡ incl (zero {k}) mod (suc k)
   h1 rewrite Incl.incl-first (suc k) =
@@ -146,3 +149,11 @@ add-one {suc k} x
   rewrite Incl.incl-one k
   | Add.right-suc (incl x) 0
   | NatModK+1.split-surjective x = refl
+
+{-
+  Exercise 7.8.a
+-}
+mul-incl-cong : ∀ {k}
+  -> (x y : ℤ/ (suc k))
+  -> incl (mul x y) ≡ incl x * incl y mod (suc k)
+mul-incl-cong x y = Incl.incl-map-cong (incl x * incl y)

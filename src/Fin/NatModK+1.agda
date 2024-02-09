@@ -19,12 +19,12 @@ effectiveness-fwd k x y [x]≡[y] =
     incl [ x ]⟨ k ⟩
   ≡⟨ lemma2 ⟩
     incl [ y ]⟨ k ⟩
-  ≡⟨ Incl.i[x]≡xmodk+1 y ⟩
+  ≡⟨ Incl.incl-map-cong y ⟩
     y
   ∎
   where
     lemma1 : x ≡ incl [ x ]⟨ k ⟩ mod (suc k)
-    lemma1 = CMK.sym (incl [ x ]⟨ k ⟩) x (suc k) (Incl.i[x]≡xmodk+1 x)
+    lemma1 = CMK.sym (incl [ x ]⟨ k ⟩) x (suc k) (Incl.incl-map-cong x)
 
     lemma2 : incl [ x ]⟨ k ⟩  ≡ incl [ y ]⟨ k ⟩ mod (suc k)
     lemma2 rewrite [x]≡[y] = CMK.reflex (incl [ y ]) (suc k)
@@ -54,11 +54,11 @@ effectiveness-bck k x y x≡ymodk+1 = Incl.injective $ Dist.itself-bck i[x]-i[y]
   i[x]≡i[y]modk+1 : incl [ x ]⟨ k ⟩ ≡ incl [ y ]⟨ k ⟩ mod (suc k)
   i[x]≡i[y]modk+1 =
       incl [ x ]⟨ k ⟩
-    ≡⟨ Incl.i[x]≡xmodk+1 x ⟩
+    ≡⟨ Incl.incl-map-cong x ⟩
       x
     ≡⟨ x≡ymodk+1 ⟩
       y
-    ≡⟨ CMK.sym (incl [ y ]⟨ k ⟩) y (suc k) (Incl.i[x]≡xmodk+1 y) ⟩
+    ≡⟨ CMK.sym (incl [ y ]⟨ k ⟩) y (suc k) (Incl.incl-map-cong y) ⟩
       incl [ y ]⟨ k ⟩
     ∎
 
@@ -76,4 +76,4 @@ split-surjective {k} x = Incl.injective $ Dist.itself-bck i[ix]-ix≡0 where
   i[ix]-ix<k+1 = Dist.both-less-than-k (Incl.bounded [ incl x ]⟨ k ⟩) (Incl.bounded x)
 
   i[ix]-ix≡0 : dist (incl [ incl x ]⟨ k ⟩) (incl x) ≡ 0
-  i[ix]-ix≡0 = Divides.divisor-less-than-dividend-fwd i[ix]-ix<k+1 (Incl.i[x]≡xmodk+1 (incl x))
+  i[ix]-ix≡0 = Divides.divisor-less-than-dividend-fwd i[ix]-ix<k+1 (Incl.incl-map-cong (incl x))

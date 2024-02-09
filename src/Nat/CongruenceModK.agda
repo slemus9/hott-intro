@@ -1,10 +1,11 @@
 open import Type using (Type)
 open import Nat.Base
 import Nat.Add as Add
-import Nat.Leq as Leq
 import Nat.Divides as Divides
 import Nat.Dist as Dist
-open import Identity using (_≡_; ap)
+import Nat.Leq as Leq
+import Nat.Mul as Mul
+open import Identity using (_≡_; ap; inv)
 open import Function using (id; _$_)
 open import DependentPair using (_,_; _<-->_; fst; snd)
 open import Coproduct using (_⨄_; inl; inr)
@@ -174,3 +175,31 @@ add-preserves-cong-3 : ∀ x y x' y' k
   -> x ≡ x' mod k
 add-preserves-cong-3 x y x' y' k
   rewrite Add.commutative x y | Add.commutative x' y' = add-preserves-cong-2 y x y' x' k
+
+mul-left : ∀ a b c k
+  -> a ≡ b mod k
+  -> (c * a) ≡ c * b mod k
+mul-left a b c k (j , a-b≡k*j)
+  rewrite Dist.linear c a b
+  | Mul.commutative c (dist a b)
+  | inv a-b≡k*j = (j * c) , inv (Mul.assoc k j c)
+
+mul-right : ∀ a b c k
+  -> a ≡ b mod k
+  -> (a * c) ≡ b * c mod k
+mul-right a b c k rewrite Mul.commutative a c | Mul.commutative b c = mul-left a b c k
+
+{-
+  Exercise 7.8.b
+-}
+mul-preserves-cong : ∀ x y x' y' k
+  -> x ≡ x' mod k
+  -> y ≡ y' mod k
+  -> (x * y) ≡ x' * y' mod k
+mul-preserves-cong x y x' y' k x≡x' y≡y' =
+    x * y
+  ≡⟨ mul-right x x' y k x≡x' ⟩
+    x' * y
+  ≡⟨ mul-left y y' x' k y≡y' ⟩
+    x' * y'
+  ∎
