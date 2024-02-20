@@ -5,17 +5,17 @@ import Nat.Add as Add
 open CMK.Reasoning
 open import Fin.Base
 open import Fin.CyclicInt.Base
-open import Identity using (_≡_; refl; sym)
+open import Identity using (_≡_; ap; refl; sym)
 open import Nat hiding (add; zero)
 
 module Fin.CyclicInt.Add where
 
-incl-add : ∀ {k} -> (x y : ℤ/ (suc k)) -> incl (add x y) ≡ incl x + incl y mod (suc k)
-incl-add x y = Incl.incl-map-cong (incl x + incl y)
+incl-add-cong : ∀ {k} -> (x y : ℤ/ (suc k)) -> incl (add x y) ≡ incl x + incl y mod (suc k)
+incl-add-cong x y = Incl.incl-map-cong (incl x + incl y)
 
--- Addition one Z / (k + 1) satisfies the laws of abelian groups
+-- Addition on Z / (k + 1) satisfies the laws of abelian groups
 commutative : ∀ {k} -> (x y : ℤ/ (suc k)) -> add x y ≡ add y x
-commutative x y rewrite Add.commutative (incl x) (incl y) = refl
+commutative x y = ap [_] (Add.commutative (incl x) (incl y))
 
 assoc : ∀ {k} -> (x y z : ℤ/ (suc k)) -> add (add x y) z ≡ add x (add y z)
 assoc {k} x y z = NatModK+1.effectiveness-bck k (incl (add x y) + incl z) (incl x + incl (add y z)) h2 where
@@ -26,7 +26,7 @@ assoc {k} x y z = NatModK+1.effectiveness-bck k (incl (add x y) + incl z) (incl 
     (incl x + incl y)
     (incl z)
     (suc k)
-    (incl-add x y)
+    (incl-add-cong x y)
     (CMK.reflex (incl z) (suc k))
 
   right : (incl x + incl (add y z)) ≡ incl x + (incl y + incl z) mod (suc k)
@@ -37,7 +37,7 @@ assoc {k} x y z = NatModK+1.effectiveness-bck k (incl (add x y) + incl z) (incl 
     (incl y + incl z)
     (suc k)
     (CMK.reflex (incl x) (suc k))
-    (incl-add y z)
+    (incl-add-cong y z)
 
   h1 : ((incl x + incl y) + incl z) ≡ incl x + (incl y + incl z) mod (suc k)
   h1 rewrite Add.assoc (incl x) (incl y) (incl z) =
