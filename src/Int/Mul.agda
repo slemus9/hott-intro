@@ -106,14 +106,14 @@ left-pred x (in-neg (Nat.suc y))
   | Neg.pred-inv x
   | Add.left-suc (- x) (- (x * in-pos y - in-pos y))
   | Neg.distrib-+ (x * in-pos y) (in-neg y)
-  | inv (Add.assoc (- x) (- (x * in-pos y)) (in-pos y))
+  | inv (Add.associative (- x) (- (x * in-pos y)) (in-pos y))
   | Neg.distrib-+ x (x * in-pos y)  = refl
 left-pred x zero = refl
 left-pred x (in-pos Nat.zero) = refl
 left-pred x (in-pos (Nat.suc y))
   rewrite left-pred x (in-pos y)
   | Add.pred-left x (x * in-pos y + in-neg y)
-  | Add.assoc x (x * in-pos y) (in-neg y) = refl
+  | Add.associative x (x * in-pos y) (in-neg y) = refl
 
 right-neg : ∀ x y -> x * (- y) ≡ (- (x * y))
 right-neg x (in-neg Nat.zero) = inv $ Neg.double-inv x
@@ -177,14 +177,14 @@ left-suc x (in-neg (Nat.suc y))
   rewrite left-suc x (in-pos y)
   | Add.left-suc x (x * in-pos y + in-pos y)
   | Neg.suc-inv (x + (x * in-pos y + in-pos y))
-  | inv (Add.assoc x (x * in-pos y) (in-pos y))
+  | inv (Add.associative x (x * in-pos y) (in-pos y))
   | Neg.distrib-+ (x + x * in-pos y) (in-pos y) = refl
 left-suc x zero = refl
 left-suc x (in-pos Nat.zero) = refl
 left-suc x (in-pos (Nat.suc y))
   rewrite left-suc x (in-pos y)
   | Add.left-suc x (x * in-pos y + in-pos y)
-  | Add.assoc x (x * in-pos y) (in-pos y)  = refl
+  | Add.associative x (x * in-pos y) (in-pos y)  = refl
 
 {-
   Exercise 5.8.c
@@ -224,17 +224,17 @@ distrib-+-right x y (in-neg Nat.zero) = Neg.distrib-+ x y
 distrib-+-right x y (in-neg (Nat.suc z))
   rewrite distrib-+-right x y (in-pos z)
   | inv $ Neg.distrib-+ (x + x * in-pos z) (y + y * in-pos z)
-  | Add.assoc x y (x * in-pos z + y * in-pos z)
+  | Add.associative x y (x * in-pos z + y * in-pos z)
   | inv $ Add.swap-left (x * in-pos z) y (y * in-pos z)
-  | Add.assoc (x * in-pos z) y (y * in-pos z)
-  | Add.assoc x (x * in-pos z) (y + y * in-pos z) = refl
+  | Add.associative (x * in-pos z) y (y * in-pos z)
+  | Add.associative x (x * in-pos z) (y + y * in-pos z) = refl
 distrib-+-right x y zero = refl
 distrib-+-right x y (in-pos Nat.zero) = refl
 distrib-+-right x y (in-pos (Nat.suc z))
   rewrite distrib-+-right x y (in-pos z)
-  | Add.assoc x y (x * in-pos z + y * in-pos z)
+  | Add.associative x y (x * in-pos z + y * in-pos z)
   | inv $ Add.swap-left (x * in-pos z) y (y * in-pos z)
-  | Add.assoc (x * in-pos z) y (y * in-pos z) = inv $ Add.assoc x (x * in-pos z) (y + y * in-pos z)
+  | Add.associative (x * in-pos z) y (y * in-pos z) = inv $ Add.associative x (x * in-pos z) (y + y * in-pos z)
 
 left-neg : ∀ x y -> (- x) * y ≡ (- (x * y))
 left-neg x (in-neg Nat.zero) = refl
@@ -288,15 +288,15 @@ left-neg-nat n x = begin
   Exercise 5.8.d
   Associativity and Commutativity
 -}
-assoc : ∀ x y z -> x * y * z ≡ x * (y * z)
-assoc x y (in-neg Nat.zero) = inv (right-neg x y)
-assoc x y (in-neg (Nat.suc z))
-  rewrite assoc x y (in-pos z)
+associative : ∀ x y z -> x * y * z ≡ x * (y * z)
+associative x y (in-neg Nat.zero) = inv (right-neg x y)
+associative x y (in-neg (Nat.suc z))
+  rewrite associative x y (in-pos z)
   | inv $ distrib-+-left x y (y * in-pos z) = inv $ right-neg x (y + y * in-pos z)
-assoc x y zero = refl
-assoc x y (in-pos Nat.zero) = refl
-assoc x y (in-pos (Nat.suc z))
-  rewrite assoc x y (in-pos z) = inv $ distrib-+-left x y (y * in-pos z)
+associative x y zero = refl
+associative x y (in-pos Nat.zero) = refl
+associative x y (in-pos (Nat.suc z))
+  rewrite associative x y (in-pos z) = inv $ distrib-+-left x y (y * in-pos z)
 
 commutative : ∀ x y -> x * y ≡ y * x
 commutative x (in-neg Nat.zero)

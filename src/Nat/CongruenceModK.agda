@@ -182,7 +182,7 @@ mul-left : ∀ a b c k
 mul-left a b c k (j , a-b≡k*j)
   rewrite Dist.linear c a b
   | Mul.commutative c (dist a b)
-  | inv a-b≡k*j = (j * c) , inv (Mul.assoc k j c)
+  | inv a-b≡k*j = (j * c) , inv (Mul.associative k j c)
 
 mul-right : ∀ a b c k
   -> a ≡ b mod k

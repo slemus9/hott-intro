@@ -167,12 +167,12 @@ left-suc x (in-pos (Nat.suc y)) rewrite left-suc x (in-pos y) = refl
   Exercise 5.7.c
   Associativity and Commutativity
 -}
-assoc : (x y z : Int) -> (x + y) + z ≡ x + (y + z)
+associative : (x y z : Int) -> (x + y) + z ≡ x + (y + z)
 {-
   (x + y) + in-neg zero = pred (x + y)
   x + (y + in-neg zero) = x + pred y
 -}
-assoc x y (in-neg Nat.zero) rewrite pred-right x y = refl
+associative x y (in-neg Nat.zero) rewrite pred-right x y = refl
 {-
     (x + y) + in-neg (suc z)
   = pred((x + y) + in-neg z)
@@ -182,15 +182,15 @@ assoc x y (in-neg Nat.zero) rewrite pred-right x y = refl
     x + (y + in-neg (suc z))
   = x + (pred (y + in-neg z))
 -}
-assoc x y (in-neg (Nat.suc z))
-  rewrite assoc x y (in-neg z)
+associative x y (in-neg (Nat.suc z))
+  rewrite associative x y (in-neg z)
   | pred-right x (y + in-neg z) = refl
-assoc x y zero = refl
+associative x y zero = refl
 {-
   (x + y) + in-pos zero = suc (x + y)
   x + (y + in-pos zero) = x + (suc y)
 -}
-assoc x y (in-pos Nat.zero) rewrite right-suc x y = refl
+associative x y (in-pos Nat.zero) rewrite right-suc x y = refl
 {-
     (x + y) + in-pos (suc z)
   = suc ((x + y) + in-pos z)
@@ -200,8 +200,8 @@ assoc x y (in-pos Nat.zero) rewrite right-suc x y = refl
     x + (y + in-pos (suc z))
   = x + suc (y + in-pos z)
 -}
-assoc x y (in-pos (Nat.suc z))
-  rewrite assoc x y (in-pos z)
+associative x y (in-pos (Nat.suc z))
+  rewrite associative x y (in-pos z)
   | right-suc x (y + in-pos z) = refl
 
 commutative : (x y : Int) -> x + y ≡ y + x
@@ -291,10 +291,10 @@ right-inv : ∀ x -> x + (- x) ≡ zero
 right-inv x rewrite commutative x (- x) = left-inv x
 
 swap-right : (x y z : Int) -> x + y + z ≡ x + (z + y)
-swap-right x y z rewrite assoc x y z | commutative y z = refl
+swap-right x y z rewrite associative x y z | commutative y z = refl
 
 swap-left : (x y z : Int) -> x + y + z ≡ y + (x + z)
-swap-left x y z rewrite commutative x y | assoc y x z = refl
+swap-left x y z rewrite commutative x y | associative y x z = refl
 
 add-pos : ∀ m n -> in-pos m + in-pos n ≡ pred (in-pos (Nat.suc m + Nat.suc n))
 add-pos m Nat.zero rewrite pred-pos (Nat.suc m) = suc-pos m

@@ -22,4 +22,4 @@ add-zero-right x y rewrite itself y = refl
 add-zero-ends : ∀ x y -> x + y - x ≡ y
 add-zero-ends x y
   rewrite Add.swap-right x y (- x)
-  | inv (Add.assoc x (- x) y) = add-zero-left x y
+  | inv (Add.associative x (- x) y) = add-zero-left x y

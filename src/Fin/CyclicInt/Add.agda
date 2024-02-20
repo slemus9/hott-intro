@@ -17,8 +17,8 @@ incl-add-cong x y = Incl.incl-map-cong (incl x + incl y)
 commutative : ∀ {k} -> (x y : ℤ/ (suc k)) -> add x y ≡ add y x
 commutative x y = ap [_] (Add.commutative (incl x) (incl y))
 
-assoc : ∀ {k} -> (x y z : ℤ/ (suc k)) -> add (add x y) z ≡ add x (add y z)
-assoc {k} x y z = NatModK+1.effectiveness-bck k (incl (add x y) + incl z) (incl x + incl (add y z)) h2 where
+associative : ∀ {k} -> (x y z : ℤ/ (suc k)) -> add (add x y) z ≡ add x (add y z)
+associative {k} x y z = NatModK+1.effectiveness-bck k (incl (add x y) + incl z) (incl x + incl (add y z)) h2 where
   left : (incl (add x y) + incl z) ≡ ((incl x + incl y) + incl z) mod (suc k)
   left = CMK.add-preserves-cong-1
     (incl (add x y))
@@ -40,7 +40,7 @@ assoc {k} x y z = NatModK+1.effectiveness-bck k (incl (add x y) + incl z) (incl 
     (incl-add-cong y z)
 
   h1 : ((incl x + incl y) + incl z) ≡ incl x + (incl y + incl z) mod (suc k)
-  h1 rewrite Add.assoc (incl x) (incl y) (incl z) =
+  h1 rewrite Add.associative (incl x) (incl y) (incl z) =
     CMK.reflex (incl x + (incl y + incl z)) (suc k)
 
   h2 : (incl (add x y) + incl z) ≡ incl x + incl (add y z) mod (suc k)

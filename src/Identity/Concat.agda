@@ -14,12 +14,12 @@ right-unit : {A : Type} {x y : A}
   -> concat p refl ≡ p
 right-unit refl = refl
 
-assoc : {A : Type} {x y z w : A}
+associative : {A : Type} {x y z w : A}
   -> (p : x ≡ y)
   -> (q : y ≡ z)
   -> (r : z ≡ w)
   -> concat (concat p q) r ≡ concat p (concat q r)
-assoc refl q r = refl
+associative refl q r = refl
 
 left-inv : {A : Type} {x y : A}
   -> (p : x ≡ y)

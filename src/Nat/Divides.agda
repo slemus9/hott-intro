@@ -59,7 +59,7 @@ antisym (suc m) n (k1 , sm*k1≡n) (k2 , n*k2≡sm) =
     n
   ∎ where
   sm*k1*k2≡sm : suc m * (k1 * k2) ≡ suc m
-  sm*k1*k2≡sm rewrite inv $ Mul.assoc (suc m) k1 k2 | sm*k1≡n = n*k2≡sm
+  sm*k1*k2≡sm rewrite inv $ Mul.associative (suc m) k1 k2 | sm*k1≡n = n*k2≡sm
 
   k1*k2≡1 : (k1 ≡ 1) × (k2 ≡ 1)
   k1*k2≡1 = Mul.both-one-fwd $ Mul.eq-mul-one sm*k1*k2≡sm
@@ -77,7 +77,7 @@ antisym (suc m) n (k1 , sm*k1≡n) (k2 , n*k2≡sm) =
 trans : ∀ m n k -> m divides n -> n divides k -> m divides k
 trans m n k (k1 , m*k1≡n) (k2 , n*k2≡k) = (k1 * k2) , m*k3≡k where
   m*k3≡k : m * (k1 * k2) ≡ k
-  m*k3≡k rewrite inv $ Mul.assoc m k1 k2 | m*k1≡n = n*k2≡k
+  m*k3≡k rewrite inv $ Mul.associative m k1 k2 | m*k1≡n = n*k2≡k
 
 divides-x-y-then-x+y : ∀ d x y
   -> d divides x

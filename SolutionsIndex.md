@@ -98,5 +98,6 @@
 - [Exercise 7.7.a](src/Fin/Classical.agda#L22)
 - [Exercise 7.7.b.i](src/Fin/Classical.agda#L75)
 - [Exercise 7.7.b.ii](src/Fin/Classical.agda#L119)
-- [Exercise 7.8.a](src/Fin/CyclicInt/Mul.agda#L9)
+- [Exercise 7.8.a](src/Fin/CyclicInt/Mul.agda#L11)
 - [Exercise 7.8.b](src/Nat/CongruenceModK.agda#L193)
+- [Exercise 7.8.c](src/Fin/CyclicInt/Mul.agda#L19)

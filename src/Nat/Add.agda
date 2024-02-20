@@ -33,8 +33,8 @@ left-suc m = ind-nat p0 pSuc
   (m + n) + suc k = suc ((m + n) + k)
   m + (n + suc k) = m + suc (n + k) = suc (m + (n + k))
 -}
-assoc : (m n k : Nat) -> (m + n) + k ≡ m + (n + k)
-assoc m n = ind-nat p0 pSuc
+associative : (m n k : Nat) -> (m + n) + k ≡ m + (n + k)
+associative m n = ind-nat p0 pSuc
   where
     P : Nat -> Type
     P k = (m + n) + k ≡ m + (n + k)

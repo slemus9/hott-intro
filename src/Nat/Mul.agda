@@ -55,7 +55,7 @@ left-suc m zero
 left-suc m (suc n)
   rewrite Add.left-suc m (suc m * n)
   | left-suc m n
-  | inv (Add.assoc m (m * n) n)  = refl
+  | inv (Add.associative m (m * n) n)  = refl
 
 {-
     m * (suc n)
@@ -90,11 +90,11 @@ distrib-+-left (suc m) n k
   | left-suc m n
   | left-suc m k
   | distrib-+-left m n k
-  | Add.assoc (m * n) (m * k) (n + k)
-  | inv (Add.assoc (m * k) n k)
+  | Add.associative (m * n) (m * k) (n + k)
+  | inv (Add.associative (m * k) n k)
   | Add.commutative (m * k) n
-  | Add.assoc n (m * k) k
-  | inv (Add.assoc (m * n) n (m * k + k)) = refl
+  | Add.associative n (m * k) k
+  | inv (Add.associative (m * n) n (m * k + k)) = refl
 
 {-
     (m + n) * suc k
@@ -108,11 +108,11 @@ distrib-+-right : (m n k : Nat) -> (m + n) * k ≡ m * k + n * k
 distrib-+-right m n zero = refl
 distrib-+-right m n (suc k)
   rewrite distrib-+-right m n k
-  | Add.assoc m n (m * k + n * k)
-  | inv (Add.assoc n (m * k) (n * k))
+  | Add.associative m n (m * k + n * k)
+  | inv (Add.associative n (m * k) (n * k))
   | Add.commutative n (m * k)
-  | Add.assoc (m * k) n (n * k)
-  | inv (Add.assoc m (m * k) (n + n * k)) = refl
+  | Add.associative (m * k) n (n * k)
+  | inv (Add.associative m (m * k) (n + n * k)) = refl
 
 {-
     (m * n) * suc k
@@ -123,11 +123,11 @@ distrib-+-right m n (suc k)
   = m * (n + n * k)
   = m * n + m * (n * k)
 -}
-assoc : (m n k : Nat) -> (m * n) * k ≡ m * (n * k)
-assoc m n zero = refl
-assoc m n (suc k)
+associative : (m n k : Nat) -> (m * n) * k ≡ m * (n * k)
+associative m n zero = refl
+associative m n (suc k)
   rewrite distrib-+-left m n (n * k)
-  | assoc m n k = refl
+  | associative m n k = refl
 
 {-
   Exercise 6.1.a.ii
@@ -144,10 +144,10 @@ mul-k+1-bck {suc m} {zero} {k} rewrite left-zero k | Add.left-suc m (suc m * k) 
 mul-k+1-bck {suc m} {suc n} {k} eq
   rewrite Add.left-suc m (suc m * k)
   | left-suc m k
-  | inv (Add.assoc m (m * k) k)
+  | inv (Add.associative m (m * k) k)
   | Add.left-suc n (suc n * k)
   | left-suc n k
-  | inv (Add.assoc n (n * k) k) = peano7-fwd (mul-k+1-bck {m} {n} {k} hyp2) where
+  | inv (Add.associative n (n * k) k) = peano7-fwd (mul-k+1-bck {m} {n} {k} hyp2) where
     hyp1 : (m + m * k) + k ≡ (n + n * k) + k
     hyp1 = peano7-bck eq
 
