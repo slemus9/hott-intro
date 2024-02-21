@@ -5,7 +5,7 @@ import Nat.Divides as Divides
 import Nat.Dist as Dist
 import Nat.Leq as Leq
 import Nat.Mul as Mul
-open import Identity using (_≡_; ap; inv)
+open import Identity using (_≡_; ap; inv; refl)
 open import Function using (id; _$_)
 open import DependentPair using (_,_; _<-->_; fst; snd)
 open import Coproduct using (_⨄_; inl; inr)
@@ -14,6 +14,9 @@ module Nat.CongruenceModK where
 
 reflex : ∀ x k -> x ≡ x mod k
 reflex x k rewrite Dist.to-itself x = Divides.any-divides-zero k
+
+when-eq : ∀ {x} {y} k -> x ≡ y -> x ≡ y mod k
+when-eq {x} {_} k refl = reflex x k
 
 sym : ∀ x y k -> x ≡ y mod k -> y ≡ x mod k
 sym x y k rewrite Dist.commutative x y = id

@@ -5,6 +5,7 @@ import Nat.Add as Add
 open CMK.Reasoning
 open import Fin.Base
 open import Fin.CyclicInt.Base
+open import Function using (_$_)
 open import Identity using (_≡_; ap; refl; sym)
 open import Nat hiding (add; zero)
 
@@ -18,7 +19,7 @@ commutative : ∀ {k} -> (x y : ℤ/ (suc k)) -> add x y ≡ add y x
 commutative x y = ap [_] (Add.commutative (incl x) (incl y))
 
 associative : ∀ {k} -> (x y z : ℤ/ (suc k)) -> add (add x y) z ≡ add x (add y z)
-associative {k} x y z = NatModK+1.effectiveness-bck k (incl (add x y) + incl z) (incl x + incl (add y z)) h2 where
+associative {k} x y z = NatModK+1.effectiveness-bck k (incl (add x y) + incl z) (incl x + incl (add y z)) res where
   left : (incl (add x y) + incl z) ≡ ((incl x + incl y) + incl z) mod (suc k)
   left = CMK.add-preserves-cong-1
     (incl (add x y))
@@ -39,16 +40,12 @@ associative {k} x y z = NatModK+1.effectiveness-bck k (incl (add x y) + incl z) 
     (CMK.reflex (incl x) (suc k))
     (incl-add-cong y z)
 
-  h1 : ((incl x + incl y) + incl z) ≡ incl x + (incl y + incl z) mod (suc k)
-  h1 rewrite Add.associative (incl x) (incl y) (incl z) =
-    CMK.reflex (incl x + (incl y + incl z)) (suc k)
-
-  h2 : (incl (add x y) + incl z) ≡ incl x + incl (add y z) mod (suc k)
-  h2 =
+  res : (incl (add x y) + incl z) ≡ incl x + incl (add y z) mod (suc k)
+  res =
       incl (add x y) + incl z
     ≡⟨ left ⟩
       (incl x + incl y) + incl z
-    ≡⟨ h1 ⟩
+    ≡⟨ CMK.when-eq (suc k) $ Add.associative (incl x) (incl y) (incl z) ⟩
       incl x + (incl y + incl z)
     ≡⟨ CMK.sym (incl x + incl (add y z)) (incl x + (incl y + incl z)) (suc k) right ⟩
       incl x + incl (add y z)
