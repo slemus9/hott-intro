@@ -7,7 +7,7 @@ open import Fin.Base
 open import Fin.CyclicInt.Base
 open import Function using (_$_)
 open import Nat hiding (add; mul; zero)
-open import Identity using (_≡_; ap)
+open import Identity using (_≡_; ap; refl)
 
 module Fin.CyclicInt.Mul where
 
@@ -69,3 +69,12 @@ associative {k} x y z =
       ≡⟨ CMK.sym (incl x * incl (mul y z)) (incl x * (incl y * incl z)) (suc k) right-cong ⟩
         incl x * incl (mul y z)
       ∎
+
+right-unit : ∀ {k} -> (x : ℤ/ (suc k)) -> mul x one ≡ x
+right-unit {Nat.zero} base rewrite Incl.incl-first 0 = refl
+right-unit {suc k} x
+  rewrite Incl.incl-one k
+  | Mul.right-unit (incl x) = NatModK+1.split-surjective x
+
+left-unit : ∀ {k} -> (x : ℤ/ (suc k)) -> mul one x ≡ x
+left-unit x rewrite commutative one x = right-unit x
