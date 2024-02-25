@@ -1,7 +1,7 @@
 open import Fin.Base
 import Fin.Incl as Incl
 open import Function using (_$_)
-open import Nat
+open import Nat.Base
 import Nat.Divides as Divides
 import Nat.Dist as Dist
 import Nat.CongruenceModK as CMK

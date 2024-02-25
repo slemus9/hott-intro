@@ -1,6 +1,6 @@
 open import DependentPair
 open import Empty
-open import Nat
+open import Nat.Base
 open import Type
 open import Unit
 

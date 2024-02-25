@@ -1,11 +1,17 @@
 open import Nat.Base
 import Nat.Leq as Leq
-open import Identity using (_≡_; refl; ap)
+open import Identity using (_≢_; _≡_; refl; ap)
 open import Function using (_$_; _∘_)
 open import Empty using (ex-falso)
 open import Empty.Negation using (¬_)
+open import Type using (Type)
 
 module Nat.Less where
+
+data Connected (m n : Nat) : Type where
+  low : m < n -> Connected m n
+  middle : m ≡ n -> Connected m n
+  high : n < m -> Connected m n
 
 not-n<0 : ∀ {n} -> ¬ (n < 0)
 not-n<0 ()
@@ -68,3 +74,16 @@ when-equal eq rewrite eq = antireflex
 <-uniq : ∀ {x y} -> (p1 p2 : x < y) -> p1 ≡ p2
 <-uniq 0<s 0<s = refl
 <-uniq (s<s p1) (s<s p2) = ap s<s (<-uniq p1 p2)
+
+connected : ∀ m n -> Connected m n
+connected zero zero = Connected.middle refl
+connected zero (suc _) = Connected.low 0<s
+connected (suc m) zero = Connected.high 0<s
+connected (suc m) (suc n) with connected m n
+... | low m<n = Connected.low (s<s m<n)
+... | middle m≡n = Connected.middle (ap suc m≡n)
+... | high n<m = Connected.high (s<s n<m)
+
+when-not-zero : ∀ {n} -> n ≢ 0 -> 0 < n
+when-not-zero {zero} n≢0 = ex-falso (n≢0 refl)
+when-not-zero {suc n} _ = 0<s

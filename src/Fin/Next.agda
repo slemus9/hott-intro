@@ -1,6 +1,6 @@
 open import Fin.Base
 open import Identity using (_≡_; refl; ap)
-open import Nat
+open import Nat.Base
 
 module Fin.Next where
 

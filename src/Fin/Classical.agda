@@ -6,7 +6,7 @@ open import DependentPair using (_<-->_; _,_; fst)
 open import Fin.Base
 open import Function using (_∘_; _$_)
 open import Identity using (_≡_; refl; inv; ap)
-open import Nat
+open import Nat.Base
 open import Nat.Less using (<-uniq)
 
 module Fin.Classical where

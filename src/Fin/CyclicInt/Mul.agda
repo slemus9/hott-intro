@@ -7,7 +7,7 @@ open CMK.Reasoning
 open import Fin.Base
 open import Fin.CyclicInt.Base
 open import Function using (_$_)
-open import Nat hiding (add; mul; zero)
+open import Nat.Base hiding (add; mul; zero)
 open import Identity using (_≡_; ap; refl)
 
 module Fin.CyclicInt.Mul where

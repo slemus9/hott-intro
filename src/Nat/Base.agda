@@ -1,6 +1,6 @@
 open import Type using (Type)
 open import DependentPair using (Σ)
-open import Identity using (_≡_)
+open import Identity using (_≡_; _≢_)
 
 module Nat.Base where
 
@@ -135,6 +135,14 @@ dist : Nat -> Nat -> Nat
 dist zero n = n
 dist m zero = m
 dist (suc m) (suc n) = dist m n
+
+-- Euclidean Division
+record Division (a b : Nat) : Type where
+  field
+    quotient : Nat
+    remainder : Nat
+    when-divisor-positive : b ≢ 0 -> remainder < b
+    division : a ≡ quotient * b + remainder
 
 -- Divides relation
 _divides_ : Nat -> Nat -> Type

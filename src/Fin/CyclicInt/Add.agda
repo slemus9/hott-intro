@@ -7,7 +7,7 @@ open import Fin.Base
 open import Fin.CyclicInt.Base
 open import Function using (_$_)
 open import Identity using (_≡_; ap; refl; sym)
-open import Nat hiding (add; zero)
+open import Nat.Base hiding (add; zero)
 
 module Fin.CyclicInt.Add where
 

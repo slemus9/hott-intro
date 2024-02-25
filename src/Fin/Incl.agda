@@ -1,5 +1,5 @@
 open import Fin.Base
-open import Nat
+open import Nat.Base
 import Nat.Dist as Dist
 import Nat.Less as Less
 import Nat.Divides as Divides
