@@ -1,7 +1,7 @@
 open import Fin.Base
 open import Int.Base using (Int)
 open import Nat.Base hiding (zero; add; mul)
-open import Type.Base
+open import Type
 
 module Fin.CyclicInt.Base where
 
