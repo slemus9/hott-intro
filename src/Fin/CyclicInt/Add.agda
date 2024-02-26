@@ -12,7 +12,7 @@ open import Nat.Base hiding (add; zero)
 module Fin.CyclicInt.Add where
 
 incl-add-cong : ∀ {k} -> (x y : ℤ/ (suc k)) -> incl (add x y) ≡ incl x + incl y mod (suc k)
-incl-add-cong x y = Incl.incl-map-cong (incl x + incl y)
+incl-add-cong x y = Incl.incl-quot-map-cong (incl x + incl y)
 
 -- Addition on Z / (k + 1) satisfies the laws of abelian groups
 commutative : ∀ {k} -> (x y : ℤ/ (suc k)) -> add x y ≡ add y x

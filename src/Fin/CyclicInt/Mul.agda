@@ -18,7 +18,7 @@ module Fin.CyclicInt.Mul where
 incl-mul-cong : ∀ {k}
   -> (x y : ℤ/ (suc k))
   -> incl (mul x y) ≡ incl x * incl y mod (suc k)
-incl-mul-cong x y = Incl.incl-map-cong (incl x * incl y)
+incl-mul-cong x y = Incl.incl-quot-map-cong (incl x * incl y)
 
 {-
   Exercise 7.8.c

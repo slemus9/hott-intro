@@ -27,6 +27,10 @@ when-m≤sn {suc m} {suc n} (s≤s m≤sn) with when-m≤sn m≤sn
 ... | inl m≡sn = inl (ap suc m≡sn)
 ... | inr m≤n = inr (s≤s m≤n)
 
+when-eq : ∀ {m n} -> m ≡ n -> m ≤ n
+when-eq {zero} {.zero} refl = 0≤n
+when-eq {suc m} {.(suc m)} refl = s≤s (when-eq refl)
+
 n<=n+m : ∀ {n m} -> n ≤ n + m
 n<=n+m {zero} {m} = 0≤n
 n<=n+m {suc n} {m} rewrite Add.left-suc n m = s≤s n<=n+m
