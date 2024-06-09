@@ -73,26 +73,26 @@ total (suc m) (suc n) with total m n
 {-
   Exercise 6.3.c
 -}
-add-k-r-fwd : ∀ m n k -> m ≤ n -> m + k ≤ n + k
-add-k-r-fwd _ _ zero = id
-add-k-r-fwd m n (suc k) m≤n = s≤s (add-k-r-fwd m n k m≤n)
+add-both-sides-r-fwd : ∀ m n k -> m ≤ n -> m + k ≤ n + k
+add-both-sides-r-fwd _ _ zero = id
+add-both-sides-r-fwd m n (suc k) m≤n = s≤s (add-both-sides-r-fwd m n k m≤n)
 
-add-k-bck : ∀ m n k -> m + k ≤ n + k -> m ≤ n
-add-k-bck _ _ zero = id
-add-k-bck m n (suc k) (s≤s h) = add-k-bck m n k h
+add-both-sides-bck : ∀ m n k -> m + k ≤ n + k -> m ≤ n
+add-both-sides-bck _ _ zero = id
+add-both-sides-bck m n (suc k) (s≤s h) = add-both-sides-bck m n k h
 
-add-k : ∀ m n k -> (m ≤ n) <--> (m + k ≤ n + k)
-add-k m n k = add-k-r-fwd m n k , add-k-bck m n k
+add-both-sides : ∀ m n k -> (m ≤ n) <--> (m + k ≤ n + k)
+add-both-sides m n k = add-both-sides-r-fwd m n k , add-both-sides-bck m n k
 
 {-
   Exercise 6.3.d
 -}
-add-k-l-fwd : ∀ k m n -> m ≤ n -> k + m ≤ k + n
-add-k-l-fwd k m n
-  rewrite Add.commutative k m | Add.commutative k n = add-k-r-fwd m n k
+add-both-sides-l-fwd : ∀ k m n -> m ≤ n -> k + m ≤ k + n
+add-both-sides-l-fwd k m n
+  rewrite Add.commutative k m | Add.commutative k n = add-both-sides-r-fwd m n k
 
 add-mono : ∀ m n p q -> m ≤ n -> p ≤ q -> m + p ≤ n + q
-add-mono m n p q m≤n p≤q = trans (add-k-r-fwd m n p m≤n) (add-k-l-fwd n p q p≤q)
+add-mono m n p q m≤n p≤q = trans (add-both-sides-r-fwd m n p m≤n) (add-both-sides-l-fwd n p q p≤q)
 
 mul-nonzero : ∀ m n k -> m ≤ n -> m * (k + 1) ≤ n * (k + 1)
 mul-nonzero m n zero = id

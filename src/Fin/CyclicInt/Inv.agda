@@ -35,7 +35,7 @@ right-inv {k} x rewrite sym $ NatModK+1.split-surjective {k} zero = ans where
   h3 : (incl x + dist (incl x) (suc k)) ≡ 0 mod (suc k)
   h3 rewrite Nat.Add.commutative (incl x) (dist (incl x) (suc k))
     | Dist.commutative (incl x) (suc k)
-    | Dist.dist-when-n<m (Incl.bounded x) = 1 , refl
+    | Dist.from-less (Incl.bounded x) = 1 , refl
 
   h2 : (incl x + incl [ dist (incl x) (suc k) ]⟨ k ⟩) ≡ incl x + dist (incl x) (suc k) mod (suc k)
   h2 = CMK.add-preserves-cong-1

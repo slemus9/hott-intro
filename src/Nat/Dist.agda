@@ -129,13 +129,13 @@ linear (suc k) (suc m) (suc n)
 {-
   Exercise 6.5.d
 -}
-dist-when-n≤m : ∀ {m n} -> n ≤ m -> dist m n + n ≡ m
-dist-when-n≤m {m} {_} 0≤n = right-unit m
-dist-when-n≤m (s≤s n≤m) = ap suc (dist-when-n≤m n≤m)
+from-leq  : ∀ {m n} -> n ≤ m -> dist m n + n ≡ m
+from-leq  {m} {_} 0≤n = right-unit m
+from-leq  (s≤s n≤m) = ap suc (from-leq  n≤m)
 
-dist-when-n<m : ∀ {m n} -> n < m -> dist m n + n ≡ m
-dist-when-n<m 0<s = refl
-dist-when-n<m (s<s n<m) = ap suc (dist-when-n<m n<m)
+from-less : ∀ {m n} -> n < m -> dist m n + n ≡ m
+from-less 0<s = refl
+from-less (s<s n<m) = ap suc (from-less n<m)
 
 clear-add-eq-when-n≤m : ∀ m n k -> n ≤ m -> m ≡ n + k -> dist m n ≡ k
 clear-add-eq-when-n≤m m zero k 0≤n

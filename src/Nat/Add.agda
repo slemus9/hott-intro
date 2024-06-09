@@ -58,16 +58,22 @@ commutative m (suc n)
 {-
   Exercise 6.1.a.i
 -}
-add-k-fwd : {m n k : Nat} -> m ≡ n -> m + k ≡ n + k
-add-k-fwd {_} {_} {zero} = id
-add-k-fwd {_} {_} {suc k} m≡n rewrite m≡n = refl
+add-both-sides-fwd : {m n k : Nat} -> m ≡ n -> m + k ≡ n + k
+add-both-sides-fwd {_} {_} {zero} = id
+add-both-sides-fwd {_} {_} {suc k} m≡n rewrite m≡n = refl
 
-add-k-bck : {m n k : Nat} -> m + k ≡ n + k -> m ≡ n
-add-k-bck {_} {_} {zero} = id
-add-k-bck {_} {_} {suc k} = add-k-bck ∘ peano7-bck
+add-both-sides-fwd' : {m n k : Nat} -> m ≡ n -> k + m ≡ k + n
+add-both-sides-fwd' {m} {n} {k} rewrite commutative k m | commutative k n = add-both-sides-fwd {m}
 
-add-k : {m n k : Nat} -> (m ≡ n) <--> (m + k ≡ n + k)
-add-k = add-k-fwd , add-k-bck
+add-both-sides-bck : {m n k : Nat} -> m + k ≡ n + k -> m ≡ n
+add-both-sides-bck {_} {_} {zero} = id
+add-both-sides-bck {_} {_} {suc k} = add-both-sides-bck ∘ peano7-bck
+
+add-both-sides-bck' : {m n k : Nat} -> k + m ≡ k + n -> m ≡ n
+add-both-sides-bck' {m} {n} {k} rewrite commutative k m | commutative k n = add-both-sides-bck {m}
+
+add-both-sides : {m n k : Nat} -> (m ≡ n) <--> (m + k ≡ n + k)
+add-both-sides = add-both-sides-fwd , add-both-sides-bck
 
 {-
   Exercise 6.1.b.i

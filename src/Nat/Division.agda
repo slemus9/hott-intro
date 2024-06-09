@@ -22,13 +22,14 @@ euclidean-div a zero = record
   ; division = sym (Add.left-unit a)
   }
 euclidean-div a (suc b) with Incl.incl-quot-map-cong {b} a
-... | k , sb*k≡a-r = record
+... | k , sucb-divides-dist = record
+  -- sucb-divides-dist : (suc b) * k ≡ dist (incl [ a ]⟨ b ⟩) a
   { quotient = k
   ; remainder = incl [ a ]⟨ b ⟩
   ; when-divisor-positive = λ _ -> Incl.bounded [ a ]
-  ; division = division
+  ; division = div
   } where
-    division : a ≡ k * (suc b) + incl [ a ]⟨ b ⟩
-    division rewrite Mul.commutative k (suc b)
-      | sb*k≡a-r
-      | Dist.commutative (incl [ a ]⟨ b ⟩) a = sym $ Dist.dist-when-n≤m (Incl.incl-quot-map-leq a)
+    div : a ≡ k * (suc b) + incl [ a ]⟨ b ⟩
+    div rewrite Mul.commutative k (suc b)
+      | sucb-divides-dist
+      | Dist.commutative (incl [ a ]⟨ b ⟩) a = sym $ Dist.from-leq (Incl.incl-quot-map-leq a)

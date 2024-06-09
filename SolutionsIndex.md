@@ -53,10 +53,10 @@
 ## Chapter 6:
 - [Exercise 6.1.a.i](src/Nat/Add.agda#L59)
 - [Exercise 6.1.a.ii](src/Nat/Mul.agda#L133)
-- [Exercise 6.1.b.i](src/Nat/Add.agda#L73)
+- [Exercise 6.1.b.i](src/Nat/Add.agda#L79)
 - [Exercise 6.1.b.ii](src/Nat/Mul.agda#L161)
 - [Exercise 6.1.b.iii](src/Nat/Mul.agda#L176)
-- [Exercise 6.1.c.i](src/Nat/Add.agda#L87)
+- [Exercise 6.1.c.i](src/Nat/Add.agda#L93)
 - [Exercise 6.1.c.ii](src/Nat/Mul.agda#L201)
 - [Exercise 6.2.a](src/Bool/Observational/Equality.agda#L11)
 - [Exercise 6.2.b](src/Bool/Observational/Equality.agda#L19)

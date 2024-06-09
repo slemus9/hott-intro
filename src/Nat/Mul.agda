@@ -152,7 +152,7 @@ mul-k+1-bck {suc m} {suc n} {k} eq
     hyp1 = peano7-bck eq
 
     hyp2 : m + m * k ≡ n + n * k
-    hyp2 = snd (Add.add-k {m + m * k} {n + n * k} {k}) hyp1
+    hyp2 = snd (Add.add-both-sides {m + m * k} {n + n * k} {k}) hyp1
 
 mul-k+1 : {m n k : Nat} -> (m ≡ n) <--> (m * (k + 1) ≡ n * (k + 1))
 mul-k+1 {m} {n} {k} = mul-k+1-fwd {m} {n} {k} , mul-k+1-bck {m} {n} {k}
