@@ -63,7 +63,7 @@ incl-quot-map-cong : ∀ {k}
   -> (n : Nat)
   -> incl [ n ]⟨ k ⟩ ≡ n mod (k + 1)
 incl-quot-map-cong {k} zero rewrite incl-first k = CMK.reflex zero (k + 1)
-incl-quot-map-cong {k} (suc n) =
+incl-quot-map-cong (suc n) =
     incl (next [ n ])
   ≡⟨ incl-next-cong [ n ] ⟩
     incl-quot-map-cong n
