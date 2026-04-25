@@ -4,9 +4,10 @@ import Nat.Add as Add
 import Nat.Divides as Divides
 import Nat.Dist as Dist
 import Nat.Leq as Leq
+import Nat.Less as Less
 import Nat.Mul as Mul
 open import Identity using (_≡_; ap; inv; refl)
-open import Function using (id; _$_)
+open import Function using (id; _$_; _∘_)
 open import DependentPair using (_,_; _<-->_; fst; snd)
 open import Coproduct using (_⨄_; inl; inr)
 
@@ -206,3 +207,7 @@ mul-preserves-cong x y x' y' k x≡x' y≡y' =
   ≡⟨ mul-left y y' x' k y≡y' ⟩
     x' * y'
   ∎
+
+to-eq : ∀ {n m k} -> n < k -> m < k -> n ≡ m mod k -> n ≡ m
+to-eq {_} {_} {k} n<k m<k = 
+  Dist.itself-bck ∘ Divides.divisor-less-than-dividend-fwd (Dist.both-less-than-k n<k m<k)

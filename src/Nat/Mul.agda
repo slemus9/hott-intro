@@ -154,6 +154,10 @@ mul-k+1-bck {suc m} {suc n} {k} eq
     hyp2 : m + m * k ≡ n + n * k
     hyp2 = snd (Add.add-both-sides {m + m * k} {n + n * k} {k}) hyp1
 
+mul-k+1-bck' : {m n k : Nat} -> (k + 1) * m ≡ (k + 1) * n -> m ≡ n
+mul-k+1-bck' {m} {n} {k}
+  rewrite commutative (k + 1) m | commutative (k + 1) n = mul-k+1-bck {m} {n} {k}
+
 mul-k+1 : {m n k : Nat} -> (m ≡ n) <--> (m * (k + 1) ≡ n * (k + 1))
 mul-k+1 {m} {n} {k} = mul-k+1-fwd {m} {n} {k} , mul-k+1-bck {m} {n} {k}
 

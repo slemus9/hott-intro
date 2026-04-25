@@ -154,3 +154,6 @@ divisor-less-than-dividend-bck : ∀ {d x}
   -> x ≡ 0
   -> d divides x
 divisor-less-than-dividend-bck {d} {_} _ refl = any-divides-zero d
+
+multiple : ∀ k m -> k divides (k * m)
+multiple k m = m , refl

@@ -166,3 +166,7 @@ both-less-than-k 0<s 0<s = 0<s
 both-less-than-k 0<s (s<s n<k) = s<s n<k
 both-less-than-k (s<s m<k) 0<s = s<s m<k
 both-less-than-k (s<s m<k) (s<s n<k) = Less.right-suc (both-less-than-k m<k n<k)
+
+add-on-right : ∀ m n -> dist m (n + m) ≡ n
+add-on-right zero m = refl
+add-on-right (suc n) m = add-on-right n m
