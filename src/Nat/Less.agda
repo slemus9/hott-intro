@@ -1,5 +1,6 @@
 open import Nat.Base
 import Nat.Leq as Leq
+import Nat.Add as Add
 open import Identity using (_≢_; _≡_; refl; ap)
 open import Function using (_$_; _∘_)
 open import Empty using (ex-falso)
@@ -87,3 +88,29 @@ connected (suc m) (suc n) with connected m n
 when-not-zero : ∀ {n} -> n ≢ 0 -> 0 < n
 when-not-zero {zero} n≢0 = ex-falso (n≢0 refl)
 when-not-zero {suc n} _ = 0<s
+
+not-less-than-zero : ∀ {n} -> ¬ (n < zero)
+not-less-than-zero {zero} = antireflex
+not-less-than-zero {suc n} = asym 0<s
+
+not-s<n : ∀ {n} -> ¬ (suc n < n)
+not-s<n (s<s s<n) = not-s<n s<n
+
+not-n+m<n : ∀ {n m} -> ¬ (n + m < n)
+not-n+m<n {n} {zero} = antireflex
+not-n+m<n {zero} {suc m} rewrite Add.left-unit m = not-n<0
+not-n+m<n {suc n} {suc m} (s<s l) rewrite Add.associative n 1 m = not-n+m<n {n} {1 + m} l
+
+leq-to-not-less : ∀ {n m} -> n ≤ m -> ¬ (m < n)
+leq-to-not-less 0≤n = not-less-than-zero
+leq-to-not-less (s≤s n≤m) (s<s m<n) = ex-falso (leq-to-not-less n≤m m<n)
+
+not-suc : ∀ {n m} -> ¬ (suc n < suc m) -> ¬ (n < m)
+not-suc {_} {zero} _ = not-less-than-zero
+not-suc {zero} {suc m} notLessSuc = ex-falso $ notLessSuc $ s<s 0<s
+not-suc {suc n} {suc m} notLessSuc sn<sm = ex-falso $ notLessSuc $ s<s sn<sm
+
+not-less-to-leq : ∀ {n m} -> ¬ (n < m) -> m ≤ n
+not-less-to-leq {n} {zero} notLess = 0≤n
+not-less-to-leq {zero} {suc m} notLess = ex-falso (notLess 0<s)
+not-less-to-leq {suc n} {suc m} notLess = s≤s $ not-less-to-leq $ not-suc notLess

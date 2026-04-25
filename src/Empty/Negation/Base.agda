@@ -20,7 +20,7 @@ module Empty.Negation.Base where
 ¬ A = A -> Empty
 
 {-
-  We also say that a type A is empty if it comes equiped of an
+  We also say that a type A is empty if it comes equipped of an
   element of type ¬ A
 -}
 is-empty : Type -> Type
@@ -38,3 +38,9 @@ taut1 (p , ¬p) = ex-falso (¬p p)
 taut2 : {P : Type} -> ¬ (P <--> (¬ P))
 taut2 (f , g) = ex-falso (f p p) where
   p = g λ p -> f p p
+
+neg-impl : {P Q : Type}
+  -> ¬ Q
+  -> (P -> Q)
+  -> ¬ P
+neg-impl notQ f p = notQ (f p)

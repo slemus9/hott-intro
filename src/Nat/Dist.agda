@@ -47,7 +47,7 @@ commutative (suc m) (suc n) = commutative m n
 -}
 leq-add : ∀ m n -> dist m n ≤ m + n
 leq-add zero n rewrite Add.left-unit n = Leq.reflex
-leq-add (suc m) zero rewrite Add.left-unit m = Leq.reflex
+leq-add (suc m) zero  = Leq.reflex
 leq-add (suc m) (suc n) rewrite Add.left-suc m n = Leq.right-suc $ Leq.right-suc (leq-add m n)
 
 leq-dist-k : ∀ m n -> m ≤ dist m n + n
@@ -166,3 +166,7 @@ both-less-than-k 0<s 0<s = 0<s
 both-less-than-k 0<s (s<s n<k) = s<s n<k
 both-less-than-k (s<s m<k) 0<s = s<s m<k
 both-less-than-k (s<s m<k) (s<s n<k) = Less.right-suc (both-less-than-k m<k n<k)
+
+add-on-right : ∀ m n -> dist m (n + m) ≡ n
+add-on-right zero m = refl
+add-on-right (suc n) m = add-on-right n m

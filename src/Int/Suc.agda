@@ -41,7 +41,7 @@ suc-pos : ∀ n -> suc (in-pos n) ≡ in-pos (Nat.suc n)
 suc-pos n rewrite pred-pos n | suc-pred (in-pos (Nat.suc n)) = refl
 
 suc-neg : ∀ n -> suc (in-neg (Nat.suc n)) ≡ in-neg n
-suc-neg n rewrite pred-neg n = refl
+suc-neg n = refl 
 
 pred-zero : in-neg Nat.zero ≡ pred Int.zero
 pred-zero = refl

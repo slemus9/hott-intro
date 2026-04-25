@@ -95,3 +95,7 @@ both-zero = both-zero-fwd , both-zero-bck
 ineq-+-nonzero : ∀ {m n} -> m ≢ m + (n + 1)
 ineq-+-nonzero {suc m} {n}
   rewrite left-suc m n = ineq-+-nonzero ∘ peano7-bck
+
+-- Sometimes I can't pattern match on refl for complex expressions for some reason, so I have this helper function
+rewrite-right : ∀ {a b c d} -> b ≡ d -> a + b ≡ c + d -> a + d ≡ c + d
+rewrite-right refl = id
