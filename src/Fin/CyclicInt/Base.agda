@@ -10,7 +10,7 @@ module Fin.CyclicInt.Base where
 ℤ/ (suc k) = Fin (suc k)
 
 zero : ∀ {k} -> Fin (suc k)
-zero = first
+zero = zero-fin
 
 add : ∀ {k} -> ℤ/ (suc k) -> ℤ/ (suc k) -> ℤ/ (suc k)
 add x y = [ incl x + incl y ]

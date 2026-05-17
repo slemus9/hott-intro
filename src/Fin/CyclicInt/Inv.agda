@@ -48,7 +48,7 @@ right-inv {k} x rewrite sym $ NatModK+1.split-surjective {k} zero = ans where
     (Incl.incl-quot-map-cong $ dist (incl x) (suc k))
 
   h1 : (incl x + incl [ dist (incl x) (suc k) ]⟨ k ⟩) ≡ incl (zero {k}) mod (suc k)
-  h1 rewrite Incl.incl-first (suc k) =
+  h1 rewrite Incl.incl-zero-fin (suc k) =
       incl x + incl [ dist (incl x) (suc k) ]
     ≡⟨ h2 ⟩
       incl x + dist (incl x) (suc k)

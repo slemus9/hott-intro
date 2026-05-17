@@ -39,7 +39,7 @@ from-fin : ∀ {k} -> Fin k -> ClassicalFin k
 from-fin x = incl x , Incl.bounded x
 
 to-fin : ∀ {k} -> ClassicalFin k -> Fin k
-to-fin (zero , 0<s) = first
+to-fin (zero , 0<s) = zero-fin
 to-fin (suc x , s<s x<k) = to-next-fin $ to-fin (x , x<k)
 
 to-fin-base : ∀ k -> to-fin base-clss ≡ base {k}
@@ -47,12 +47,12 @@ to-fin-base zero = refl
 to-fin-base (suc k) = ap to-next-fin (to-fin-base k)
 
 {-
-  base case: to-fin (i-clss (0 , 0<s)) = i first
+  base case: to-fin (i-clss (0 , 0<s)) = i zero-fin
     to-fin (i-clss (0 , 0<s))
   = to-fin (0 , Less.right-suc 0<s)
   = to-fin {suc k} (0 , 0<s)
-  = first {suc k}
-  = i (first {k})
+  = zero-fin {suc k}
+  = i (zero-fin {k})
 
   inductive case: to-fin (i-clss (suc x , s<s x<k)) = i (to-fin (suc x , s<s x<k))
   IH: to-fin (i-clss (x , x<k)) = to-fin (x , Less.right-suc x<k) = i (to-fin (x , x<k))
@@ -120,9 +120,9 @@ from-fin-to-next (i x) rewrite from-fin-i (to-next-fin x) = ap i-clss (from-fin-
 
   base case: from-fin (to-fin (zero , 0<s)) = (zero , 0<s)
     from-fin (to-fin (zero , 0<s))
-  = from-fin first
-  = (incl first , Incl.bounded first)
-  = (zero , 0<s) [because incl first = 0]
+  = from-fin zero-fin
+  = (incl zero-fin , Incl.bounded zero-fin)
+  = (zero , 0<s) [because incl zero-fin = 0]
 
   inductive case: from-fin (to-fin (suc x , s<s x<k)) ≡ (suc x , s<s x<k)
   IH: from-fin (to-fin (x , x<k)) = (x , x<k)
@@ -134,6 +134,6 @@ from-fin-to-next (i x) rewrite from-fin-i (to-next-fin x) = ap i-clss (from-fin-
   = (suc x , s<s x<k)
 -}
 from-fin-to-fin : ∀ {k} -> (x : ClassicalFin k) -> from-fin (to-fin x) ≡ x
-from-fin-to-fin {suc k} (zero , 0<s) = eq-clss-bck (from-fin first) (zero , 0<s) (Incl.incl-first k)
+from-fin-to-fin {suc k} (zero , 0<s) = eq-clss-bck (from-fin zero-fin) (zero , 0<s) (Incl.incl-zero-fin k)
 from-fin-to-fin (suc x , s<s x<k)
   rewrite from-fin-to-next (to-fin (x , x<k)) = ap to-next-clss (from-fin-to-fin (x , x<k))

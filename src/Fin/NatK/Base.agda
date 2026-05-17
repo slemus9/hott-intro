@@ -1,5 +1,6 @@
 open import Fin.Base
 open import Nat.Base
+open import Nat.Division
 open import Type
 open import Empty
 open import Empty.Negation

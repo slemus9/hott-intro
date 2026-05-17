@@ -8,15 +8,15 @@ next-neg-two : ∀ {k} -> next (neg-two {k}) ≡ base
 next-neg-two {zero} = refl
 next-neg-two {suc k} = refl
 
-pred-first : ∀ {k} -> pred (first {k}) ≡ base
-pred-first {zero} = refl
-pred-first {suc k} = ap skip-neg-two (pred-first {k})
+pred-zero-fin : ∀ {k} -> pred (zero-fin {k}) ≡ base
+pred-zero-fin {zero} = refl
+pred-zero-fin {suc k} = ap skip-neg-two (pred-zero-fin {k})
 
 {-
   base:
     next (skip-neg-two base {k})
   = next (base {suc k})
-  = i (first {k})
+  = i (zero-fin {k})
 
   (i x):
     next (skip-neg-two (i x))
@@ -53,5 +53,5 @@ next-pred base = next-neg-two
 next-pred (i x) rewrite next-skip-neg-two (pred x) = ap i (next-pred x)
 
 pred-next : ∀ {k} -> (x : Fin k) -> pred (next x) ≡ x
-pred-next base = pred-first
+pred-next base = pred-zero-fin
 pred-next (i x) = pred-to-next-fin x

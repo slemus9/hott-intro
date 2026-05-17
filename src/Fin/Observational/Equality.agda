@@ -34,9 +34,9 @@ i-injective x y = eq-identity-bck x y ∘ eq-identity-fwd (i x) (i y)
 {-
   Exercise 7.5.c
 -}
-zero≢next : ∀ {k} -> (x : Fin k) -> first ≢ next (i x)
-zero≢next base = eq-identity-fwd (i first) base
-zero≢next (i x) = zero≢next x ∘ i-injective first (next $ i x)
+zero≢next : ∀ {k} -> (x : Fin k) -> zero-fin ≢ next (i x)
+zero≢next base = eq-identity-fwd (i zero-fin) base
+zero≢next (i x) = zero≢next x ∘ i-injective zero-fin (next $ i x)
 
 to-next-fin-injective : ∀ {k} -> (x y : Fin k) -> to-next-fin x ≡ to-next-fin y -> x ≡ y
 to-next-fin-injective base base _ = refl

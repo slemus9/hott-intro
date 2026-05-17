@@ -45,9 +45,9 @@ incl (i x) = incl x
   The first element of Fin (suc k) is:
     i {k} (... i {2} (i {1} (base {0})))
 -}
-first : ∀ {k} -> Fin (suc k)
-first {zero} = base
-first {suc k} = i (first {k})
+zero-fin : ∀ {k} -> Fin (suc k)
+zero-fin {zero} = base
+zero-fin {suc k} = i (zero-fin {k})
 
 {-
   to-next (i {k + n} (... i {k + 2} (i {k + 1} (base {k}))))
@@ -72,7 +72,7 @@ to-next-fin (i x) = i (to-next-fin x)
   next (base {4}) = i (i (i (i (base {0}))))
 -}
 next : ∀ {k} -> Fin k -> Fin k
-next base = first
+next base = zero-fin
 next (i x) = to-next-fin x
 
 neg-two : ∀ {k} -> Fin (suc k)
@@ -106,7 +106,7 @@ pred (i x) = skip-neg-two (pred x)
 
 -- Quotient map
 [_] : ∀ {k} -> Nat -> Fin (suc k)
-[ zero ] = first
+[ zero ] = zero-fin
 [ suc n ] = next [ n ]
 
 [_]⟨_⟩ : Nat -> ∀ k -> Fin (suc k)
