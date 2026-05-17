@@ -72,7 +72,7 @@ associative {k} x y z =
       ∎
 
 right-unit : ∀ {k} -> (x : ℤ/ (suc k)) -> mul x one ≡ x
-right-unit {Nat.zero} base rewrite Incl.incl-first 0 = refl
+right-unit {Nat.zero} base rewrite Incl.incl-zero-fin 0 = refl
 right-unit {suc k} x
   rewrite Incl.incl-one k
   | Mul.right-unit (incl x) = NatModK+1.split-surjective x

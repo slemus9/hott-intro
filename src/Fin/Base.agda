@@ -45,9 +45,9 @@ incl (i x) = incl x
   The first element of Fin (suc k) is:
     i {k} (... i {2} (i {1} (base {0})))
 -}
-first : ∀ {k} -> Fin (suc k)
-first {zero} = base
-first {suc k} = i (first {k})
+zero-fin : ∀ {k} -> Fin (suc k)
+zero-fin {zero} = base
+zero-fin {suc k} = i (zero-fin {k})
 
 {-
   to-next (i {k + n} (... i {k + 2} (i {k + 1} (base {k}))))
@@ -67,13 +67,13 @@ to-next-fin (i x) = i (to-next-fin x)
   4. i (base {3})
   5. base {4}
 
-  Note the following applications of next:
-  next (i (i (i base))) = i (i base)
-  next (base {4}) = i (i (i (i (base {0}))))
+  Note the following applications of suc-fin:
+  suc-fin (i (i (i base))) = i (i base)
+  suc-fin (base {4}) = i (i (i (i (base {0}))))
 -}
-next : ∀ {k} -> Fin k -> Fin k
-next base = first
-next (i x) = to-next-fin x
+suc-fin : ∀ {k} -> Fin k -> Fin k
+suc-fin base = zero-fin
+suc-fin (i x) = to-next-fin x
 
 neg-two : ∀ {k} -> Fin (suc k)
 neg-two {zero} = base
@@ -106,8 +106,8 @@ pred (i x) = skip-neg-two (pred x)
 
 -- Quotient map
 [_] : ∀ {k} -> Nat -> Fin (suc k)
-[ zero ] = first
-[ suc n ] = next [ n ]
+[ zero ] = zero-fin
+[ suc n ] = suc-fin [ n ]
 
 [_]⟨_⟩ : Nat -> ∀ k -> Fin (suc k)
 [ n ]⟨ k ⟩ = [_] {k} n

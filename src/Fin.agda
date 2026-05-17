@@ -6,5 +6,5 @@ import Fin.CyclicInt
 import Fin.Incl
 import Fin.NatK
 import Fin.NatModK+1
-import Fin.Next
+import Fin.Suc
 import Fin.Observational.Equality

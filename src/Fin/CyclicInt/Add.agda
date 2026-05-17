@@ -52,7 +52,7 @@ associative {k} x y z = NatModK+1.effectiveness-bck k (incl (add x y) + incl z) 
     ∎
 
 right-unit : ∀ {k} -> (x : ℤ/ (suc k)) -> add x zero ≡ x
-right-unit {k} x rewrite Incl.incl-first k = NatModK+1.split-surjective x
+right-unit {k} x rewrite Incl.incl-zero-fin k = NatModK+1.split-surjective x
 
 left-unit : ∀ {k} -> (x : ℤ/ (suc k)) -> add zero x ≡ x
 left-unit x rewrite commutative zero x = right-unit x
@@ -60,7 +60,7 @@ left-unit x rewrite commutative zero x = right-unit x
 {-
   Exercise 7.4
 -}
-add-one : ∀ {k} -> (x : ℤ/ (suc k)) -> next x ≡ add x one
+add-one : ∀ {k} -> (x : ℤ/ (suc k)) -> suc-fin x ≡ add x one
 add-one {Nat.zero} base = refl
 add-one {suc k} x
   rewrite Incl.incl-one k
