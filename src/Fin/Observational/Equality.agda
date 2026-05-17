@@ -34,9 +34,9 @@ i-injective x y = eq-identity-bck x y ∘ eq-identity-fwd (i x) (i y)
 {-
   Exercise 7.5.c
 -}
-zero≢next : ∀ {k} -> (x : Fin k) -> zero-fin ≢ next (i x)
-zero≢next base = eq-identity-fwd (i zero-fin) base
-zero≢next (i x) = zero≢next x ∘ i-injective zero-fin (next $ i x)
+zero≢suc-fin : ∀ {k} -> (x : Fin k) -> zero-fin ≢ suc-fin (i x)
+zero≢suc-fin base = eq-identity-fwd (i zero-fin) base
+zero≢suc-fin (i x) = zero≢suc-fin x ∘ i-injective zero-fin (suc-fin $ i x)
 
 to-next-fin-injective : ∀ {k} -> (x y : Fin k) -> to-next-fin x ≡ to-next-fin y -> x ≡ y
 to-next-fin-injective base base _ = refl
@@ -52,8 +52,8 @@ to-next-fin-injective (i x) (i y) eq = ap i $ to-next-fin-injective x y fx≡fy 
 {-
   Exercise 7.5.d
 -}
-next-injective : ∀ {k} -> (x y : Fin k) -> next x ≡ next y -> x ≡ y
-next-injective base base _ = refl
-next-injective base (i y) = ex-falso ∘ zero≢next y
-next-injective (i x) base = ex-falso ∘ zero≢next x ∘ sym
-next-injective (i x) (i y) = ap i ∘ to-next-fin-injective x y
+suc-fin-injective : ∀ {k} -> (x y : Fin k) -> suc-fin x ≡ suc-fin y -> x ≡ y
+suc-fin-injective base base _ = refl
+suc-fin-injective base (i y) = ex-falso ∘ zero≢suc-fin y
+suc-fin-injective (i x) base = ex-falso ∘ zero≢suc-fin x ∘ sym
+suc-fin-injective (i x) (i y) = ap i ∘ to-next-fin-injective x y

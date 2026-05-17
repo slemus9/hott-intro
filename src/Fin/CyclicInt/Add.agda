@@ -60,7 +60,7 @@ left-unit x rewrite commutative zero x = right-unit x
 {-
   Exercise 7.4
 -}
-add-one : ∀ {k} -> (x : ℤ/ (suc k)) -> next x ≡ add x one
+add-one : ∀ {k} -> (x : ℤ/ (suc k)) -> suc-fin x ≡ add x one
 add-one {Nat.zero} base = refl
 add-one {suc k} x
   rewrite Incl.incl-one k

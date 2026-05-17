@@ -67,13 +67,13 @@ to-next-fin (i x) = i (to-next-fin x)
   4. i (base {3})
   5. base {4}
 
-  Note the following applications of next:
-  next (i (i (i base))) = i (i base)
-  next (base {4}) = i (i (i (i (base {0}))))
+  Note the following applications of suc-fin:
+  suc-fin (i (i (i base))) = i (i base)
+  suc-fin (base {4}) = i (i (i (i (base {0}))))
 -}
-next : ∀ {k} -> Fin k -> Fin k
-next base = zero-fin
-next (i x) = to-next-fin x
+suc-fin : ∀ {k} -> Fin k -> Fin k
+suc-fin base = zero-fin
+suc-fin (i x) = to-next-fin x
 
 neg-two : ∀ {k} -> Fin (suc k)
 neg-two {zero} = base
@@ -107,7 +107,7 @@ pred (i x) = skip-neg-two (pred x)
 -- Quotient map
 [_] : ∀ {k} -> Nat -> Fin (suc k)
 [ zero ] = zero-fin
-[ suc n ] = next [ n ]
+[ suc n ] = suc-fin [ n ]
 
 [_]⟨_⟩ : Nat -> ∀ k -> Fin (suc k)
 [ n ]⟨ k ⟩ = [_] {k} n

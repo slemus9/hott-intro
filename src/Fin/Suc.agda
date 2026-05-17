@@ -2,11 +2,11 @@ open import Fin.Base
 open import Identity using (_≡_; refl; ap)
 open import Nat.Base
 
-module Fin.Next where
+module Fin.Suc where
 
-next-neg-two : ∀ {k} -> next (neg-two {k}) ≡ base
-next-neg-two {zero} = refl
-next-neg-two {suc k} = refl
+suc-fin-neg-two : ∀ {k} -> suc-fin (neg-two {k}) ≡ base
+suc-fin-neg-two {zero} = refl
+suc-fin-neg-two {suc k} = refl
 
 pred-zero-fin : ∀ {k} -> pred (zero-fin {k}) ≡ base
 pred-zero-fin {zero} = refl
@@ -14,20 +14,20 @@ pred-zero-fin {suc k} = ap skip-neg-two (pred-zero-fin {k})
 
 {-
   base:
-    next (skip-neg-two base {k})
-  = next (base {suc k})
+    suc-fin (skip-neg-two base {k})
+  = suc-fin (base {suc k})
   = i (zero-fin {k})
 
   (i x):
-    next (skip-neg-two (i x))
-  = next (i (i x))
+    suc-fin (skip-neg-two (i x))
+  = suc-fin (i (i x))
   = to-next-fin (i x)
   = i (to-next-fin x)
   = i (next x)
 -}
-next-skip-neg-two : ∀ {k} -> (x : Fin k) -> next (skip-neg-two x) ≡ i (next x)
-next-skip-neg-two base = refl
-next-skip-neg-two (i _) = refl
+suc-fin-skip-neg-two : ∀ {k} -> (x : Fin k) -> suc-fin (skip-neg-two x) ≡ i (suc-fin x)
+suc-fin-skip-neg-two base = refl
+suc-fin-skip-neg-two (i _) = refl
 
 {-
     pred (to-next-fin (base {k}))
@@ -48,10 +48,10 @@ pred-to-next-fin (i x) rewrite pred-to-next-fin x = refl
 {-
   Exercise 7.6
 -}
-next-pred : ∀ {k} -> (x : Fin k) -> next (pred x) ≡ x
-next-pred base = next-neg-two
-next-pred (i x) rewrite next-skip-neg-two (pred x) = ap i (next-pred x)
+suc-fin-pred : ∀ {k} -> (x : Fin k) -> suc-fin (pred x) ≡ x
+suc-fin-pred base = suc-fin-neg-two
+suc-fin-pred (i x) rewrite suc-fin-skip-neg-two (pred x) = ap i (suc-fin-pred x)
 
-pred-next : ∀ {k} -> (x : Fin k) -> pred (next x) ≡ x
-pred-next base = pred-zero-fin
-pred-next (i x) = pred-to-next-fin x
+pred-suc-fin : ∀ {k} -> (x : Fin k) -> pred (suc-fin x) ≡ x
+pred-suc-fin base = pred-zero-fin
+pred-suc-fin (i x) = pred-to-next-fin x

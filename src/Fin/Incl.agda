@@ -37,16 +37,16 @@ incl-one zero = refl
 incl-one (suc k)
   rewrite incl-to-next-fin (zero-fin {k + 2}) | incl-zero-fin (k + 2) = refl
 
-incl-next-cong : ∀ {k}
+incl-suc-fin-cong : ∀ {k}
   -> (x : Fin k)
-  -> incl (next x) ≡ incl x + 1 mod k
-incl-next-cong {suc k} base rewrite incl-zero-fin k = Divides.reflex (suc k)
-incl-next-cong {suc k} (i x) rewrite incl-to-next-fin x | Dist.to-itself (incl x) = Divides.any-divides-zero (suc k)
+  -> incl (suc-fin x) ≡ incl x + 1 mod k
+incl-suc-fin-cong {suc k} base rewrite incl-zero-fin k = Divides.reflex (suc k)
+incl-suc-fin-cong {suc k} (i x) rewrite incl-to-next-fin x | Dist.to-itself (incl x) = Divides.any-divides-zero (suc k)
 
 {-
   Goal:
       incl [ suc n ] ≡ suc n mod suc k
-  ->  incl (next [ n ]) ≡ suc n mod suc k
+  ->  incl (suc-fin [ n ]) ≡ suc n mod suc k
 
   IH:
       incl [ n ] ≡ n mod suc k
@@ -54,28 +54,28 @@ incl-next-cong {suc k} (i x) rewrite incl-to-next-fin x | Dist.to-itself (incl x
 
 
   By transitivity of:
-    incl (next [ n ]) ≡ suc (incl [ n ]) mod suc k
+    incl (suc-fin [ n ]) ≡ suc (incl [ n ]) mod suc k
     suc (incl [ n ]) ≡ suc n mod suc k
   We get:
-    incl (next [ n ]) ≡ suc n mod suc k
+    incl (suc-fin [ n ]) ≡ suc n mod suc k
 -}
 incl-quot-map-cong : ∀ {k}
   -> (n : Nat)
   -> incl [ n ]⟨ k ⟩ ≡ n mod (k + 1)
 incl-quot-map-cong {k} zero rewrite incl-zero-fin k = CMK.reflex zero (k + 1)
 incl-quot-map-cong (suc n) =
-    incl (next [ n ])
-  ≡⟨ incl-next-cong [ n ] ⟩
+    incl (suc-fin [ n ])
+  ≡⟨ incl-suc-fin-cong [ n ] ⟩
     incl-quot-map-cong n
 
-incl-next-leq : ∀ {k}
+incl-suc-fin-leq : ∀ {k}
   -> (x : Fin k)
-  -> incl (next x) ≤ suc (incl x)
-incl-next-leq {k} base rewrite incl-zero-fin k = 0≤n
-incl-next-leq (i x) rewrite incl-to-next-fin x = s≤s (Leq.when-eq refl)
+  -> incl (suc-fin x) ≤ suc (incl x)
+incl-suc-fin-leq {k} base rewrite incl-zero-fin k = 0≤n
+incl-suc-fin-leq (i x) rewrite incl-to-next-fin x = s≤s (Leq.when-eq refl)
 
 incl-quot-map-leq : ∀ {k}
   -> (n : Nat)
   -> incl [ n ]⟨ k ⟩ ≤ n
 incl-quot-map-leq {k} zero rewrite incl-zero-fin k = 0≤n
-incl-quot-map-leq (suc n) = Leq.trans (incl-next-leq [ n ]) (s≤s (incl-quot-map-leq n))
+incl-quot-map-leq (suc n) = Leq.trans (incl-suc-fin-leq [ n ]) (s≤s (incl-quot-map-leq n))
