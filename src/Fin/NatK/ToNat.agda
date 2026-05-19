@@ -83,3 +83,22 @@ to-nat-injective {suc k} (unary x n) (unary y m) eq =
 
     to-nat-eq : to-nat n ≡ to-nat m
     to-nat-eq = Add.add-both-sides-bck {to-nat n} {to-nat m} {1} (Mul.mul-k+1-bck' step2)
+
+
+to-nat-suc : ∀ {k} -> (n : ℕ k) -> to-nat (suc-ℕ n) ≡ suc (to-nat n)
+to-nat-suc (constant (i x)) = Incl.incl-to-next-fin x
+to-nat-suc {suc k} (constant base) rewrite Incl.incl-zero-fin (suc k) = refl
+to-nat-suc (unary (i x) n) rewrite Incl.incl-to-next-fin x = refl
+to-nat-suc {suc k} (unary base n) 
+  rewrite Incl.incl-zero-fin (suc k)
+  | to-nat-suc n
+  | Add.left-suc k (suc k + suc k * to-nat n) = ap suc $ Add.commutative k (suc k + suc k * to-nat n)
+
+
+{-
+  Exercise 7.10.c.ii
+-}
+to-nat-from-nat : ∀ {k} -> ∀ a -> to-nat (from-nat {k} a) ≡ a
+to-nat-from-nat {k} zero = Incl.incl-zero-fin k
+to-nat-from-nat {k} (suc a) 
+  rewrite to-nat-suc (from-nat {k} a) = ap suc (to-nat-from-nat a)

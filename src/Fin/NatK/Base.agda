@@ -76,17 +76,17 @@ zero-ℕ = constant zero-fin
 
   a = 8 = 0 + 4 * (1 + 1)
 
-  We can now see a pattern, and to generate a = {9 ... 11}, we need to increase incl(x₁) and keep x₂ as is:
+  We can now see a pattern. To generate a = {9 ... 11}, we need to increase incl(x₁) and keep x₂ as is:
 
   a = 9 = 1 + 4 * (1 + 1)
   a = 10 = 2 + 4 * (1 + 1)
   a = 11 = 3 + 4 * (1 + 1)
 
-  When we get to a = 19 = 3 + 4 * (3 + 1), we need a new term in summation; that is, we need to add another unary constructor so that we can use the 4^2 term:
+  When we get to a = 19 = 3 + 4 * (3 + 1), we need a new term in the to-nat summation; that is, we need to add another unary constructor so that we can use the 4^2 term:
 
   a = 20 = 0 + 4 * (0 + 1) + 4^2 * (0 + 1)
 
-  Then we repeat the same process recursively and iterate between all combinations of x₁ and x₂ to generate all numbers until 83, 
+  We then repeat the same process recursively and iterate between all combinations of x₁ and x₂ to generate all numbers until 83, 
   by which point we will need to add another unary constructor to gain access to the 4^3 term and build 84
 -}
 suc-ℕ : ∀ {k} -> ℕ k -> ℕ k
