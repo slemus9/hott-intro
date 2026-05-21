@@ -102,3 +102,21 @@ to-nat-from-nat : ∀ {k} -> ∀ a -> to-nat (from-nat {k} a) ≡ a
 to-nat-from-nat {k} zero = Incl.incl-zero-fin k
 to-nat-from-nat {k} (suc a) 
   rewrite to-nat-suc (from-nat {k} a) = ap suc (to-nat-from-nat a)
+
+{-
+  Exercise 7.11.c.iii
+
+  Goal: from-nat (to-nat {suc k} n) ≡ n
+
+  Since to-nat is injective, we get that ∀ a b -> to-nat a ≡ to-nat b -> a ≡ b
+
+  If a = from-nat (to-nat {suc k} n) and b = n, we know that to-nat a ≡ to-nat b holds because
+  of the to-nat-from-nat property:
+
+    to-nat (from-nat (to-nat n)) ≡ to-nat n
+                      to-nat n   ≡ to-nat n
+  
+  Hence from-nat (to-nat n) ≡ n
+-}
+from-nat-to-nat : ∀ {k} -> (n : ℕ (suc k)) -> from-nat (to-nat {suc k} n) ≡ n
+from-nat-to-nat {k} n = to-nat-injective {suc k} (from-nat (to-nat n)) n (to-nat-from-nat (to-nat n))
