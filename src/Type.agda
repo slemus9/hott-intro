@@ -1,11 +1,9 @@
-open import Agda.Primitive using (Level)
+open import Agda.Primitive using (Level; lsuc)
 
 -- Some Aliases
 module Type where
 
-Type = Set
-Type1 = Set1
-Type2 = Set2
-Type3 = Set3
-
-TypeN = (n : Level) -> Set n
+open import Agda.Primitive 
+  using (Level ; lzero ; lsuc ; _⊔_)
+  renaming (Set to Type ; Setω to Typeω)
+  public
