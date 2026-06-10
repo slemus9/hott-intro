@@ -5,7 +5,7 @@ import Nat.Leq as Leq
 import Nat.Less as Less
 import Nat.Mul as Mul
 import Nat.Dist as Dist
-open import DependentPair using (_,_; _×_; snd)
+open import DependentPair using (_,_; _×_; snd; _<-->_)
 open import Identity using (_≡_; refl; inv; ap)
 open import Identity.Reasoning
 open import Empty using (ex-falso)
@@ -18,8 +18,8 @@ one-divides-any n = n , Mul.left-unit n
 any-divides-zero : ∀ n -> n divides 0
 any-divides-zero n = 0 , refl
 
-zero-divides-zero : ∀ n -> 0 divides n -> n ≡ 0
-zero-divides-zero n (k , 0*k≡n) =
+zero-divides-zero-fwd : ∀ n -> 0 divides n -> n ≡ 0
+zero-divides-zero-fwd n (k , 0*k≡n) =
   begin
     n
   ≡⟨ inv 0*k≡n ⟩
@@ -27,6 +27,12 @@ zero-divides-zero n (k , 0*k≡n) =
   ≡⟨ Mul.left-zero k ⟩
     0
   ∎
+
+zero-divides-zero-bck : ∀ n -> n ≡ 0 -> 0 divides n
+zero-divides-zero-bck _ refl = any-divides-zero zero
+
+zero-divides-zero : ∀ n -> (0 divides n) <--> (n ≡ 0)
+zero-divides-zero n = zero-divides-zero-fwd n , zero-divides-zero-bck n
 
 {-
   Exercise 7.2
@@ -49,7 +55,7 @@ reflex n = 1 , refl
   ==> suc m * 1 = n
 -}
 antisym : ∀ m n -> m divides n -> n divides m -> m ≡ n
-antisym zero n 0|n _  = inv $ zero-divides-zero n 0|n
+antisym zero n 0|n _  = inv $ zero-divides-zero-fwd n 0|n
 antisym (suc m) n (k1 , sm*k1≡n) (k2 , n*k2≡sm) =
   begin
     suc m
