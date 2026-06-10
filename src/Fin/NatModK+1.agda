@@ -7,6 +7,7 @@ import Nat.Dist as Dist
 import Nat.CongruenceModK as CMK
 open CMK.Reasoning
 open import Identity using (_≡_; refl)
+open import DependentPair using (_,_; _<-->_)
 
 module Fin.NatModK+1 where
 
@@ -67,6 +68,10 @@ effectiveness-bck k x y x≡ymodk+1 = Incl.injective $ Dist.itself-bck i[x]-i[y]
 
   i[x]-i[y]≡0 : dist (incl [ x ]⟨ k ⟩) (incl [ y ]⟨ k ⟩) ≡ 0
   i[x]-i[y]≡0 = Divides.divisor-less-than-dividend-fwd i[x]-i[y]<k+1 i[x]≡i[y]modk+1
+
+effectiveness : ∀ k x y
+  -> ([ x ]⟨ k ⟩ ≡ [ y ]⟨ k ⟩) <--> (x ≡ y mod (suc k))
+effectiveness k x y = effectiveness-fwd k x y , effectiveness-bck k x y
 
 split-surjective : ∀ {k}
   -> (x : Fin (suc k))
