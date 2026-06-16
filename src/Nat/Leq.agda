@@ -4,7 +4,7 @@ open import Nat.Base
 open import Empty using (ex-falso)
 open import Empty.Negation using (¬_)
 open import Coproduct using (_⨄_; inl; inr)
-open import DependentPair using (_<-->_; _×_; _,_)
+open import DependentPair using (Σ; _<-->_; _×_; _,_)
 open import Function using (id; _∘_)
 open import Identity using (_≢_; _≡_; refl; ap)
 
@@ -139,3 +139,6 @@ leq-for-add-eq m zero k _ = 0≤n
 leq-for-add-eq zero (suc n) k rewrite Add.left-suc n k = ex-falso ∘ peano8
 leq-for-add-eq (suc m) (suc n) k
   rewrite Add.left-suc n k = s≤s ∘ leq-for-add-eq m n k ∘ peano7-bck
+
+exists-leq : ∀ n -> Σ Nat (_≤ n)
+exists-leq n = n , when-eq refl

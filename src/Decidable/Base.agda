@@ -133,3 +133,14 @@ collatz : Nat -> Nat
 collatz n with divides-nat 2 n 
 ... | inl holds = n /2
 ... | inr not-holds = 3 * n + 1
+
+all-nat-family-from-leq : {P : Nat -> Type}
+  -> decidable (∀ m x -> m ≤ x -> P x)
+  -> decidable (∀ x -> P x)
+all-nat-family-from-leq {P} = from-bijection-fwd (from , to) where
+  from : (∀ m x -> m ≤ x -> P x) -> ∀ x -> P x
+  from f x with Leq.exists-leq x
+  ... | (m , leq) = f m x leq
+
+  to : (∀ x -> P x) -> ∀ m x -> m ≤ x -> P x
+  to f _ x _ = f x
