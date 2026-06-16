@@ -1,6 +1,6 @@
 open import DependentPair using (_<-->_; _×_; _,_)
 open import Empty.Base using (Empty; ex-falso)
-open import Type using (Type)
+open import Type using (Type; Level)
 
 module Empty.Negation.Base where
 
@@ -16,7 +16,7 @@ module Empty.Negation.Base where
   The type ¬ ¬ A is equivalent to (P -> Empty) -> Empty, but we cannot construct it unless we know
   something about A. In practice, we rarely see double negation
 -}
-¬_ : Type -> Type
+¬_ : {l : Level} -> Type l -> Type l
 ¬ A = A -> Empty
 
 {-

@@ -1,11 +1,11 @@
-open import Type using (Type)
+open import Type using (Type; Level; _⊔_)
 open import Empty.Base using (ex-falso)
 open import Empty.Negation.Base using (is-empty)
 
 module Coproduct.Base where
 
 -- Coproduct or Disjoint Sum
-data _⨄_ (A B : Type) : Type where
+data _⨄_ {l1 l2 : Level} (A : Type l1) (B : Type l2) : Type (l1 ⊔ l2) where
   inl : A -> A ⨄ B
   inr : B -> A ⨄ B
 
