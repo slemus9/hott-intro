@@ -1,6 +1,6 @@
 open import Type using (Type)
 open import Function using (_∘_)
-open import Nat using (Nat; zero)
+open import Nat.Base using (Nat; zero)
 open import Coproduct using (_⨄_; inr; inl)
 open import Identity using (_≡_; refl)
 

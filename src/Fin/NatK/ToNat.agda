@@ -5,7 +5,7 @@ import Nat.CongruenceModK as CMK
 import Fin.Incl as Incl
 import Fin.NatK.Unary as Unary
 
-open import Nat
+open import Nat.Base
 open import Fin.Base
 open import Fin.NatK.Base
 open import Identity
