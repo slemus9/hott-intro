@@ -4,7 +4,7 @@ import Nat.Divides as Divides
 open import Fin.Base
 open import Fin.NatK.Base
 open import Identity
-open import Nat
+open import Nat.Base
 
 module Fin.NatK.Unary where
 

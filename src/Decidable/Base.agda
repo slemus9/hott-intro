@@ -1,11 +1,11 @@
 open import Agda.Primitive using (Level)
 open import Coproduct using (_⨄_; inl; inr)
-open import DependentPair using (_<-->_; _×_; _,_; fst; snd)
+open import DependentPair using (Σ; _<-->_; _×_; _,_; fst; snd)
 open import Empty using (Empty; ex-falso)
 open import Empty.Negation using (¬_)
 open import Function using (_∘_; id)
-open import Identity using (_≡_)
-open import Nat 
+open import Identity using (_≡_; inv)
+open import Nat.Base
 open import Nat.Observational.Equality using (Eq-Nat; equiv-Eq-Nat)
 open import Type using (Type; _⊔_; lsuc)
 open import Unit using (Unit)
@@ -16,6 +16,7 @@ import Fin.NatModK+1 as FinMod
 import Nat.Divides as Divides
 import Nat.Dist as Dist
 import Nat.Leq as Leq
+import Nat.Less as Less
 
 module Decidable.Base where
 
@@ -144,3 +145,33 @@ all-nat-family-from-leq {P} = from-bijection-fwd (from , to) where
 
   to : (∀ x -> P x) -> ∀ m x -> m ≤ x -> P x
   to f _ x _ = f x
+
+is-lower-bound : (Nat -> Type) -> Nat -> Type
+is-lower-bound P n = ∀ x -> P x -> n ≤ x
+
+is-upper-bound : (Nat -> Type) -> Nat -> Type
+is-upper-bound P n = ∀ x -> P x -> x ≤ n
+
+{-
+  We can also say that n is a lower bound if P(n) holds and, for all elements x < n, P(x) does not hold
+-}
+is-lower-bound-complement : (Nat -> Type) -> Nat -> Type
+is-lower-bound-complement P n = ∀ x -> x < n -> ¬ (P x)
+
+{-
+  Zero is a lower bound for all type families over Nat
+-}
+zero-is-lower-bound : {P : Nat -> Type} -> is-lower-bound P 0
+zero-is-lower-bound _ _ = 0≤n
+
+zero-is-lower-bound-complement : {P : Nat -> Type} -> is-lower-bound-complement P 0
+zero-is-lower-bound-complement _ = ex-falso ∘ Less.not-less-than-zero -- nothing is less than 0
+
+lower-bound-from-complement : {P : Nat -> Type}
+  -> (n : Nat)
+  -> is-lower-bound-complement P n
+  -> is-lower-bound P n
+lower-bound-from-complement n f x px with Less.connected x n 
+... | Less.Connected.low l = ex-falso (f x l px) -- when x < n
+... | Less.Connected.middle eq = Leq.when-eq (inv eq) -- when x = n
+... | Less.Connected.high h = Leq.when-less h -- when n < x

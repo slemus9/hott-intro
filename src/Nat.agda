@@ -11,3 +11,4 @@ import Nat.Instances
 import Nat.Leq
 import Nat.Less
 import Nat.Mul
+import Nat.WellOrdering
