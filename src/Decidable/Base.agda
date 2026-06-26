@@ -153,51 +153,61 @@ is-lower-bound P n = ∀ x -> P x -> n ≤ x
 is-upper-bound : (Nat -> Type) -> Nat -> Type
 is-upper-bound P n = ∀ x -> P x -> x ≤ n
 
-zero-is-lower-bound : (P : Nat -> Type) -> is-lower-bound P 0
-zero-is-lower-bound P x _ = 0≤n
+is-lower-bound-complement : (Nat -> Type) -> Nat -> Type
+is-lower-bound-complement P n = ∀ x -> x < n -> ¬ (P x)
 
-make-lower-bound : {P : Nat -> Type}
+zero-is-lower-bound : {P : Nat -> Type} -> is-lower-bound P 0
+zero-is-lower-bound _ _ = 0≤n
+
+zero-is-lower-bound-complement : {P : Nat -> Type} -> is-lower-bound-complement P 0
+zero-is-lower-bound-complement _ = ex-falso ∘ Less.not-less-than-zero -- nothing is less than 0
+
+lower-bound-from-complement : {P : Nat -> Type}
   -> (n : Nat)
-  -> (∀ x -> x < n -> ¬ (P x))
+  -> is-lower-bound-complement P n
   -> is-lower-bound P n
-make-lower-bound n f x px with Less.connected x n 
+lower-bound-from-complement n f x px with Less.connected x n 
 ... | Less.Connected.low l = ex-falso (f x l px) -- when x < n
 ... | Less.Connected.middle eq = Leq.when-eq (inv eq) -- when x = n
 ... | Less.Connected.high h = Leq.when-less h -- when n < x
 
-find-minimum-from : {P : Nat -> Type}
-  -> decidable-family P
-  -> (x n : Nat)
-  -> P (x + n)
-  -> (∀ y -> y < x -> ¬ (P y))
-  -> Σ Nat (λ m -> P m × ∀ y -> y < m -> ¬ (P y))
-find-minimum-from d x zero px f with d zero 
-... | inl p0 = zero , (p0 , λ _ -> ex-falso ∘ Less.not-less-than-zero) -- nothing is less than 0
-... | inr not-p0 = x , (px , f)
+module WellOrdering (P : Nat -> Type) (d : decidable-family P) where
 
-find-minimum-from {P} d x (suc n) pxn f with d x 
-... | inl px = x , (px , f)
-... | inr not-px = find-minimum-from d (suc x) n step-P (step-invariant f) where
-  step-P : P (suc x + n)
-  step-P = tr {Nat} {P} {suc (x + n)} {suc x + n} (inv $ Add.left-suc x n) pxn
+  private
+    step-predicate-invariant : ∀ x n
+      -> P (suc (x + n))
+      -> P (suc x + n)
+    step-predicate-invariant x n = 
+      tr {Nat} {P} {suc (x + n)} {suc x + n} (inv $ Add.left-suc x n)
 
-  step-invariant : (∀ y -> y < x -> ¬ (P y)) -> (∀ y -> y < (suc x) -> ¬ (P y))
-  step-invariant f y l with Less.single-step l
-  ... | inl l = f y l -- when y < x
-  ... | inr eq = tr (inv eq) not-px -- when y = x
+    step-bound-invariant : ∀ x
+      -> ¬ (P x)
+      -> (∀ y -> y < x -> ¬ (P y))
+      -> ∀ y -> y < (suc x) -> ¬ (P y)
+    step-bound-invariant x not-px f y l with Less.less-suc-to-leq l
+    ... | inl l = f y l -- when y < x
+    ... | inr eq = tr (inv eq) not-px -- when y = x
 
-find-minimum : {P : Nat -> Type}
-  -> decidable-family P
-  -> Σ Nat P
-  -> Σ Nat (λ m -> P m × ∀ y -> y < m -> ¬ (P y))
-find-minimum {P} d (n , p) = 
-  find-minimum-from d zero n 
-    (tr {Nat} {P} {n} {0 + n} (inv $ Add.left-unit n) p) 
-    (λ _ -> ex-falso ∘ Less.not-less-than-zero)
+  find-minimum-from : ∀ x n
+    -> P (x + n)
+    -> is-lower-bound-complement P x
+    -> Σ Nat (λ m -> P m × is-lower-bound-complement P m)
+  find-minimum-from x zero p f with d zero
+  ... | inl p0 = zero , (p0 , zero-is-lower-bound-complement)
+  ... | inr not-p0 = x , (p , f)
+  
+  find-minimum-from x (suc n) p f with d x 
+  ... | inl px = x , (px , f)
+  ... | inr not-px = find-minimum-from (suc x) n (step-predicate-invariant x n p) (step-bound-invariant x not-px f)
 
-well-ordering : {P : Nat -> Type}
-  -> decidable-family P
-  -> Σ Nat P
-  -> Σ Nat (λ m -> P m × is-lower-bound P m)
-well-ordering d n with find-minimum d n 
-... | (m , (p , f)) = m , (p , make-lower-bound m f)
+  find-minimum : Σ Nat P -> Σ Nat (λ m -> P m × is-lower-bound-complement P m)
+  find-minimum (n , p) = 
+    find-minimum-from 
+      zero 
+      n 
+      (tr {Nat} {P} {n} {0 + n} (inv $ Add.left-unit n) p)
+      zero-is-lower-bound-complement
+
+  well-ordering : Σ Nat P -> Σ Nat (λ m -> P m × is-lower-bound P m)
+  well-ordering n with find-minimum n 
+  ... | (m , (p , f)) = m , (p , lower-bound-from-complement m f)

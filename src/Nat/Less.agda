@@ -116,9 +116,9 @@ not-less-to-leq {n} {zero} notLess = 0≤n
 not-less-to-leq {zero} {suc m} notLess = ex-falso (notLess 0<s)
 not-less-to-leq {suc n} {suc m} notLess = s≤s $ not-less-to-leq $ not-suc notLess
 
-single-step : ∀ {n m} -> n < suc m -> (n < m) ⨄ (n ≡ m)
-single-step {_} {zero} 0<s = inr refl
-single-step {_} {suc m} 0<s = inl 0<s
-single-step {suc n} {suc m} (s<s l) with single-step l 
+less-suc-to-leq : ∀ {n m} -> n < suc m -> (n < m) ⨄ (n ≡ m)
+less-suc-to-leq {_} {zero} 0<s = inr refl
+less-suc-to-leq {_} {suc m} 0<s = inl 0<s
+less-suc-to-leq {suc n} {suc m} (s<s l) with less-suc-to-leq l 
 ... | inl l = inl (s<s l)
 ... | inr eq = inr (ap suc eq)
