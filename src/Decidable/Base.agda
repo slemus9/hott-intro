@@ -1,10 +1,10 @@
 open import Agda.Primitive using (Level)
 open import Coproduct using (_⨄_; inl; inr)
-open import DependentPair using (_<-->_; _×_; _,_; fst; snd)
+open import DependentPair using (Σ; _<-->_; _×_; _,_; fst; snd)
 open import Empty using (Empty; ex-falso)
 open import Empty.Negation using (¬_)
-open import Function using (_∘_; id)
-open import Identity using (_≡_)
+open import Function using (_∘_; id; _$_)
+open import Identity using (_≡_; inv; tr)
 open import Nat 
 open import Nat.Observational.Equality using (Eq-Nat; equiv-Eq-Nat)
 open import Type using (Type; _⊔_; lsuc)
@@ -13,9 +13,11 @@ open import Fin using (Fin; Eq-Fin; [_]⟨_⟩)
 
 import Fin.Observational.Equality as FinObsEq
 import Fin.NatModK+1 as FinMod
+import Nat.Add as Add
 import Nat.Divides as Divides
 import Nat.Dist as Dist
 import Nat.Leq as Leq
+import Nat.Less as Less
 
 module Decidable.Base where
 
@@ -144,3 +146,58 @@ all-nat-family-from-leq {P} = from-bijection-fwd (from , to) where
 
   to : (∀ x -> P x) -> ∀ m x -> m ≤ x -> P x
   to f _ x _ = f x
+
+is-lower-bound : (Nat -> Type) -> Nat -> Type
+is-lower-bound P n = ∀ x -> P x -> n ≤ x
+
+is-upper-bound : (Nat -> Type) -> Nat -> Type
+is-upper-bound P n = ∀ x -> P x -> x ≤ n
+
+zero-is-lower-bound : (P : Nat -> Type) -> is-lower-bound P 0
+zero-is-lower-bound P x _ = 0≤n
+
+make-lower-bound : {P : Nat -> Type}
+  -> (n : Nat)
+  -> (∀ x -> x < n -> ¬ (P x))
+  -> is-lower-bound P n
+make-lower-bound n f x px with Less.connected x n 
+... | Less.Connected.low l = ex-falso (f x l px) -- when x < n
+... | Less.Connected.middle eq = Leq.when-eq (inv eq) -- when x = n
+... | Less.Connected.high h = Leq.when-less h -- when n < x
+
+find-minimum-from : {P : Nat -> Type}
+  -> decidable-family P
+  -> (x n : Nat)
+  -> P (x + n)
+  -> (∀ y -> y < x -> ¬ (P y))
+  -> Σ Nat (λ m -> P m × ∀ y -> y < m -> ¬ (P y))
+find-minimum-from d x zero px f with d zero 
+... | inl p0 = zero , (p0 , λ _ -> ex-falso ∘ Less.not-less-than-zero) -- nothing is less than 0
+... | inr not-p0 = x , (px , f)
+
+find-minimum-from {P} d x (suc n) pxn f with d x 
+... | inl px = x , (px , f)
+... | inr not-px = find-minimum-from d (suc x) n step-P (step-invariant f) where
+  step-P : P (suc x + n)
+  step-P = tr {Nat} {P} {suc (x + n)} {suc x + n} (inv $ Add.left-suc x n) pxn
+
+  step-invariant : (∀ y -> y < x -> ¬ (P y)) -> (∀ y -> y < (suc x) -> ¬ (P y))
+  step-invariant f y l with Less.single-step l
+  ... | inl l = f y l -- when y < x
+  ... | inr eq = tr (inv eq) not-px -- when y = x
+
+find-minimum : {P : Nat -> Type}
+  -> decidable-family P
+  -> Σ Nat P
+  -> Σ Nat (λ m -> P m × ∀ y -> y < m -> ¬ (P y))
+find-minimum {P} d (n , p) = 
+  find-minimum-from d zero n 
+    (tr {Nat} {P} {n} {0 + n} (inv $ Add.left-unit n) p) 
+    (λ _ -> ex-falso ∘ Less.not-less-than-zero)
+
+well-ordering : {P : Nat -> Type}
+  -> decidable-family P
+  -> Σ Nat P
+  -> Σ Nat (λ m -> P m × is-lower-bound P m)
+well-ordering d n with find-minimum d n 
+... | (m , (p , f)) = m , (p , make-lower-bound m f)

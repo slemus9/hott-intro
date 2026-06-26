@@ -6,6 +6,7 @@ open import Function using (_$_; _∘_)
 open import Empty using (ex-falso)
 open import Empty.Negation using (¬_)
 open import Type using (Type)
+open import Coproduct
 
 module Nat.Less where
 
@@ -114,3 +115,10 @@ not-less-to-leq : ∀ {n m} -> ¬ (n < m) -> m ≤ n
 not-less-to-leq {n} {zero} notLess = 0≤n
 not-less-to-leq {zero} {suc m} notLess = ex-falso (notLess 0<s)
 not-less-to-leq {suc n} {suc m} notLess = s≤s $ not-less-to-leq $ not-suc notLess
+
+single-step : ∀ {n m} -> n < suc m -> (n < m) ⨄ (n ≡ m)
+single-step {_} {zero} 0<s = inr refl
+single-step {_} {suc m} 0<s = inl 0<s
+single-step {suc n} {suc m} (s<s l) with single-step l 
+... | inl l = inl (s<s l)
+... | inr eq = inr (ap suc eq)

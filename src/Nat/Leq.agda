@@ -31,6 +31,10 @@ when-eq : ∀ {m n} -> m ≡ n -> m ≤ n
 when-eq {zero} {.zero} refl = 0≤n
 when-eq {suc m} {.(suc m)} refl = s≤s (when-eq refl)
 
+when-less : ∀ {m n} -> m < n -> m ≤ n
+when-less 0<s = 0≤n
+when-less (s<s m<n) = s≤s (when-less m<n)
+
 n<=n+m : ∀ {n m} -> n ≤ n + m
 n<=n+m {zero} {m} = 0≤n
 n<=n+m {suc n} {m} rewrite Add.left-suc n m = s≤s n<=n+m
