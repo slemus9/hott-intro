@@ -158,6 +158,9 @@ is-upper-bound P n = ∀ x -> P x -> x ≤ n
 is-lower-bound-complement : (Nat -> Type) -> Nat -> Type
 is-lower-bound-complement P n = ∀ x -> x < n -> ¬ (P x)
 
+is-upper-bound-complement : (Nat -> Type) -> Nat -> Type
+is-upper-bound-complement P n = ∀ x -> n < x -> ¬ (P x)
+
 {-
   Zero is a lower bound for all type families over Nat
 -}
@@ -175,6 +178,26 @@ lower-bound-from-complement n f x px with Less.connected x n
 ... | Less.Connected.low l = ex-falso (f x l px) -- when x < n
 ... | Less.Connected.middle eq = Leq.when-eq (inv eq) -- when x = n
 ... | Less.Connected.high h = Leq.when-less h -- when n < x
+
+upper-bound-from-complement : {P : Nat -> Type}
+  -> (n : Nat)
+  -> is-upper-bound-complement P n
+  -> is-upper-bound P n
+upper-bound-from-complement n f x px with Less.connected x n 
+... | Less.Connected.low l = Leq.when-less l -- when x < n
+... | Less.Connected.middle eq = Leq.when-eq eq -- when x = n
+... | Less.Connected.high h = ex-falso (f x h px) -- when n < x
+
+upper-bound-to-complement : {P : Nat -> Type}
+  -> (n : Nat)
+  -> is-upper-bound P n
+  -> is-upper-bound-complement P n
+upper-bound-to-complement zero f x l px rewrite Leq.when-n≤0 (f x px) = 
+  -- contradiction because nothing is less than 0
+  Less.not-n<0 l
+upper-bound-to-complement (suc n) f (suc x) (s<s l) psx = 
+  -- contradiction because applying f to (suc x) yields x ≤ n, but we assumed that n < x
+  Less.not-leq-fwd l (Leq.pred (f (suc x) psx))
 
 nat-family-from-leq : {P : Nat -> Type} (m : Nat)
   -> decidable-family P
@@ -213,9 +236,12 @@ function-nat-families : {P Q : Nat -> Type} (m : Nat)
   -> is-upper-bound P m
   -> decidable (∀ x -> P x -> Q x)
 function-nat-families {P} {Q} m decide-p decide-q up = 
-  nat-family-from-leq m decide-p-q (inl f) where
+  nat-family-from-leq (m + 1) decide-p-q (inl f) where
     decide-p-q : ∀ x -> decidable (P x -> Q x)
     decide-p-q x = function (decide-p x) (decide-q x)
 
-    f : ∀ x -> m ≤ x -> P x -> Q x
-    f = {!   !}
+    after-m : ∀ x -> (m + 1) ≤ x -> ¬ (P x)
+    after-m (suc x) (s≤s l) = upper-bound-to-complement m up (suc x) (Less.from-leq l)
+
+    f : ∀ x -> (m + 1) ≤ x -> P x -> Q x
+    f x l = ex-falso ∘ (after-m x l)

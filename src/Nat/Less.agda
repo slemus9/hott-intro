@@ -54,6 +54,10 @@ to-leq : ∀ {m n} -> m < n -> m + 1 ≤ n
 to-leq 0<s = s≤s 0≤n
 to-leq (s<s m<n) = s≤s (to-leq m<n)
 
+from-leq : ∀ {m n} -> m ≤ n -> m < n + 1
+from-leq 0≤n = 0<s
+from-leq (s≤s l) = s<s (from-leq l)
+
 {-
   Exercise 6.4.c.ii
 -}

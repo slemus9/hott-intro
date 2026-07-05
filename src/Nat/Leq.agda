@@ -13,6 +13,9 @@ module Nat.Leq where
 not-s≤0 : ∀ {n} -> ¬ (suc n ≤ 0)
 not-s≤0 {zero} ()
 
+pred : ∀ {m n} -> suc m ≤ suc n -> m ≤ n
+pred (s≤s l) = l
+
 right-suc : ∀ {m n} -> m ≤ n -> m ≤ suc n
 right-suc 0≤n = 0≤n
 right-suc (s≤s m≤n) = s≤s (right-suc m≤n)
