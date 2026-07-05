@@ -4,7 +4,7 @@ open import DependentPair using (Σ; _<-->_; _×_; _,_; fst; snd)
 open import Empty using (Empty; ex-falso)
 open import Empty.Negation using (¬_)
 open import Function using (_∘_; id)
-open import Identity using (_≡_; inv)
+open import Identity using (_≡_; inv; tr; refl)
 open import Nat.Base
 open import Nat.Observational.Equality using (Eq-Nat; equiv-Eq-Nat)
 open import Type using (Type; _⊔_; lsuc)
@@ -175,3 +175,47 @@ lower-bound-from-complement n f x px with Less.connected x n
 ... | Less.Connected.low l = ex-falso (f x l px) -- when x < n
 ... | Less.Connected.middle eq = Leq.when-eq (inv eq) -- when x = n
 ... | Less.Connected.high h = Leq.when-less h -- when n < x
+
+nat-family-from-leq : {P : Nat -> Type} (m : Nat)
+  -> decidable-family P
+  -> decidable (∀ x -> m ≤ x -> P x)
+  -> decidable (∀ x -> P x)
+nat-family-from-leq {P} zero decide-p decide-f = 
+  from-bijection-fwd (from , to) decide-f where
+    from : (∀ x -> zero ≤ x -> P x) -> ∀ x -> P x
+    from f x = f x 0≤n
+
+    to : (∀ x -> P x) -> ∀ x -> zero ≤ x -> P x
+    to f x _ = f x
+
+nat-family-from-leq {P} (suc m) decide-p decide-f with decide-p zero 
+... | inl p0 = result ih where
+  step-down : (∀ x -> m ≤ x -> P (x + 1)) -> ∀ x -> suc m ≤ x -> P x
+  step-down f zero _ = p0
+  step-down f (suc x) (s≤s l) = f x l
+
+  decide-f' : decidable (∀ x -> suc m ≤ x -> P x) -> decidable (∀ x -> m ≤ x -> P (x + 1))
+  decide-f' (inl f) = inl (λ x l -> f (x + 1) (s≤s l))
+  decide-f' (inr not-f) = inr (not-f ∘ step-down)
+
+  ih : decidable (∀ x -> P (x + 1))
+  ih = nat-family-from-leq m (λ x -> decide-p (x + 1)) (decide-f' decide-f)
+
+  result : decidable (∀ x -> P (x + 1)) -> decidable (∀ x -> P x)
+  result (inl f) = inl (λ { zero → p0; (suc x) → f x})
+  result (inr not-f) = inr (λ f -> not-f (λ x -> f (x + 1)))
+
+... | inr not-p0 = inr (λ f -> not-p0 (f zero))
+
+function-nat-families : {P Q : Nat -> Type} (m : Nat)
+  -> decidable-family P
+  -> decidable-family Q
+  -> is-upper-bound P m
+  -> decidable (∀ x -> P x -> Q x)
+function-nat-families {P} {Q} m decide-p decide-q up = 
+  nat-family-from-leq m decide-p-q (inl f) where
+    decide-p-q : ∀ x -> decidable (P x -> Q x)
+    decide-p-q x = function (decide-p x) (decide-q x)
+
+    f : ∀ x -> m ≤ x -> P x -> Q x
+    f = {!   !}
