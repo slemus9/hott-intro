@@ -4,7 +4,7 @@ open import DependentPair using (Σ; _<-->_; _×_; _,_; fst; snd)
 open import Empty using (Empty; ex-falso)
 open import Empty.Negation using (¬_)
 open import Function using (_∘_; id)
-open import Identity using (_≡_; inv)
+open import Identity using (_≡_; inv; tr; refl)
 open import Nat.Base
 open import Nat.Observational.Equality using (Eq-Nat; equiv-Eq-Nat)
 open import Type using (Type; _⊔_; lsuc)
@@ -99,30 +99,30 @@ to-decidable-function : {A B : Type}
 to-decidable-function (inl a) f = function (inl a) (f a)
 to-decidable-function (inr notA) f = inl (ex-falso ∘ notA)
 
-eq-nat : ∀ m n -> decidable (Eq-Nat m n)
-eq-nat zero zero = unit
-eq-nat zero (suc n) = empty
-eq-nat (suc m) zero = empty
-eq-nat (suc m) (suc n) = eq-nat m n
+eq-obs-nat : ∀ m n -> decidable (Eq-Nat m n)
+eq-obs-nat zero zero = unit
+eq-obs-nat zero (suc n) = empty
+eq-obs-nat (suc m) zero = empty
+eq-obs-nat (suc m) (suc n) = eq-obs-nat m n
 
-nat-has-eq : has-decidable-eq Nat
-nat-has-eq m n = from-bijection-bck (equiv-Eq-Nat m n) (eq-nat m n)
+eq-nat : has-decidable-eq Nat
+eq-nat m n = from-bijection-bck (equiv-Eq-Nat m n) (eq-obs-nat m n)
 
-eq-fin : ∀ {k} -> (x y : Fin k) -> decidable (Eq-Fin x y)
-eq-fin Fin.base Fin.base = unit
-eq-fin Fin.base (Fin.i _) = empty
-eq-fin (Fin.i _) Fin.base = empty
-eq-fin (Fin.i x) (Fin.i y) = eq-fin x y
+eq-obs-fin : ∀ {k} -> (x y : Fin k) -> decidable (Eq-Fin x y)
+eq-obs-fin Fin.base Fin.base = unit
+eq-obs-fin Fin.base (Fin.i _) = empty
+eq-obs-fin (Fin.i _) Fin.base = empty
+eq-obs-fin (Fin.i x) (Fin.i y) = eq-obs-fin x y
 
-fin-has-eq : ∀ {k} -> has-decidable-eq (Fin k)
-fin-has-eq x y = from-bijection-bck (FinObsEq.eq-identity x y) (eq-fin x y)
+eq-fin : ∀ {k} -> has-decidable-eq (Fin k)
+eq-fin x y = from-bijection-bck (FinObsEq.eq-identity x y) (eq-obs-fin x y)
 
 divides-nat : ∀ d x -> decidable (d divides x)
-divides-nat zero x = from-bijection-bck (Divides.zero-divides-zero x) (nat-has-eq x 0)
+divides-nat zero x = from-bijection-bck (Divides.zero-divides-zero x) (eq-nat x 0)
 divides-nat (suc d) x = 
   simplify-dist 
     (from-bijection-fwd (FinMod.effectiveness d x 0) 
-    (fin-has-eq [ x ]⟨ d ⟩ [ 0 ]⟨ d ⟩)) 
+    (eq-fin [ x ]⟨ d ⟩ [ 0 ]⟨ d ⟩)) 
   where
     simplify-dist : decidable (suc d divides (dist x 0)) -> decidable (suc d divides x)
     simplify-dist rewrite Dist.right-unit x = id
@@ -158,6 +158,9 @@ is-upper-bound P n = ∀ x -> P x -> x ≤ n
 is-lower-bound-complement : (Nat -> Type) -> Nat -> Type
 is-lower-bound-complement P n = ∀ x -> x < n -> ¬ (P x)
 
+is-upper-bound-complement : (Nat -> Type) -> Nat -> Type
+is-upper-bound-complement P n = ∀ x -> n < x -> ¬ (P x)
+
 {-
   Zero is a lower bound for all type families over Nat
 -}
@@ -175,3 +178,70 @@ lower-bound-from-complement n f x px with Less.connected x n
 ... | Less.Connected.low l = ex-falso (f x l px) -- when x < n
 ... | Less.Connected.middle eq = Leq.when-eq (inv eq) -- when x = n
 ... | Less.Connected.high h = Leq.when-less h -- when n < x
+
+upper-bound-from-complement : {P : Nat -> Type}
+  -> (n : Nat)
+  -> is-upper-bound-complement P n
+  -> is-upper-bound P n
+upper-bound-from-complement n f x px with Less.connected x n 
+... | Less.Connected.low l = Leq.when-less l -- when x < n
+... | Less.Connected.middle eq = Leq.when-eq eq -- when x = n
+... | Less.Connected.high h = ex-falso (f x h px) -- when n < x
+
+upper-bound-to-complement : {P : Nat -> Type}
+  -> (n : Nat)
+  -> is-upper-bound P n
+  -> is-upper-bound-complement P n
+upper-bound-to-complement zero f x l px rewrite Leq.when-n≤0 (f x px) = 
+  -- contradiction because nothing is less than 0
+  Less.not-n<0 l
+upper-bound-to-complement (suc n) f (suc x) (s<s l) psx = 
+  -- contradiction because applying f to (suc x) yields x ≤ n, but we assumed that n < x
+  Less.not-leq-fwd l (Leq.pred (f (suc x) psx))
+
+nat-family-from-leq : {P : Nat -> Type} (m : Nat)
+  -> decidable-family P
+  -> decidable (∀ x -> m ≤ x -> P x)
+  -> decidable (∀ x -> P x)
+nat-family-from-leq {P} zero decide-p decide-f = 
+  from-bijection-fwd (from , to) decide-f where
+    from : (∀ x -> zero ≤ x -> P x) -> ∀ x -> P x
+    from f x = f x 0≤n
+
+    to : (∀ x -> P x) -> ∀ x -> zero ≤ x -> P x
+    to f x _ = f x
+
+nat-family-from-leq {P} (suc m) decide-p decide-f with decide-p zero 
+... | inl p0 = result ih where
+  step-down : (∀ x -> m ≤ x -> P (x + 1)) -> ∀ x -> suc m ≤ x -> P x
+  step-down f zero _ = p0
+  step-down f (suc x) (s≤s l) = f x l
+
+  decide-f' : decidable (∀ x -> suc m ≤ x -> P x) -> decidable (∀ x -> m ≤ x -> P (x + 1))
+  decide-f' (inl f) = inl (λ x l -> f (x + 1) (s≤s l))
+  decide-f' (inr not-f) = inr (not-f ∘ step-down)
+
+  ih : decidable (∀ x -> P (x + 1))
+  ih = nat-family-from-leq m (λ x -> decide-p (x + 1)) (decide-f' decide-f)
+
+  result : decidable (∀ x -> P (x + 1)) -> decidable (∀ x -> P x)
+  result (inl f) = inl (λ { zero → p0; (suc x) → f x})
+  result (inr not-f) = inr (λ f -> not-f (λ x -> f (x + 1)))
+
+... | inr not-p0 = inr (λ f -> not-p0 (f zero))
+
+function-nat-families : {P Q : Nat -> Type} (m : Nat)
+  -> decidable-family P
+  -> decidable-family Q
+  -> is-upper-bound P m
+  -> decidable (∀ x -> P x -> Q x)
+function-nat-families {P} {Q} m decide-p decide-q up = 
+  nat-family-from-leq (m + 1) decide-p-q (inl f) where
+    decide-p-q : ∀ x -> decidable (P x -> Q x)
+    decide-p-q x = function (decide-p x) (decide-q x)
+
+    after-m : ∀ x -> (m + 1) ≤ x -> ¬ (P x)
+    after-m (suc x) (s≤s l) = upper-bound-to-complement m up (suc x) (Less.from-leq l)
+
+    f : ∀ x -> (m + 1) ≤ x -> P x -> Q x
+    f x l = ex-falso ∘ (after-m x l)

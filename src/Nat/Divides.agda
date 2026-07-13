@@ -6,7 +6,7 @@ import Nat.Less as Less
 import Nat.Mul as Mul
 import Nat.Dist as Dist
 open import DependentPair using (_,_; _×_; snd; _<-->_)
-open import Identity using (_≡_; refl; inv; ap)
+open import Identity using (_≡_; _≢_; refl; inv; ap)
 open import Identity.Reasoning
 open import Empty using (ex-falso)
 
@@ -163,3 +163,11 @@ divisor-less-than-dividend-bck {d} {_} _ refl = any-divides-zero d
 
 multiple : ∀ k m -> k divides (k * m)
 multiple k m = m , refl
+
+addition-to-upper-bound : ∀ a b x
+  -> a + b ≢ 0
+  -> x divides a
+  -> x divides b
+  -> x ≤ (a + b)
+addition-to-upper-bound a b x not-zero div-a div-b with divides-x-y-then-x+y x a b div-a div-b 
+... | k , eq  = Mul.mul-positive-ineq {x} {k} {a + b} (Less.when-not-zero not-zero) eq

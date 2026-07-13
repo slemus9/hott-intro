@@ -7,6 +7,7 @@ import Nat.Dist
 import Nat.Divides
 import Nat.Division
 import Nat.Factorial
+import Nat.GreatestCommonDivisor
 import Nat.Instances
 import Nat.Leq
 import Nat.Less
