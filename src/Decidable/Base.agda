@@ -99,30 +99,30 @@ to-decidable-function : {A B : Type}
 to-decidable-function (inl a) f = function (inl a) (f a)
 to-decidable-function (inr notA) f = inl (ex-falso ∘ notA)
 
-eq-nat : ∀ m n -> decidable (Eq-Nat m n)
-eq-nat zero zero = unit
-eq-nat zero (suc n) = empty
-eq-nat (suc m) zero = empty
-eq-nat (suc m) (suc n) = eq-nat m n
+eq-obs-nat : ∀ m n -> decidable (Eq-Nat m n)
+eq-obs-nat zero zero = unit
+eq-obs-nat zero (suc n) = empty
+eq-obs-nat (suc m) zero = empty
+eq-obs-nat (suc m) (suc n) = eq-obs-nat m n
 
-nat-has-eq : has-decidable-eq Nat
-nat-has-eq m n = from-bijection-bck (equiv-Eq-Nat m n) (eq-nat m n)
+eq-nat : has-decidable-eq Nat
+eq-nat m n = from-bijection-bck (equiv-Eq-Nat m n) (eq-obs-nat m n)
 
-eq-fin : ∀ {k} -> (x y : Fin k) -> decidable (Eq-Fin x y)
-eq-fin Fin.base Fin.base = unit
-eq-fin Fin.base (Fin.i _) = empty
-eq-fin (Fin.i _) Fin.base = empty
-eq-fin (Fin.i x) (Fin.i y) = eq-fin x y
+eq-obs-fin : ∀ {k} -> (x y : Fin k) -> decidable (Eq-Fin x y)
+eq-obs-fin Fin.base Fin.base = unit
+eq-obs-fin Fin.base (Fin.i _) = empty
+eq-obs-fin (Fin.i _) Fin.base = empty
+eq-obs-fin (Fin.i x) (Fin.i y) = eq-obs-fin x y
 
-fin-has-eq : ∀ {k} -> has-decidable-eq (Fin k)
-fin-has-eq x y = from-bijection-bck (FinObsEq.eq-identity x y) (eq-fin x y)
+eq-fin : ∀ {k} -> has-decidable-eq (Fin k)
+eq-fin x y = from-bijection-bck (FinObsEq.eq-identity x y) (eq-obs-fin x y)
 
 divides-nat : ∀ d x -> decidable (d divides x)
-divides-nat zero x = from-bijection-bck (Divides.zero-divides-zero x) (nat-has-eq x 0)
+divides-nat zero x = from-bijection-bck (Divides.zero-divides-zero x) (eq-nat x 0)
 divides-nat (suc d) x = 
   simplify-dist 
     (from-bijection-fwd (FinMod.effectiveness d x 0) 
-    (fin-has-eq [ x ]⟨ d ⟩ [ 0 ]⟨ d ⟩)) 
+    (eq-fin [ x ]⟨ d ⟩ [ 0 ]⟨ d ⟩)) 
   where
     simplify-dist : decidable (suc d divides (dist x 0)) -> decidable (suc d divides x)
     simplify-dist rewrite Dist.right-unit x = id

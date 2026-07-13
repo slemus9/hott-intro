@@ -1,5 +1,6 @@
-open import Nat.Base using (Nat; zero; suc; _+_; _*_)
+open import Nat.Base
 import Nat.Add as Add
+import Nat.Leq as Leq
 open import Nat.Observational.Equality using (peano7-fwd; peano7-bck; peano8)
 open import Identity using (_≢_; _≡_; refl; ap; inv)
 open import DependentPair using (_×_; _<-->_; _,_; fst; snd)
@@ -217,3 +218,24 @@ eq-mul-one {zero} {k} eq rewrite left-unit k = eq
 eq-mul-one {suc n} {k} eq
   rewrite commutative (suc (suc n)) k
   | inv $ left-unit $ suc (suc n) = mul-k+1-bck {k} {1} {suc n} eq
+
+when-product-positive : ∀ {a b c}
+  -> 0 < c
+  -> a * b ≡ c
+  -> 0 < a
+when-product-positive {zero} {b} {suc c} 0<s eq rewrite left-zero b = ex-falso (peano8 eq)
+when-product-positive {suc a} {b} {suc c} 0<s eq = 0<s
+
+when-multiplier-positive : ∀ {a b c}
+  -> 0 < b
+  -> a * b ≡ c
+  -> a ≤ c
+when-multiplier-positive {a} {suc b} {c} l1 eq rewrite (inv eq) = Leq.n<=n+m
+
+mul-positive-ineq : ∀ {a b c}
+  -> 0 < c
+  -> a * b ≡ c
+  -> a ≤ c
+mul-positive-ineq {a} {b} {c} l eq = when-multiplier-positive (b-positive eq) eq where
+  b-positive : a * b ≡ c -> 0 < b
+  b-positive eq rewrite commutative a b = when-product-positive {b} {a} {c} l eq
