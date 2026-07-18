@@ -3,9 +3,12 @@ open import Nat.Base
 open import DependentPair.Base
 open import Identity.Base
 open import Decidable.Base
+open import Empty.Negation.Base
+open import Function.Base
 
 import Nat.Divides as Divides
 import Nat.WellOrdering as WellOrdering
+import Nat.Leq as Leq
 
 module Nat.GreatestCommonDivisor where
 
@@ -70,9 +73,9 @@ well-ordered-gcd-is-decidable a b n =
 {-
   We also need to show that there is an element of the type family in order to use Well-Ordering Principle
 -}
-exists-well-ordered-gcd : ∀ a b -> Σ Nat (well-ordered-gcd a b)
-exists-well-ordered-gcd a b = 
-  (a + b) , λ not-zero -> (not-zero , divides-sum) where
+sum-is-well-ordered-gcd : ∀ a b -> well-ordered-gcd a b (a + b)
+sum-is-well-ordered-gcd a b not-zero = 
+  (not-zero , divides-sum) where
     divides-sum : ∀ x -> (x divides a) × (x divides b) -> x divides (a + b)
     divides-sum x (div-a , div-b) = Divides.divides-x-y-then-x+y x a b div-a div-b
 
@@ -85,4 +88,36 @@ open module GcdWellOrdering (a b : Nat) =
 -}
 gcd : (a b : Nat) -> Σ Nat (λ n -> (well-ordered-gcd a b n) × is-lower-bound (well-ordered-gcd a b) n) 
 gcd a b = 
-  well-ordering a b (exists-well-ordered-gcd a b) 
+  well-ordering a b ((a + b) , sum-is-well-ordered-gcd a b)
+
+when-gcd-zero-fwd : (a b n : Nat) 
+  -> well-ordered-gcd a b n
+  -> n ≡ 0
+  -> a + b ≡ 0
+when-gcd-zero-fwd a b n wo-gcd n-is-zero = 
+  double-neg (eq-nat (a + b) 0) not-not-zero where
+    not-not-zero : ¬ (a + b ≢ 0)
+    not-not-zero not-zero = fst (wo-gcd not-zero) n-is-zero
+
+when-gcd-zero-bck : (a b n : Nat)
+  -> is-lower-bound (well-ordered-gcd a b) n
+  -> a + b ≡ 0
+  -> n ≡ 0
+when-gcd-zero-bck a b n low-bound sum-is-zero = 
+  Leq.when-n≤0 (n-leq-zero sum-is-zero n-leq-sum) where
+    n-leq-sum : n ≤ a + b
+    n-leq-sum = low-bound (a + b) (sum-is-well-ordered-gcd a b)
+
+    n-leq-zero : a + b ≡ 0 -> n ≤ a + b -> n ≤ 0
+    n-leq-zero eq rewrite eq = id
+
+when-gcd-zero : (a b n : Nat)
+  -> well-ordered-gcd a b n
+  -> is-lower-bound (well-ordered-gcd a b) n
+  -> (n ≡ 0) <--> (a + b ≡ 0)
+when-gcd-zero a b n wo-gcd low-bound = 
+  when-gcd-zero-fwd a b n wo-gcd , when-gcd-zero-bck a b n low-bound
+
+when-gcd-zero-uncurry : (a b : Nat) -> (fst (gcd a b) ≡ 0) <--> ((a + b) ≡ 0)
+when-gcd-zero-uncurry a b with gcd a b
+... | n , (wo-gcd , low-bound) = when-gcd-zero a b n wo-gcd low-bound
