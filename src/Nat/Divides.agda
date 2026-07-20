@@ -18,6 +18,9 @@ one-divides-any n = n , Mul.left-unit n
 any-divides-zero : ∀ n -> n divides 0
 any-divides-zero n = 0 , refl
 
+when-dividend-zero : ∀ m n -> n ≡ 0 -> m divides n
+when-dividend-zero m n refl = any-divides-zero m
+
 zero-divides-zero-fwd : ∀ n -> 0 divides n -> n ≡ 0
 zero-divides-zero-fwd n (k , 0*k≡n) =
   begin
@@ -163,6 +166,17 @@ divisor-less-than-dividend-bck {d} {_} _ refl = any-divides-zero d
 
 multiple : ∀ k m -> k divides (k * m)
 multiple k m = m , refl
+
+divides-mul : ∀ a b c
+  -> a divides b
+  -> a divides (b * c)
+divides-mul a b c (k , div-b) rewrite inv div-b  = 
+  (k * c) , inv (Mul.associative a k c)
+
+commute-mul : ∀ a b c
+  -> a divides (b * c)
+  -> a divides (c * b)
+commute-mul a b c div rewrite Mul.commutative b c = div
 
 addition-to-upper-bound : ∀ a b x
   -> a + b ≢ 0
