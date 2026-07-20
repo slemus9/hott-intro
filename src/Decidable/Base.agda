@@ -39,6 +39,11 @@ neg : {A : Type} -> decidable A -> decidable (¬ A)
 neg (inl a) = inr λ ¬a -> ex-falso (¬a a)
 neg (inr ¬a) = inl ¬a
 
+double-neg : {A : Type} -> decidable A -> ¬ ¬ A -> A
+double-neg decide-a neg with decide-a 
+... | inl a = a
+... | inr not-a = ex-falso (neg not-a)
+
 coproduct : {A B : Type}
   -> decidable A
   -> decidable B
