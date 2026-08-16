@@ -13,3 +13,4 @@ import Nat.Leq
 import Nat.Less
 import Nat.Mul
 import Nat.WellOrdering
+import Nat.Primes
