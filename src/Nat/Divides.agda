@@ -185,3 +185,9 @@ addition-to-upper-bound : ∀ a b x
   -> x ≤ (a + b)
 addition-to-upper-bound a b x not-zero div-a div-b with divides-x-y-then-x+y x a b div-a div-b 
 ... | k , eq  = Mul.mul-positive-ineq {x} {k} {a + b} (Less.when-not-zero not-zero) eq
+
+suc-upper-bound : ∀ a b
+  -> a divides (suc b)
+  -> a ≤ suc b
+suc-upper-bound a b (k , eq) =
+  Mul.mul-positive-ineq {a} {k} {suc b} 0<s eq
