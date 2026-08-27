@@ -1,6 +1,7 @@
 open import Nat.Base
 import Nat.Leq as Leq
 import Nat.Add as Add
+import Nat.Observational.Equality as NatEq
 open import Identity using (_≢_; _≡_; refl; ap)
 open import Function using (_$_; _∘_)
 open import Empty using (ex-falso)
@@ -76,6 +77,10 @@ n<s {suc n} = s<s n<s
 
 when-equal : ∀ {m n} -> m ≡ n -> ¬ (m < n)
 when-equal eq rewrite eq = antireflex
+
+not-eq : ∀ {m n} -> m < n -> m ≢ n
+not-eq 0<s = NatEq.peano8
+not-eq (s<s l) = not-eq l ∘ NatEq.peano7-bck
 
 <-uniq : ∀ {x y} -> (p1 p2 : x < y) -> p1 ≡ p2
 <-uniq 0<s 0<s = refl

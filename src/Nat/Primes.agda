@@ -83,3 +83,21 @@ is-prime-aux-is-decidable (suc n) =
 -}
 is-prime-is-decidable : decidable-family (is-prime)
 is-prime-is-decidable n = from-bijection-bck (is-prime-iff-aux n) (is-prime-aux-is-decidable n)
+
+relatively-prime : Nat -> Nat -> Type
+relatively-prime n m = (n < m) × ∀ x -> x ≤ n -> x divides m -> x ≡ 1
+
+{-
+  relatively-prime is a decidable type family
+-}
+relatively-prime-is-decidable : ∀ n -> decidable-family (relatively-prime n)
+relatively-prime-is-decidable n m = product fst-component snd-component where
+  fst-component : decidable (n < m)
+  fst-component = less-nat n m
+
+  snd-component : decidable (∀ x -> x ≤ n -> x divides m -> x ≡ 1)
+  snd-component = 
+    function-nat-families n 
+      (λ x -> leq-nat x n) 
+      (λ x -> function (divides-nat x m) (eq-nat x 1)) 
+      (λ _ -> id)
