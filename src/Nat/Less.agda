@@ -1,7 +1,8 @@
 open import Nat.Base
 import Nat.Leq as Leq
 import Nat.Add as Add
-open import Identity using (_≢_; _≡_; refl; ap)
+import Nat.Observational.Equality as NatEq
+open import Identity using (_≢_; _≡_; refl; inv; ap)
 open import Function using (_$_; _∘_)
 open import Empty using (ex-falso)
 open import Empty.Negation using (¬_)
@@ -77,6 +78,10 @@ n<s {suc n} = s<s n<s
 when-equal : ∀ {m n} -> m ≡ n -> ¬ (m < n)
 when-equal eq rewrite eq = antireflex
 
+not-eq : ∀ {m n} -> m < n -> m ≢ n
+not-eq 0<s = NatEq.peano8
+not-eq (s<s l) = not-eq l ∘ NatEq.peano7-bck
+
 <-uniq : ∀ {x y} -> (p1 p2 : x < y) -> p1 ≡ p2
 <-uniq 0<s 0<s = refl
 <-uniq (s<s p1) (s<s p2) = ap s<s (<-uniq p1 p2)
@@ -90,9 +95,12 @@ connected (suc m) (suc n) with connected m n
 ... | middle m≡n = Connected.middle (ap suc m≡n)
 ... | high n<m = Connected.high (s<s n<m)
 
-when-not-zero : ∀ {n} -> n ≢ 0 -> 0 < n
-when-not-zero {zero} n≢0 = ex-falso (n≢0 refl)
-when-not-zero {suc n} _ = 0<s
+when-not-zero-fwd : ∀ {n} -> n ≢ 0 -> 0 < n
+when-not-zero-fwd {zero} n≢0 = ex-falso (n≢0 refl)
+when-not-zero-fwd {suc n} _ = 0<s
+
+when-not-zero-bck : ∀ {n} -> 0 < n -> n ≢ 0
+when-not-zero-bck 0<s = NatEq.peano8 ∘ inv
 
 not-less-than-zero : ∀ {n} -> ¬ (n < zero)
 not-less-than-zero {zero} = antireflex
@@ -126,3 +134,6 @@ less-suc-to-leq {_} {suc m} 0<s = inl 0<s
 less-suc-to-leq {suc n} {suc m} (s<s l) with less-suc-to-leq l 
 ... | inl l = inl (s<s l)
 ... | inr eq = inr (ap suc eq)
+
+non-zero-addition : ∀ {n m} -> 0 < m -> 0 < n + m
+non-zero-addition 0<s = 0<s

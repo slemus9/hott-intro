@@ -10,6 +10,9 @@ open import Type
 
 import Nat.Divides as Divides
 import Nat.Observational.Equality as NatEq
+import Nat.Less as Less
+import Nat.Factorial as Fact
+import Nat.Mul as Mul
 
 module Nat.Primes where
 
@@ -83,3 +86,38 @@ is-prime-aux-is-decidable (suc n) =
 -}
 is-prime-is-decidable : decidable-family (is-prime)
 is-prime-is-decidable n = from-bijection-bck (is-prime-iff-aux n) (is-prime-aux-is-decidable n)
+
+relatively-prime : Nat -> Nat -> Type
+relatively-prime n m = (n < m) × ∀ x -> x ≤ n -> x divides m -> x ≡ 1
+
+{-
+  relatively-prime is a decidable type family
+-}
+relatively-prime-is-decidable : ∀ n -> decidable-family (relatively-prime n)
+relatively-prime-is-decidable n m = product fst-component snd-component where
+  fst-component : decidable (n < m)
+  fst-component = less-nat n m
+
+  snd-component : decidable (∀ x -> x ≤ n -> x divides m -> x ≡ 1)
+  snd-component = 
+    function-nat-families n 
+      (λ x -> leq-nat x n) 
+      (λ x -> function (divides-nat x m) (eq-nat x 1)) 
+      (λ _ -> id)
+
+{-
+  Proof that n is relatively prime to n! + 1
+-}
+factorial-relatively-prime : ∀ n -> relatively-prime n (n ! + 1)
+factorial-relatively-prime n = fst-component , snd-component where 
+  fst-component : n < n ! + 1
+  fst-component = Less.from-leq (Fact.leq-than-factorial n)
+
+  x-positive : ∀ x -> x divides (n ! + 1) -> x ≢ 0
+  x-positive x (k , eq) = Less.when-not-zero-bck (Mul.when-product-positive {x} {k} {n ! + 1} 0<s eq)
+
+  snd-component : ∀ x -> x ≤ n -> x divides (n ! + 1) -> x ≡ 1
+  snd-component x leq div = 
+    Divides.divides-consecutive x (n !)
+      (Fact.all-leq-divide-factorial x n (x-positive x div) leq)
+      div

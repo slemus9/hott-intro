@@ -149,3 +149,6 @@ leq-for-add-eq (suc m) (suc n) k
 
 exists-leq : ∀ n -> Σ Nat (_≤ n)
 exists-leq n = n , when-eq refl
+
+non-zero-mul : ∀ {m n} -> 0 < n -> m ≤ m * n
+non-zero-mul 0<s = n<=n+m

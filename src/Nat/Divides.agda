@@ -5,7 +5,7 @@ import Nat.Leq as Leq
 import Nat.Less as Less
 import Nat.Mul as Mul
 import Nat.Dist as Dist
-open import DependentPair using (_,_; _×_; snd; _<-->_)
+open import DependentPair using (_,_; _×_; fst; snd; _<-->_)
 open import Identity using (_≡_; _≢_; refl; inv; ap)
 open import Identity.Reasoning
 open import Empty using (ex-falso)
@@ -36,6 +36,9 @@ zero-divides-zero-bck _ refl = any-divides-zero zero
 
 zero-divides-zero : ∀ n -> (0 divides n) <--> (n ≡ 0)
 zero-divides-zero n = zero-divides-zero-fwd n , zero-divides-zero-bck n
+
+when-divides-one : ∀ n -> n divides 1 -> n ≡ 1
+when-divides-one n (k , eq) = fst (Mul.both-one-fwd {n} {k} eq)
 
 {-
   Exercise 7.2
@@ -184,10 +187,13 @@ addition-to-upper-bound : ∀ a b x
   -> x divides b
   -> x ≤ (a + b)
 addition-to-upper-bound a b x not-zero div-a div-b with divides-x-y-then-x+y x a b div-a div-b 
-... | k , eq  = Mul.mul-positive-ineq {x} {k} {a + b} (Less.when-not-zero not-zero) eq
+... | k , eq  = Mul.mul-positive-ineq {x} {k} {a + b} (Less.when-not-zero-fwd not-zero) eq
 
 suc-upper-bound : ∀ a b
   -> a divides (suc b)
   -> a ≤ suc b
 suc-upper-bound a b (k , eq) =
   Mul.mul-positive-ineq {a} {k} {suc b} 0<s eq
+
+divides-consecutive : ∀ a b -> a divides b -> a divides (suc b) -> a ≡ 1
+divides-consecutive a b div1 div2 = when-divides-one a (divides-x-x+y-then-y a b 1 div1 div2)

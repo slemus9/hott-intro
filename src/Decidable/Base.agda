@@ -113,6 +113,18 @@ eq-obs-nat (suc m) (suc n) = eq-obs-nat m n
 eq-nat : has-decidable-eq Nat
 eq-nat m n = from-bijection-bck (equiv-Eq-Nat m n) (eq-obs-nat m n)
 
+less-nat : ∀ m n -> decidable (m < n)
+less-nat m n with Less.connected m n 
+... | Less.Connected.low lo = inl lo
+... | Less.Connected.middle eq = inr (Less.when-equal eq)
+... | Less.Connected.high hi = inr (Less.asym hi)
+
+leq-nat : ∀ m n -> decidable (m ≤ n)
+leq-nat m n with Less.connected m n 
+... | Less.Connected.low lo = inl (Leq.when-less lo)
+... | Less.Connected.middle eq = inl (Leq.when-eq eq)
+... | Less.Connected.high hi = inr (Less.not-leq-fwd hi)
+
 eq-obs-fin : ∀ {k} -> (x y : Fin k) -> decidable (Eq-Fin x y)
 eq-obs-fin Fin.base Fin.base = unit
 eq-obs-fin Fin.base (Fin.i _) = empty
