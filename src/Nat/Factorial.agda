@@ -1,5 +1,6 @@
 import Nat.Divides as Div
 import Nat.Leq as Leq
+import Nat.Less as Less
 import Nat.Mul as Mul
 open import Coproduct using (_⨄_; inl; inr)
 open import DependentPair using (_,_)
@@ -42,9 +43,18 @@ x≤n-x!-divides-n! x (suc n) x≤sn with Leq.when-m≤sn x≤sn
 {-
   Exercise 7.3
 -}
-x≤n-x-divides-n! : ∀ x n
+all-leq-divide-factorial : ∀ x n
   -> x ≢ 0
   -> x ≤ n
   -> x divides (n !)
-x≤n-x-divides-n! x n x≢0 x≤n =
+all-leq-divide-factorial x n x≢0 x≤n =
   Div.trans x (x !) (n !) (x-divides-x! x x≢0) (x≤n-x!-divides-n! x n x≤n)
+
+factorial-non-zero : ∀ n -> 0 < n !
+factorial-non-zero zero = 0<s
+factorial-non-zero (suc n) rewrite Mul.left-suc n (n !) = 
+  Less.non-zero-addition (factorial-non-zero n)
+
+leq-than-factorial : ∀ n -> n ≤ n !
+leq-than-factorial zero = 0≤n
+leq-than-factorial (suc n) = Leq.non-zero-mul (factorial-non-zero n)
