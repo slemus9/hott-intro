@@ -11,8 +11,10 @@ open import Type
 import Nat.Divides as Divides
 import Nat.Observational.Equality as NatEq
 import Nat.Less as Less
+import Nat.Leq as Leq
 import Nat.Factorial as Fact
 import Nat.Mul as Mul
+import Nat.WellOrdering as WellOrdering
 
 module Nat.Primes where
 
@@ -54,8 +56,8 @@ is-proper-divisor-of-zero x = (NatEq.peano8 ∘ sym) , Divides.any-divides-zero 
 {-
   Zero is not a prime number
 -}
-not-zero-is-prime-aux : ¬ (is-prime-aux 0)
-not-zero-is-prime-aux (_ , f) =
+zero-is-not-prime-aux : ¬ (is-prime-aux 0)
+zero-is-not-prime-aux (_ , f) =
   NatEq.diff-from-suc (sym two-eq-one) where
     two-eq-one : 2 ≡ 1
     two-eq-one = f 2 (is-proper-divisor-of-zero 1)
@@ -68,7 +70,7 @@ is-proper-divisor-is-decidable n d =
   is-prime-aux is a decidable type family
 -}
 is-prime-aux-is-decidable : decidable-family (is-prime-aux)
-is-prime-aux-is-decidable zero = inr not-zero-is-prime-aux
+is-prime-aux-is-decidable zero = inr zero-is-not-prime-aux
 is-prime-aux-is-decidable (suc n) =
   product fst-component snd-component where
     fst-component : decidable (suc n ≢ 1)
@@ -121,3 +123,79 @@ factorial-relatively-prime n = fst-component , snd-component where
     Divides.divides-consecutive x (n !)
       (Fact.all-leq-divide-factorial x n (x-positive x div) leq)
       div
+
+{-
+  Open the  WellOrdering module for the relatively-prime type family
+-}
+open module RelativelyPrimeWellOrdering (n : Nat) = 
+  WellOrdering (relatively-prime n) (relatively-prime-is-decidable n)
+
+{-
+  Auxiliary module to prove that there are is is always a prime number greater than all non-zero natural numbers
+-}
+module InfinitelyMany 
+  (n m : Nat)
+  (0-less-n : 0 < n)
+  (n-relatively-prime-m : relatively-prime n m)
+  (low-bound : is-lower-bound (relatively-prime n) m) where
+
+  private
+    n-less-m : n < m
+    n-less-m = fst n-relatively-prime-m
+
+    f : ∀ x -> x ≤ n -> x divides m -> x ≡ 1
+    f = snd n-relatively-prime-m
+
+    m-greater-one : 1 < m
+    m-greater-one = Less.trans-suc 0-less-n n-less-m
+
+    m-positive : 0 < m
+    m-positive = Less.trans 0<s m-greater-one
+
+    m-not-one : m ≢ 1
+    m-not-one = Less.not-eq m-greater-one ∘ inv
+
+    m-only-proper-divisor-is-one : ∀ x -> is-proper-divisor m x -> x ≡ 1
+    m-only-proper-divisor-is-one x (x-neq-m , (k , x-div-m)) = x-eq-one where
+      x-leq-m : x ≤ m
+      x-leq-m = Mul.mul-positive-ineq {x} {k} {m} m-positive x-div-m
+      
+      x-less-m : x < m
+      x-less-m with Leq.to-less-or-equal x-leq-m
+      -- when x ≡ m
+      ... | inl x-eq-m = ex-falso (x-neq-m x-eq-m)
+      -- when x < m
+      ... | inr x-less-m = x-less-m
+
+      x-not-relatively-prime-n : ¬ (relatively-prime n x)
+      x-not-relatively-prime-n = neg-impl (Less.not-leq-fwd {x} {m} x-less-m) (low-bound x)
+
+      x-proper-divisor : ∀ y -> y ≤ n -> y divides x -> y ≡ 1
+      x-proper-divisor y y-leq-n y-div-x = f y y-leq-n (Divides.trans y x m y-div-x (k , x-div-m))
+
+      not-n-less-x : ¬ (n < x)
+      not-n-less-x = neg-and x-not-relatively-prime-n x-proper-divisor
+
+      x-eq-one : x ≡ 1
+      x-eq-one = f x (Less.not-less-to-leq not-n-less-x) (k , x-div-m)
+
+  minimal-is-prime : (is-prime m) × (n < m)
+  minimal-is-prime = aux-to-is-prime m (m-not-one , m-only-proper-divisor-is-one) , n-less-m
+
+
+{-
+  Proof that there are is is always a prime number greater than all non-zero natural numbers
+-}
+non-zero-infinitely-many : ∀ n -> 0 < n -> Σ Nat λ p -> is-prime p × (n < p)
+non-zero-infinitely-many n 0-less-n with well-ordering n ((n ! + 1) , factorial-relatively-prime n)
+... | (m , (n-relatively-prime-m , low-bound)) = 
+  m , InfinitelyMany.minimal-is-prime n m 0-less-n n-relatively-prime-m low-bound
+
+{-
+  Proof that there are infinitely many primes
+-}
+infinitely-many : ∀ n -> Σ Nat λ p -> is-prime p × (n < p)
+infinitely-many zero with non-zero-infinitely-many 1 0<s 
+... | (p , (is-prime , leq)) = p , (is-prime , Less.trans 0<s leq)
+infinitely-many (suc n) with non-zero-infinitely-many (suc n) 0<s 
+... | (p , (is-prime , leq)) = p , (is-prime , leq)

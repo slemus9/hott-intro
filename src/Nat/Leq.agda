@@ -152,3 +152,10 @@ exists-leq n = n , when-eq refl
 
 non-zero-mul : ∀ {m n} -> 0 < n -> m ≤ m * n
 non-zero-mul 0<s = n<=n+m
+
+to-less-or-equal : ∀ {m n} -> m ≤ n -> (m ≡ n) ⨄ (m < n)
+to-less-or-equal {.zero} {zero} 0≤n = inl refl
+to-less-or-equal {.zero} {suc n} 0≤n = inr 0<s
+to-less-or-equal (s≤s leq) with to-less-or-equal leq 
+... | inl eq = inl (ap suc eq)
+... | inr less = inr (s<s less)
