@@ -44,3 +44,6 @@ neg-impl : {P Q : Type}
   -> (P -> Q)
   -> ¬ P
 neg-impl notQ f p = notQ (f p)
+
+neg-and : {P Q : Type} -> ¬ (P × Q) -> Q -> ¬ P
+neg-and not-and q p = not-and (p , q)

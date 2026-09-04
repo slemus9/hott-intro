@@ -2,7 +2,7 @@ open import Nat.Base
 import Nat.Leq as Leq
 import Nat.Add as Add
 import Nat.Observational.Equality as NatEq
-open import Identity using (_≢_; _≡_; refl; inv; ap)
+open import Identity using (_≢_; _≡_; refl; inv; ap; tr)
 open import Function using (_$_; _∘_)
 open import Empty using (ex-falso)
 open import Empty.Negation using (¬_)
@@ -15,6 +15,7 @@ data Connected (m n : Nat) : Type where
   low : m < n -> Connected m n
   middle : m ≡ n -> Connected m n
   high : n < m -> Connected m n
+
 
 not-n<0 : ∀ {n} -> ¬ (n < 0)
 not-n<0 ()
@@ -58,6 +59,16 @@ to-leq (s<s m<n) = s≤s (to-leq m<n)
 from-leq : ∀ {m n} -> m ≤ n -> m < n + 1
 from-leq 0≤n = 0<s
 from-leq (s≤s l) = s<s (from-leq l)
+
+from-leq-pred : ∀ {m n} -> suc m ≤ n -> m < n
+from-leq-pred (s≤s leq) = from-leq leq
+
+trans-suc : ∀ {m n k} -> m < n -> n < k -> suc m < k
+trans-suc {m} {n} {k} m-less-n n-less-k with Leq.to-less-or-equal (to-leq m-less-n)
+-- when suc m ≡ n
+... | inl sm-eq-n = tr {Nat} {_< k} {n} {suc m} (inv sm-eq-n) n-less-k
+-- when suc m < n
+... | inr sm-less-n = trans sm-less-n n-less-k
 
 {-
   Exercise 6.4.c.ii
