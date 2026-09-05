@@ -3,6 +3,7 @@ open import Coproduct using (_⨄_; inl; inr)
 open import DependentPair using (Σ; _<-->_; _×_; _,_; fst; snd)
 open import Empty using (Empty; ex-falso)
 open import Empty.Negation using (¬_)
+open import Empty.Negation.DeMorgan
 open import Function using (_∘_; id)
 open import Identity using (_≡_; inv; tr; refl)
 open import Nat.Base
@@ -44,6 +45,17 @@ double-neg : {A : Type} -> decidable A -> ¬ ¬ A -> A
 double-neg decide-a neg with decide-a 
 ... | inl a = a
 ... | inr not-a = ex-falso (neg not-a)
+
+{-
+  Exercise 8.2
+
+  Note: in the case where we assume that ¬ (decidable A) = ¬ (A ⨄ ¬ A), we prove by contradiction because
+  this assumption implies that (¬ A) × (¬ ¬ A) holds
+-}
+decidable-is-decidable : {A : Type} -> decidable (decidable A) -> decidable A
+decidable-is-decidable (inl dec-a) = dec-a
+decidable-is-decidable (inr not-dec-a) with de-morgan-or not-dec-a 
+... | (not-a , not-not-a) = ex-falso (not-not-a not-a)
 
 coproduct : {A B : Type}
   -> decidable A
