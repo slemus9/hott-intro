@@ -10,6 +10,7 @@ open import Nat.Observational.Equality using (Eq-Nat; equiv-Eq-Nat)
 open import Type using (Type; _⊔_; lsuc)
 open import Unit using (Unit)
 open import Fin using (Fin; Eq-Fin; [_]⟨_⟩)
+open import Bool.Base using (Bool; true; false)
 
 import Fin.Observational.Equality as FinObsEq
 import Fin.NatModK+1 as FinMod
@@ -262,3 +263,25 @@ function-nat-families {P} {Q} m decide-p decide-q up =
 
     f : ∀ x -> (m + 1) ≤ x -> P x -> Q x
     f x l = ex-falso ∘ (after-m x l)
+
+------------------------
+-- Boolean Reflection --
+------------------------
+
+{-
+  A map from a decision (decidable A) to a boolean. Returns true if A holds, false otherwise
+-}
+to-bool : {A : Type} -> decidable A -> Bool
+to-bool (inl _) = true
+to-bool (inr _) = false
+
+{-
+  A function that receives a decision (decidable A) and the evidence that such decision concludes that `A` holds.
+  It returns a value of type A, which we can extract from the decision value because we know that the only possible shape it has is (inl a).
+  The value (reflect d), however, does not contain the full information of why A holds. It type-checks because `d` is judgementally equal to an element of the form (inl a),
+  but in order to get the full information of why `A` holds, we have to evaluate `d` directly.
+
+  Boolean reflection allows us to offload the evaluation of the decision algorithm to the computer
+-}
+reflect : {A : Type} -> (d : decidable A) -> to-bool d ≡ true -> A
+reflect (inl a) refl = a
