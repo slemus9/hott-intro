@@ -8,3 +8,4 @@ import Fin.NatK
 import Fin.NatModK+1
 import Fin.Suc
 import Fin.Observational.Equality
+import Fin.Quantified

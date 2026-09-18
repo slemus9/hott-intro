@@ -137,3 +137,6 @@ from-fin-to-fin : ∀ {k} -> (x : ClassicalFin k) -> from-fin (to-fin x) ≡ x
 from-fin-to-fin {suc k} (zero , 0<s) = eq-clss-bck (from-fin zero-fin) (zero , 0<s) (Incl.incl-zero-fin k)
 from-fin-to-fin (suc x , s<s x<k)
   rewrite from-fin-to-next (to-fin (x , x<k)) = ap to-next-clss (from-fin-to-fin (x , x<k))
+
+suc-clss : ∀ {k} -> ClassicalFin k -> ClassicalFin (suc k)
+suc-clss (x , x-less-k) = x , Less.trans x-less-k Less.n<s
