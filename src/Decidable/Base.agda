@@ -10,7 +10,7 @@ open import Nat.Base
 open import Nat.Observational.Equality using (Eq-Nat; equiv-Eq-Nat)
 open import Type using (Type; _⊔_; lsuc)
 open import Unit using (Unit)
-open import Fin using (Fin; Eq-Fin; [_]⟨_⟩)
+open import Fin.Base using (Fin; Eq-Fin; [_]⟨_⟩)
 open import Bool.Base using (Bool; true; false)
 
 import Fin.Observational.Equality as FinObsEq

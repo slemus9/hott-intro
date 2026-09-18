@@ -46,3 +46,6 @@ _$_ : {A : Type} {B : A -> Type}
 f $ x = f x
 
 infixr 0 _$_
+
+case_of_ : {A B : Type} -> A -> (A -> B) -> B
+case a of selection = selection a
