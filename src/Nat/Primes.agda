@@ -197,5 +197,34 @@ non-zero-infinitely-many n 0-less-n with well-ordering n ((n ! + 1) , factorial-
 infinitely-many : ∀ n -> Σ Nat λ p -> is-prime p × (n < p)
 infinitely-many zero with non-zero-infinitely-many 1 0<s 
 ... | (p , (is-prime , leq)) = p , (is-prime , Less.trans 0<s leq)
-infinitely-many (suc n) with non-zero-infinitely-many (suc n) 0<s 
-... | (p , (is-prime , leq)) = p , (is-prime , leq)
+infinitely-many (suc n) = non-zero-infinitely-many (suc n) 0<s 
+
+
+{-
+  Exercise 8.4.a
+
+  Returns the n-th prime.
+
+  The (infinitely-many n) function returns the next prime, as it computes the minimal number that is relatively prime to n.
+
+  TODO: this function is very inefficient, even though infinitely-many is, in theory, defined using the sieve. I must have done something wrong. Fix it.
+-}
+prime-from : Nat -> Nat -> Nat
+prime-from prev-prime zero = prev-prime
+prime-from prev-prime (suc n) = prime-from (fst (infinitely-many prev-prime)) n
+
+prime : Nat -> Nat
+prime = prime-from 2
+
+{-
+  Exercise 8.4.b
+
+  Counts the primes that are less than or equal to n
+
+  TODO: this function is very inefficient, fix it
+-}
+count-primes : Nat -> Nat
+count-primes zero = zero
+count-primes (suc n) with is-prime-is-decidable (suc n)
+... | inl _ = suc (count-primes n)
+... | inr _ = count-primes n
