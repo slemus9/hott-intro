@@ -27,16 +27,19 @@ is-prime n = ∀ x -> (is-proper-divisor n x) <--> (x ≡ 1)
 {-
   Alternative is-prime definition that can be easier to manipulate in some cases
 -}
-is-prime-aux : Nat -> Type
-is-prime-aux n = (n ≢ 1) × (∀ x -> is-proper-divisor n x -> x ≡ 1)
+is-prime-aux-1 : Nat -> Type
+is-prime-aux-1 n = (n ≢ 1) × (∀ x -> is-proper-divisor n x -> x ≡ 1)
 
-is-prime-to-aux : ∀ n -> is-prime n -> is-prime-aux n
-is-prime-to-aux n n-is-prime with eq-nat n 1 
+is-prime-aux-2 : Nat -> Type
+is-prime-aux-2 n = (2 ≤ n) × (∀ x -> x divides n -> (x ≡ 1) ⨄ (x ≡ n))
+
+is-prime-to-aux-1 : ∀ n -> is-prime n -> is-prime-aux-1 n
+is-prime-to-aux-1 n n-is-prime with eq-nat n 1 
 ... | inl is-one = ex-falso (fst (snd (n-is-prime n) is-one) refl) -- One is not a proper divisor of itself
 ... | inr is-not-one = is-not-one , λ x -> fst (n-is-prime x)
 
-aux-to-is-prime : ∀ n -> is-prime-aux n -> is-prime n
-aux-to-is-prime n (is-not-one , f) x = 
+aux-1-to-is-prime : ∀ n -> is-prime-aux-1 n -> is-prime n
+aux-1-to-is-prime n (is-not-one , f) x = 
   forwards , backwards where
     forwards : is-proper-divisor n x -> x ≡ 1
     forwards = f x
@@ -44,8 +47,8 @@ aux-to-is-prime n (is-not-one , f) x =
     backwards : x ≡ 1 -> is-proper-divisor n x
     backwards refl = (is-not-one ∘ inv) , Divides.one-divides-any n
 
-is-prime-iff-aux : ∀ n -> (is-prime n) <--> (is-prime-aux n)
-is-prime-iff-aux n = is-prime-to-aux n , aux-to-is-prime n
+is-prime-iff-aux-1 : ∀ n -> (is-prime n) <--> (is-prime-aux-1 n)
+is-prime-iff-aux-1 n = is-prime-to-aux-1 n , aux-1-to-is-prime n
 
 {-
   Any non-zero natural number is a proper divisor of 0
@@ -56,22 +59,65 @@ is-proper-divisor-of-zero x = (NatEq.peano8 ∘ sym) , Divides.any-divides-zero 
 {-
   Zero is not a prime number
 -}
-zero-is-not-prime-aux : ¬ (is-prime-aux 0)
-zero-is-not-prime-aux (_ , f) =
+zero-is-not-prime-aux-1 : ¬ (is-prime-aux-1 0)
+zero-is-not-prime-aux-1 (_ , f) =
   NatEq.diff-from-suc (sym two-eq-one) where
     two-eq-one : 2 ≡ 1
     two-eq-one = f 2 (is-proper-divisor-of-zero 1)
+
+one-is-not-prime-aux-1 : ¬ (is-prime-aux-1 1)
+one-is-not-prime-aux-1 (1-neq-1 , _) = 1-neq-1 refl
+
+zero-is-not-prime : ¬ (is-prime 0)
+zero-is-not-prime = zero-is-not-prime-aux-1 ∘ (fst (is-prime-iff-aux-1 0))
+
+one-is-not-prime : ¬ (is-prime 1)
+one-is-not-prime = one-is-not-prime-aux-1 ∘ (fst (is-prime-iff-aux-1 1))
 
 is-proper-divisor-is-decidable : ∀ n d -> decidable (is-proper-divisor n d)
 is-proper-divisor-is-decidable n d =
   product (neg (eq-nat d n)) (divides-nat d n)
 
+is-prime-to-aux-2 : ∀ n -> is-prime n -> is-prime-aux-2 n
+is-prime-to-aux-2 n f = Less.not-less-to-leq not-n-less-2 , g where
+  not-n-less-2 : ¬ (n < 2)
+  not-n-less-2 0<s = zero-is-not-prime f
+  not-n-less-2 (s<s 0<s) = one-is-not-prime f
+
+  g : ∀ x -> x divides n -> (x ≡ 1) ⨄ (x ≡ n)
+  g x div with eq-nat x n
+  -- when x ≡ n
+  ... | inl eq = inr eq
+  -- when x ≢ n
+  ... | inr not-eq = inl (fst (f x) (not-eq , div))
+
+aux-2-to-is-prime : ∀ n -> is-prime-aux-2 n -> is-prime n
+aux-2-to-is-prime n (2-leq-n , f) x = forwards , backwards where
+  forwards : is-proper-divisor n x -> x ≡ 1
+  forwards (not-eq-n , div) with f x div
+  -- when x ≡ 1
+  ... | inl eq-1 = eq-1
+  -- when x ≡ n
+  ... | inr eq-n = ex-falso (not-eq-n eq-n)
+
+  not-one-eq-n : 1 ≢ n
+  not-one-eq-n = Less.disjoint-bounds (s<s 0<s) 2-leq-n
+
+  backwards : x ≡ 1 -> is-proper-divisor n x
+  backwards refl = not-one-eq-n , Divides.one-divides-any n
+
 {-
-  is-prime-aux is a decidable type family
+  Exercise 8.5
 -}
-is-prime-aux-is-decidable : decidable-family (is-prime-aux)
-is-prime-aux-is-decidable zero = inr zero-is-not-prime-aux
-is-prime-aux-is-decidable (suc n) =
+is-prime-iff-aux-2 : ∀ n -> (is-prime n) <--> (is-prime-aux-2 n)
+is-prime-iff-aux-2 n = is-prime-to-aux-2 n , aux-2-to-is-prime n
+
+{-
+  is-prime-aux-1 is a decidable type family
+-}
+is-prime-aux-1-is-decidable : decidable-family (is-prime-aux-1)
+is-prime-aux-1-is-decidable zero = inr zero-is-not-prime-aux-1
+is-prime-aux-1-is-decidable (suc n) =
   product fst-component snd-component where
     fst-component : decidable (suc n ≢ 1)
     fst-component = neg (eq-nat (suc n) 1)
@@ -87,7 +133,7 @@ is-prime-aux-is-decidable (suc n) =
   is-prime is a decidable type family
 -}
 is-prime-is-decidable : decidable-family (is-prime)
-is-prime-is-decidable n = from-bijection-bck (is-prime-iff-aux n) (is-prime-aux-is-decidable n)
+is-prime-is-decidable n = from-bijection-bck (is-prime-iff-aux-1 n) (is-prime-aux-1-is-decidable n)
 
 relatively-prime : Nat -> Nat -> Type
 relatively-prime n m = (n < m) × ∀ x -> x ≤ n -> x divides m -> x ≡ 1
@@ -180,7 +226,7 @@ module InfinitelyMany
       x-eq-one = f x (Less.not-less-to-leq not-n-less-x) (k , x-div-m)
 
   minimal-is-prime : (is-prime m) × (n < m)
-  minimal-is-prime = aux-to-is-prime m (m-not-one , m-only-proper-divisor-is-one) , n-less-m
+  minimal-is-prime = aux-1-to-is-prime m (m-not-one , m-only-proper-divisor-is-one) , n-less-m
 
 
 {-

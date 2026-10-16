@@ -86,6 +86,9 @@ n<s : ∀ {n} -> n < suc n
 n<s {zero} = 0<s
 n<s {suc n} = s<s n<s
 
+from-eq : ∀ {m n} -> m ≡ n -> m < suc n
+from-eq refl = n<s
+
 when-equal : ∀ {m n} -> m ≡ n -> ¬ (m < n)
 when-equal eq rewrite eq = antireflex
 
@@ -148,3 +151,7 @@ less-suc-to-leq {suc n} {suc m} (s<s l) with less-suc-to-leq l
 
 non-zero-addition : ∀ {n m} -> 0 < m -> 0 < n + m
 non-zero-addition 0<s = 0<s
+
+disjoint-bounds : ∀ {n m k} -> n < m -> m ≤ k -> n ≢ k
+disjoint-bounds {zero} {suc m} {suc k} _ _ = NatEq.peano8
+disjoint-bounds {suc n} {suc m} {suc k} (s<s n<m) (s≤s m≤k) = (disjoint-bounds n<m m≤k) ∘ NatEq.peano7-bck
