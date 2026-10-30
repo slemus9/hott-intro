@@ -1,4 +1,5 @@
 open import Type using (Type)
+open import Function.Base
 
 module DependentPair.Base where
 
@@ -41,3 +42,15 @@ curry : {A : Type} {B : A -> Type} {P : Σ A B -> Type}
   -> (∀ z -> P z)
   -> ∀ x -> ∀ y -> P (x , y)
 curry f x y = f (x , y)
+
+module Equiv where
+  trans : {A B C : Type}
+    -> (A <--> B)
+    -> (B <--> C)
+    -> (A <--> C)
+  trans {A} {B} {C} a-to-b b-to-c = a-to-c , c-to-a where
+    a-to-c : A -> C
+    a-to-c = (fst b-to-c) ∘ (fst a-to-b)
+
+    c-to-a : C -> A
+    c-to-a = (snd a-to-b) ∘ (snd b-to-c)

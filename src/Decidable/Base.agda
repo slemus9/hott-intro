@@ -1,5 +1,6 @@
 open import Agda.Primitive using (Level)
 open import Coproduct using (_⨄_; inl; inr)
+open import Coproduct.Observational.Equality
 open import DependentPair using (Σ; _<-->_; _×_; _,_; fst; snd)
 open import Empty using (Empty; ex-falso)
 open import Empty.Negation using (¬_)
@@ -349,3 +350,43 @@ eq-pair-from-functions-bck {A} {B} f = eq-pair-to-fst-component f , eq-pair-to-s
 eq-pair-from-functions : {A B : Type}
   -> ((B -> has-decidable-eq A) × (A -> has-decidable-eq B)) <--> (has-decidable-eq (A × B))
 eq-pair-from-functions = (λ{(f , g) -> eq-pair-from-functions-fwd f g}) , eq-pair-from-functions-bck
+
+----------------
+-- Coproducts --
+----------------
+
+eq-obs-coproduct-fwd : {A B : Type}
+  -> has-decidable-eq A
+  -> has-decidable-eq B
+  -> (x y : A ⨄ B) -> decidable (Eq-Copr x y)
+eq-obs-coproduct-fwd f g (inl a1) (inl a2) = f a1 a2
+eq-obs-coproduct-fwd f g (inl a1) (inr b2) = empty
+eq-obs-coproduct-fwd f g (inr b1) (inl a2) = empty
+eq-obs-coproduct-fwd f g (inr b1) (inr b2) = g b1 b2
+
+eq-obs-coproduct-bck-left : {A B : Type}
+  -> ((x y : A ⨄ B) -> decidable (Eq-Copr x y))
+  -> has-decidable-eq A
+eq-obs-coproduct-bck-left f a1 a2 with f (inl a1) (inl a2)
+... | inl a1-eq-a2 = inl a1-eq-a2
+... | inr a1-neq-a2 = inr a1-neq-a2
+
+eq-obs-coproduct-bck-right : {A B : Type}
+  -> ((x y : A ⨄ B) -> decidable (Eq-Copr x y))
+  -> has-decidable-eq B
+eq-obs-coproduct-bck-right f b1 b2 with f (inr b1) (inr b2)
+... | inl b1-eq-b2 = inl b1-eq-b2
+... | inr b1-neq-b2 = inr b1-neq-b2
+
+eq-obs-coproduct-bck : {A B : Type}
+  -> ((x y : A ⨄ B) -> decidable (Eq-Copr x y))
+  -> (has-decidable-eq A) × (has-decidable-eq B)
+eq-obs-coproduct-bck f = eq-obs-coproduct-bck-left f , eq-obs-coproduct-bck-right f
+
+eq-obs-coproduct : {A B : Type}
+  -> ((has-decidable-eq A) × (has-decidable-eq B)) <--> ((x y : A ⨄ B) -> decidable (Eq-Copr x y))
+eq-obs-coproduct = ((λ{(eq-a , eq-b) -> eq-obs-coproduct-fwd eq-a eq-b})) , eq-obs-coproduct-bck
+
+eq-coproduct : {A B : Type}
+  -> ((has-decidable-eq A) × (has-decidable-eq B)) <--> (has-decidable-eq (A ⨄ B))
+eq-coproduct = {!  !}
