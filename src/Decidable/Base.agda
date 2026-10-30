@@ -19,6 +19,7 @@ import Nat.Divides as Divides
 import Nat.Dist as Dist
 import Nat.Leq as Leq
 import Nat.Less as Less
+import DependentPair.Identification as PairEq
 
 module Decidable.Base where
 
@@ -297,3 +298,54 @@ to-bool (inr _) = false
 -}
 reflect : {A : Type} -> (d : decidable A) -> to-bool d ≡ true -> A
 reflect (inl a) refl = a
+
+-----------
+-- Pairs --
+-----------
+
+{-
+  Exercise 8.6.2
+-}
+eq-components-to-pair : {A B : Type}
+  -> has-decidable-eq A
+  -> has-decidable-eq B
+  -> has-decidable-eq (A × B)
+eq-components-to-pair f g (a1 , b1) (a2 , b2) with (f a1 a2 , g b1 b2) 
+-- When a1 ≡ a2 and b1 ≡ b2
+... | (inl a1-eq-a2 , inl b1-eq-b2) = inl (PairEq.eq-both-fwd a1-eq-a2 b1-eq-b2)
+-- When a1 ≢ a2
+... | (inr a1-neq-a2 , _)           = inr (a1-neq-a2 ∘ fst ∘ PairEq.eq-both-bck)
+-- When b1 ≢ b2
+... | (_ , inr b1-neq-b2)           = inr (b1-neq-b2 ∘ snd ∘ PairEq.eq-both-bck)
+
+eq-pair-to-fst-component : {A B : Type}
+  -> has-decidable-eq (A × B)
+  -> B -> has-decidable-eq A
+eq-pair-to-fst-component f b a1 a2 with f (a1 , b) (a2 , b)
+... | inl p1-eq-p2 = inl (fst (PairEq.eq-both-bck p1-eq-p2))
+... | inr p1-neq-p2 = inr λ a1-eq-a2 -> p1-neq-p2 (PairEq.eq-both-fwd a1-eq-a2 refl)
+
+eq-pair-to-snd-component : {A B : Type}
+  -> has-decidable-eq (A × B)
+  -> A -> has-decidable-eq B
+eq-pair-to-snd-component f a b1 b2 with f (a , b1) (a , b2)
+... | inl p1-eq-p2 = inl (snd (PairEq.eq-both-bck p1-eq-p2))
+... | inr p1-neq-p2 = inr λ b1-eq-b2 -> p1-neq-p2 (PairEq.eq-both-fwd refl b1-eq-b2)
+
+eq-pair-from-functions-fwd : {A B : Type}
+  -> (B -> has-decidable-eq A)
+  -> (A -> has-decidable-eq B)
+  -> has-decidable-eq (A × B)
+eq-pair-from-functions-fwd f g (a1 , b1) (a2 , b2) = eq-components-to-pair (f b1) (g a1) (a1 , b1) (a2 , b2)
+
+eq-pair-from-functions-bck : {A B : Type}
+  -> has-decidable-eq (A × B)
+  -> (B -> has-decidable-eq A) × (A -> has-decidable-eq B)
+eq-pair-from-functions-bck {A} {B} f = eq-pair-to-fst-component f , eq-pair-to-snd-component f
+
+{-
+  Exercise 8.6.1
+-}
+eq-pair-from-functions : {A B : Type}
+  -> ((B -> has-decidable-eq A) × (A -> has-decidable-eq B)) <--> (has-decidable-eq (A × B))
+eq-pair-from-functions = (λ{(f , g) -> eq-pair-from-functions-fwd f g}) , eq-pair-from-functions-bck

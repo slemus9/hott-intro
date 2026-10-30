@@ -1,4 +1,4 @@
-open import DependentPair using (_<-->_; _×_; _,_)
+open import DependentPair.Base using (_<-->_; _×_; _,_)
 open import Empty.Base using (Empty; ex-falso)
 open import Type using (Type; Level)
 
