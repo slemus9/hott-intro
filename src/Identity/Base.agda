@@ -1,6 +1,6 @@
 open import Type using (Type)
 open import Function.Base using (id)
-open import DependentPair using (Σ; _,_)
+open import DependentPair.Base using (Σ; _,_)
 open import Empty.Negation.Base using (¬_)
 
 module Identity.Base where
