@@ -1,5 +1,5 @@
 open import Type using (Type)
-open import Function.Base
+open import Function.Base hiding (swap)
 
 module DependentPair.Base where
 
@@ -42,6 +42,9 @@ curry : {A : Type} {B : A -> Type} {P : Σ A B -> Type}
   -> (∀ z -> P z)
   -> ∀ x -> ∀ y -> P (x , y)
 curry f x y = f (x , y)
+
+swap : {A B : Type} -> A × B -> B × A
+swap (a , b) = b , a
 
 module Equiv where
   trans : {A B C : Type}

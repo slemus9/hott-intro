@@ -1,18 +1,19 @@
 open import Agda.Primitive using (Level)
 open import Coproduct using (_⨄_; inl; inr)
 open import Coproduct.Observational.Equality
-open import DependentPair using (Σ; _<-->_; _×_; _,_; fst; snd)
+open import DependentPair.Base
 open import Empty using (Empty; ex-falso)
 open import Empty.Negation using (¬_)
 open import Empty.Negation.DeMorgan
 open import Function using (_∘_; id)
-open import Identity using (_≡_; inv; tr; refl)
+open import Identity using (_≡_; inv; tr; refl; ap)
 open import Nat.Base
 open import Nat.Observational.Equality using (Eq-Nat; equiv-Eq-Nat)
 open import Type using (Type; _⊔_; lsuc)
 open import Unit using (Unit)
 open import Fin.Base using (Fin; Eq-Fin; [_]⟨_⟩)
 open import Bool.Base using (Bool; true; false)
+open import Int.Base using (Int; RawInt)
 
 import Fin.Observational.Equality as FinObsEq
 import Fin.NatModK+1 as FinMod
@@ -21,6 +22,7 @@ import Nat.Dist as Dist
 import Nat.Leq as Leq
 import Nat.Less as Less
 import DependentPair.Identification as PairEq
+import Int.Base as Int
 
 module Decidable.Base where
 
@@ -47,6 +49,26 @@ double-neg : {A : Type} -> decidable A -> ¬ ¬ A -> A
 double-neg decide-a neg with decide-a 
 ... | inl a = a
 ... | inr not-a = ex-falso (neg not-a)
+
+eq-unit : has-decidable-eq Unit
+eq-unit Unit.unit Unit.unit = inl refl
+
+{-
+  TODO: Define datatypes for Isomorphisms and Embeddings with their respective properties
+-}
+embed-has-decidable-eq : {A B : Type}
+  -> (equiv : A <--> B)
+  -> ((b : B) -> (fst equiv (snd equiv b)) ≡ b)
+  -> has-decidable-eq A
+  -> has-decidable-eq B
+embed-has-decidable-eq (from , to) id-comp decide-eq b1 b2 = resolve where 
+  simplify : from (to b1) ≡ from (to b2) -> b1 ≡ b2
+  simplify rewrite id-comp b1 | id-comp b2 = id
+
+  resolve : decidable (b1 ≡ b2)
+  resolve with decide-eq (to b1) (to b2)
+  ... | inl a1-eq-a2 = inl (simplify (ap from a1-eq-a2))
+  ... | inr a1-neq-a2 = inr λ a1-eq-a2 -> a1-neq-a2 (ap to a1-eq-a2)
 
 {-
   Exercise 8.2
@@ -387,6 +409,41 @@ eq-obs-coproduct : {A B : Type}
   -> ((has-decidable-eq A) × (has-decidable-eq B)) <--> ((x y : A ⨄ B) -> decidable (Eq-Copr x y))
 eq-obs-coproduct = ((λ{(eq-a , eq-b) -> eq-obs-coproduct-fwd eq-a eq-b})) , eq-obs-coproduct-bck
 
+decidable-eq-obs-to-has-decidable-eq-coproduct : {A B : Type}
+  -> ((x y : A ⨄ B) -> decidable (Eq-Copr x y))
+  -> has-decidable-eq (A ⨄ B)
+decidable-eq-obs-to-has-decidable-eq-coproduct f x y = from-bijection-bck equiv-Eq-Copr (f x y)
+
+has-decidable-eq-to-decidable-eq-obs-coproduct : {A B : Type}
+  -> has-decidable-eq (A ⨄ B)
+  -> ((x y : A ⨄ B) -> decidable (Eq-Copr x y))
+has-decidable-eq-to-decidable-eq-obs-coproduct f x y = from-bijection-fwd equiv-Eq-Copr (f x y)
+
+eq-obs-iff-decidable-eq-coproduct : {A B : Type}
+  -> ((x y : A ⨄ B) -> decidable (Eq-Copr x y)) <--> (has-decidable-eq (A ⨄ B))
+eq-obs-iff-decidable-eq-coproduct = decidable-eq-obs-to-has-decidable-eq-coproduct , has-decidable-eq-to-decidable-eq-obs-coproduct
+
+{-
+  Exercise 8.7.b.1
+-}
 eq-coproduct : {A B : Type}
   -> ((has-decidable-eq A) × (has-decidable-eq B)) <--> (has-decidable-eq (A ⨄ B))
-eq-coproduct = {!  !}
+eq-coproduct = Equiv.trans eq-obs-coproduct eq-obs-iff-decidable-eq-coproduct
+
+--------------
+-- Integers --
+--------------
+
+eq-raw-int : has-decidable-eq RawInt
+eq-raw-int = raw-int where   
+  zero-and-pos : has-decidable-eq (Unit ⨄ Nat)
+  zero-and-pos = fst eq-coproduct (eq-unit , eq-nat)
+
+  raw-int : has-decidable-eq (Nat ⨄ (Unit ⨄ Nat))
+  raw-int = fst eq-coproduct (eq-nat , zero-and-pos)
+
+{-
+  Exercise 8.7.b.2
+-}
+eq-int : has-decidable-eq Int
+eq-int = embed-has-decidable-eq (swap Int.raw-equiv) Int.from-raw-to-raw eq-raw-int

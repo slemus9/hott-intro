@@ -3,6 +3,8 @@ open import Function using (_∘_)
 open import Nat.Base using (Nat; zero)
 open import Coproduct using (_⨄_; inr; inl)
 open import Identity using (_≡_; refl)
+open import Unit.Base
+open import DependentPair.Base
 
 module Int.Base where
 
@@ -150,3 +152,37 @@ abs : Int -> Nat
 abs (in-neg n) = Nat.suc n
 abs zero = zero
 abs (in-pos n) = Nat.suc n
+
+--------------------------------
+-- Raw Integer Representation --
+--------------------------------
+
+{-
+  Same structure of the Int datatype, but represented in terms of co-products.
+  The Unit represents zero, the left Nat represents the negative numbers (i.e., in-neg),
+  and the right Nat represents the positive numbers (i.e., in-pos)
+-}
+RawInt = Nat ⨄ (Unit ⨄ Nat)
+
+to-raw : Int -> RawInt
+to-raw (in-neg x) = inl x
+to-raw zero = inr (inl unit)
+to-raw (in-pos x) = inr (inr x)
+
+from-raw : RawInt -> Int
+from-raw (inl x) = in-neg x
+from-raw (inr (inl unit)) = zero
+from-raw (inr (inr x)) = in-pos x
+
+raw-equiv : Int <--> RawInt
+raw-equiv = to-raw , from-raw
+
+from-raw-to-raw : ∀ x -> from-raw (to-raw x) ≡ x
+from-raw-to-raw (in-neg x) = refl
+from-raw-to-raw zero = refl
+from-raw-to-raw (in-pos x) = refl
+
+to-raw-from-raw : ∀ x -> to-raw (from-raw x) ≡ x
+to-raw-from-raw (inl x) = refl
+to-raw-from-raw (inr (inl unit)) = refl
+to-raw-from-raw (inr (inr x)) = refl
