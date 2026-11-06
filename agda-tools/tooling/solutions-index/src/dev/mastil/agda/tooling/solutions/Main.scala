@@ -1,21 +1,24 @@
-package slemus.hott
+package dev.mastil.agda.tooling.solutions
 
-import cats.effect.{IOApp, IO}
+import cats.effect.{IO, IOApp}
 import cats.syntax.traverse.*
-import fs2.{Chunk, Stream, Pipe, Pure}
+import fs2.{Chunk, Pipe, Pure, Stream}
 import fs2.io.file.{Files, Path}
 import fs2.io.file.Flags
 
 object Main extends IOApp.Simple:
 
   // TODO: all these variables should be given as an input to the program
-  val title = "# Solutions Index"
-  val outFileName = "SolutionsIndex.md"
-  val chunkSize = 20
+  private val title       = "# Solutions Index"
+  private val outFileName = "SolutionsIndex.md"
+  private val chunkSize   = 20
+
+  private val filesIO = Files[IO]
 
   def run: IO[Unit] =
     val outPath = Path("..") / outFileName
-    Files[IO].walk(Path("../src"))
+    filesIO
+      .walk(Path("../src"))
       .filter(_.extName == ".agda")
       .through(extractAllExercises(chunkSize))
       .through(makeMarkdownLines)
@@ -34,7 +37,8 @@ object Main extends IOApp.Simple:
 
   def extractFileExercises(path: Path): Stream[IO, ChapterExercise] =
     val normalizedPath = Path(".") / Path("..").relativize(path)
-    Files[IO].readUtf8Lines(path)
+    filesIO
+      .readUtf8Lines(path)
       .zipWithIndex
       .flatMap { case (line, lineNumber) =>
         Stream.fromOption(ChapterExercise.make(normalizedPath, line, lineNumber + 1))
@@ -43,7 +47,7 @@ object Main extends IOApp.Simple:
   /*
     I don't expect that the number of exercises will exceed the memory capacity.
     If that is the case, we should re-implement this function
-  */
+   */
   def sortExerciseStream(chunkSize: Int): Pipe[IO, ChapterExercise, ChapterExercise] = s =>
     Stream.eval(s.compile.toList).flatMap { l =>
       Stream.iterable(l.sortBy(_.exerciseId))

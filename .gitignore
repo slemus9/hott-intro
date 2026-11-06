@@ -9,3 +9,5 @@ target
 project/metals.sbt
 project/project
 project/.bloop
+
+out/
