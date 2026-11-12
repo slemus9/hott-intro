@@ -6,7 +6,7 @@ open import Empty using (Empty; ex-falso)
 open import Empty.Negation using (¬_)
 open import Empty.Negation.DeMorgan
 open import Function using (_∘_; id)
-open import Identity using (_≡_; inv; tr; refl; ap)
+open import Identity using (_≡_; _≢_; inv; tr; refl; ap)
 open import Nat.Base
 open import Nat.Observational.Equality using (Eq-Nat; equiv-Eq-Nat)
 open import Type using (Type; _⊔_; lsuc)
@@ -372,6 +372,40 @@ eq-pair-from-functions-bck {A} {B} f = eq-pair-to-fst-component f , eq-pair-to-s
 eq-pair-from-functions : {A B : Type}
   -> ((B -> has-decidable-eq A) × (A -> has-decidable-eq B)) <--> (has-decidable-eq (A × B))
 eq-pair-from-functions = (λ{(f , g) -> eq-pair-from-functions-fwd f g}) , eq-pair-from-functions-bck
+
+eq-pair-type-family-fwd : {A : Type} {B : A -> Type}
+  -> has-decidable-eq A
+  -> (∀ a -> has-decidable-eq (B a))
+  -> has-decidable-eq (Σ A B)
+eq-pair-type-family-fwd {A} {B} eq-a f (a1 , b1) (a2 , b2) = decide-eq where
+
+  when-eq-a : a1 ≡ a2 -> decidable ((a1 , b1) ≡ (a2 , b2)) 
+  when-eq-a a1-eq-a2 with f a2 (tr a1-eq-a2 b1) b2 
+  ... | inl b1-eq-b2 = inl (PairEq.eq-both-dep-fwd a1 b1 a2 b2 a1-eq-a2 b1-eq-b2)
+  ... | inr b1-neq-b2 = inr λ both-eq -> b1-neq-b2 (PairEq.eq-both-dep-bck-snd a1 b1 a2 b2 a1-eq-a2 both-eq)
+
+  when-neq-a : a1 ≢ a2 -> decidable ((a1 , b1) ≡ (a2 , b2))
+  when-neq-a a1-neq-a2 = inr λ both-eq -> a1-neq-a2 (PairEq.eq-both-dep-bck-fst a1 b1 a2 b2 both-eq)
+
+  decide-eq : decidable ((a1 , b1) ≡ (a2 , b2))
+  decide-eq with eq-a a1 a2
+  ... | inl a1-eq-a2 = when-eq-a a1-eq-a2
+  ... | inr a1-neq-a2 = when-neq-a a1-neq-a2
+
+eq-pair-type-family-bck : {A : Type} {B : A -> Type}
+  -> has-decidable-eq (Σ A B)
+  -> (∀ a -> has-decidable-eq (B a))
+eq-pair-type-family-bck f a b1 b2 with f (a , b1) (a , b2) 
+... | inl both-eq = inl (PairEq.eq-both-dep-bck-snd a b1 a b2 refl both-eq)
+... | inr both-neq = inr λ b1-eq-b2 -> both-neq (PairEq.eq-both-dep-fwd a b1 a b2 refl b1-eq-b2)
+
+{-
+  Exercise 8.8.1
+-}
+eq-pair-type-family : {A : Type} {B : A -> Type}
+  -> has-decidable-eq A
+  -> (∀ a -> has-decidable-eq (B a)) <--> (has-decidable-eq (Σ A B))
+eq-pair-type-family eq-a = eq-pair-type-family-fwd eq-a , eq-pair-type-family-bck
 
 ----------------
 -- Coproducts --
