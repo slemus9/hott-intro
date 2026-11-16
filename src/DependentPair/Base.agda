@@ -6,6 +6,7 @@ module DependentPair.Base where
 data Σ (A : Type) (B : A -> Type) : Type where
   _,_ : (x : A) -> (y : B x) -> Σ A B
 
+
 -- The product is a special case of Σ
 _×_ : Type -> Type -> Type
 A × B = Σ A (λ _ -> B)
@@ -45,6 +46,11 @@ curry f x y = f (x , y)
 
 swap : {A B : Type} -> A × B -> B × A
 swap (a , b) = b , a
+
+map-section-Σ : {A : Type} {B : A -> Type}
+  -> (∀ x -> B x)
+  -> (A -> Σ A B)
+map-section-Σ f x = x , f x
 
 module Equiv where
   trans : {A B C : Type}
