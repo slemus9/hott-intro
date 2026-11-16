@@ -3,7 +3,7 @@ open import Coproduct using (_⨄_; inl; inr)
 open import Coproduct.Observational.Equality
 open import DependentPair.Base
 open import Empty using (Empty; ex-falso)
-open import Empty.Negation using (¬_)
+open import Empty.Negation using (¬_; neg-impl)
 open import Empty.Negation.DeMorgan
 open import Function using (_∘_; id)
 open import Identity using (_≡_; _≢_; inv; tr; refl; ap)
@@ -400,12 +400,24 @@ eq-pair-type-family-bck f a b1 b2 with f (a , b1) (a , b2)
 ... | inr both-neq = inr λ b1-eq-b2 -> both-neq (PairEq.eq-both-dep-fwd a b1 a b2 refl b1-eq-b2)
 
 {-
-  Exercise 8.8.1
+  Exercise 8.8.i
 -}
 eq-pair-type-family : {A : Type} {B : A -> Type}
   -> has-decidable-eq A
   -> (∀ a -> has-decidable-eq (B a)) <--> (has-decidable-eq (Σ A B))
 eq-pair-type-family eq-a = eq-pair-type-family-fwd eq-a , eq-pair-type-family-bck
+
+{-
+  Exercise 8.8.ii
+-}
+eq-pair-type-family-section : {A : Type} {B : A -> Type}
+  -> (∀ a -> B a)
+  -> has-decidable-eq (Σ A B)
+  -> has-decidable-eq A
+eq-pair-type-family-section f eq-pair a1 a2 with eq-pair (map-section-Σ f a1) (map-section-Σ f a2)
+... | inl both-eq = inl (PairEq.map-section-Σ-is-injective f a1 a2 both-eq)
+... | inr both-neq = inr (neg-impl both-neq (PairEq.map-section-Σ-same-input f a1 a2))
+
 
 ----------------
 -- Coproducts --

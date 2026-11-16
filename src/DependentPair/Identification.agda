@@ -1,5 +1,6 @@
 open import DependentPair.Base
-open import Identity.Base using (_≡_; refl; tr)
+open import Identity.Base using (_≡_; _≢_; refl; tr)
+open import Coproduct.Base
 open import Type using (Type)
 
 module DependentPair.Identification where
@@ -27,7 +28,7 @@ eq-both-bck refl = refl , refl
 
   When we pattern match on eq with (refl {a1}), we get:
 
-  id b1 ≡ b2 -> (a1 , id b1) -> (a1 , b2)
+  id b1 ≡ b2 -> (a1 , id b1) ≡ (a1 , b2)
 
   Then when we pattern match with (refl {id b1}) we end up with
 
@@ -55,3 +56,17 @@ eq-both-dep-bck-fst : {A : Type} {B : A -> Type}
   -> (a1 , b1) ≡ (a2 , b2)
   -> a1 ≡ a2
 eq-both-dep-bck-fst a1 b1 a2 b2 refl = refl
+
+map-section-Σ-is-injective : {A : Type} {B : A -> Type}
+  -> (f : ∀ x -> B x)
+  -> (x y : A)
+  -> map-section-Σ f x ≡ map-section-Σ f y
+  -> x ≡ y
+map-section-Σ-is-injective f x y = eq-both-dep-bck-fst x (f x) y (f y)
+
+map-section-Σ-same-input : {A : Type} {B : A -> Type}
+  -> (f : ∀ x -> B x)
+  -> (x y : A)
+  -> x ≡ y
+  -> map-section-Σ f x ≡ map-section-Σ f y
+map-section-Σ-same-input f x y refl = refl
