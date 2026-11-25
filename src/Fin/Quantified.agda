@@ -122,3 +122,33 @@ not-forall {k} {P} decide-p not-all-fin = exists-fin where
 
   exists-fin : Σ (Fin k) λ x -> ¬ (P x)
   exists-fin = Clss.to-fin (fst exists-classic) , snd exists-classic
+
+{-
+  Exercise 8.9.a
+
+  We reuse find-any-invalid to find the first B(x) that does not hold for all elements of x : Fin(k).
+  This function either returns an element x such that ¬B(x), or the evidence that ∀ x -> B(x) holds.
+  From these two values we can then assert that ∀ x -> B x is decidable
+-}
+decidable-forall : {k : Nat} {B : Fin k -> Type}
+  -> decidable-family B
+  -> decidable (∀ x -> B x)
+decidable-forall {k} {B} dec-B = result where
+  P : ClassicalFin k -> Type
+  P y = B (Clss.to-fin y)
+
+  dec-P : decidable-family P
+  dec-P y = dec-B (Clss.to-fin y)
+
+  found-not-P : (Σ (ClassicalFin k) λ x -> ¬ (P x)) ⨄ (∀ x -> P x)
+  found-not-P = find-any-invalid k P dec-P
+
+  p-to-b : (∀ y -> P y) -> ∀ x -> B x
+  p-to-b f x rewrite inv (Clss.to-fin-from-fin x) = f (Clss.from-fin x)
+
+  result : decidable (∀ x -> B x)
+  result with find-any-invalid k P dec-P
+  -- When Σ (ClassicalFin k) λ x -> ¬ (P x), we can conclude that ¬ (∀ x -> B x)
+  ... | inl (y , not-y) = inr λ f -> ex-falso (not-y (f (Clss.to-fin y)))
+  -- When ∀ x -> P x, we can conclude that ∀ x -> B x
+  ... | inr (all-P) = inl (p-to-b all-P)
